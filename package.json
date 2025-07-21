@@ -17,7 +17,7 @@
     "build-fast": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run --dir src/test --environment jsdom",
+    "test": "vitest run --environment jsdom --reporter=verbose",
     "type-check": "tsc --noEmit",
     "postbuild": "echo. > dist\\.nojekyll",
     "predeploy": "npm run build && npm run postbuild",
@@ -73,6 +73,8 @@
     "typescript-eslint": "^8.37.0",
     "vite": "^7.0.4",
     "vite-plugin-compression": "^0.5.1",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/jest-dom": "^6.6.3"
   }
 }
