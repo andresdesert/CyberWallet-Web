@@ -3,7 +3,6 @@ import {
   Container,
   Typography,
   Box,
-  Avatar,
   Button,
   useTheme,
   useMediaQuery,
@@ -22,11 +21,9 @@ import {
   ListItemText,
   ListItemIcon,
   Divider,
-  Skeleton,
-  Drawer,
   SwipeableDrawer,
 } from '@mui/material';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   GitHub as GitHubIcon,
   LinkedIn as LinkedInIcon,
@@ -370,8 +367,6 @@ const AboutMePage: React.FC = () => {
   
   // Scroll management
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -14,11 +14,11 @@ import {
     useTheme,
     alpha,
     Container,
-    Chip,
     Fade,
     Menu,
     MenuItem,
-    Tooltip
+    Tooltip,
+    Theme
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -30,15 +30,22 @@ import {
     GitHub as GitHubIcon,
     Email as EmailIcon,
     Brightness4,
-    Brightness7,
-    SettingsBrightness
+    Brightness7
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
-import { FadeInUp, HoverScale, SlideInRight } from '@/components/ui/MicroInteractions';
+import { HoverScale } from '@/components/ui/MicroInteractions';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useUnifiedTheme } from '@/context/UnifiedThemeContext';
+
+// Type definitions
+interface ScrollState {
+    scrollY: number;
+    isScrolled: boolean;
+    isScrollingUp: boolean;
+    isAtTop: boolean;
+}
 
 // 🎯 Hook personalizado para manejar scroll sticky moderno
 const useStickyHeader = () => {
@@ -55,7 +62,7 @@ const useStickyHeader = () => {
         const isScrollingUp = currentScrollY < scrollState.scrollY && currentScrollY > 100;
         const isAtTop = currentScrollY < 10;
 
-        setScrollState(prev => ({
+        setScrollState(() => ({
             scrollY: currentScrollY,
             isScrolled,
             isScrollingUp,
@@ -84,7 +91,7 @@ const useStickyHeader = () => {
 };
 
 // 🎨 Sistema de estilos dinámicos para el header
-const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
+const getHeaderStyles = (theme: Theme, scrollState: ScrollState, isMobile: boolean) => {
     const { isScrolled, isAtTop, scrollY } = scrollState;
     
     // Calcular opacidad del backdrop dinámicamente
