@@ -17,7 +17,7 @@ Ejecuta estos comandos en PowerShell:
 
 ```powershell
 # Agregar el remote origin
-git remote add origin https://github.com/deluxo/CyberWallet-Web.git
+git remote add origin https://github.com/andresdesert/CyberWallet-Web.git
 
 # Renombrar la rama principal a main
 git branch -M main
@@ -28,7 +28,7 @@ git push -u origin main
 
 ## Paso 3: Configurar GitHub Pages
 
-1. Ve a tu repositorio en GitHub: https://github.com/deluxo/CyberWallet-Web
+1. Ve a tu repositorio en GitHub: https://github.com/andresdesert/CyberWallet-Web
 2. Click en "Settings" (configuraciones)
 3. En el menú lateral izquierdo, busca "Pages"
 4. En "Source", selecciona "GitHub Actions"
@@ -39,7 +39,7 @@ git push -u origin main
 1. Ve a la pestaña "Actions" en tu repositorio
 2. Verifica que el workflow se ejecute automáticamente
 3. Una vez completado, tu aplicación estará disponible en:
-   **https://deluxo.github.io/CyberWallet-Web/**
+   **https://andresdesert.github.io/CyberWallet-Web/**
 
 ## 🔧 Comandos útiles para desarrollo
 

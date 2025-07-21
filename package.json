@@ -4,10 +4,10 @@
   "private": false,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://deluxo.github.io/CyberWallet-Web",
+  "homepage": "https://andresdesert.github.io/CyberWallet-Web",
   "repository": {
     "type": "git",
-    "url": "https://github.com/deluxo/CyberWallet-Web.git"
+    "url": "https://github.com/andresdesert/CyberWallet-Web.git"
   },
   "author": "deluxo@gmail.com",
   "license": "MIT",
