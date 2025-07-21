@@ -47,6 +47,11 @@ import { getActiveTokens } from '@/theme/tokens/colorTokens';
 import { migrateGetGlass } from '@/theme/utils/surfaceHelper';
 import { useUnifiedTheme } from '../context/UnifiedThemeContext';
 
+// Importar imágenes estáticamente
+import profilePhoto from '../assets/profile-photo.png';
+import istqbBanner from '../assets/Banner ISTQB.png';
+import cvFile from '../assets/CV-QA-Simahan.pdf';
+
 // 🚀 DYNAMIC IMPORTS: Carga lazy para componentes no críticos
 const ParticleBackground = lazy(() => import('../components/ParticleBackground'));
 
@@ -534,7 +539,7 @@ const AboutMePage: React.FC = () => {
               <motion.div variants={itemVariants}>
                 <ProfileAvatar sx={{ mb: 3 }}>
                   <OptimizedImage
-                    src={`${import.meta.env.BASE_URL}profile-photo.png`}
+                    src={profilePhoto}
                     alt="Andrés Simahan"
                     width="100%"
                     height="100%"
@@ -717,7 +722,7 @@ const AboutMePage: React.FC = () => {
                       >
                         <ContactButton
                           startIcon={<DownloadIcon />}
-                          onClick={() => window.open(`${import.meta.env.BASE_URL}CV-QA-Simahan.pdf`, '_blank')}
+                          onClick={() => window.open(cvFile, '_blank')}
                           sx={{ 
                             // 🎯 MOBILE-FRIENDLY: Botón principal adaptativo
                             minWidth: { xs: '100%', sm: 140 },
@@ -840,7 +845,7 @@ const AboutMePage: React.FC = () => {
                   minWidth: { md: 300 },
                 }}>
                   <OptimizedImage
-                    src={`${import.meta.env.BASE_URL}Banner ISTQB.png`} 
+                    src={istqbBanner} 
                     alt="ISTQB Certification Banner"
                     width="100%"
                     height="auto"
