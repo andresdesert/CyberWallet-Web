@@ -18,8 +18,12 @@
     "preview": "vite preview",
     "test": "vitest run --dir src/test --environment jsdom",
     "type-check": "tsc --noEmit",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "postbuild": "echo. > dist\\.nojekyll",
+    "predeploy": "npm run build && npm run postbuild",
+    "deploy": "gh-pages -d dist --force --remove \".\"",
+    "deploy-clean": "gh-pages -d dist --force --clean-exclude \"!.nojekyll\"",
+    "sync-deploy": "npm run clean && npm run build && npm run deploy-clean",
+    "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
