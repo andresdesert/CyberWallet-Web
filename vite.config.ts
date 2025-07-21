@@ -8,7 +8,10 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
-  const isGitHubPages = !isDev;
+  const isGitHubPages = mode === 'production';
+  
+  console.log('🔵 [VITE] Build mode:', mode);
+  console.log('🔵 [VITE] GitHub Pages mode:', isGitHubPages);
   
   return {
     // 🌐 GitHub Pages configuration - OPTIMIZED

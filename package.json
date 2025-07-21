@@ -24,6 +24,7 @@
     "deploy": "gh-pages -d dist",
     "deploy-clean": "gh-pages -d dist --dotfiles",
     "sync-deploy": "npm run clean && npm run build-fast && npm run deploy-clean",
+    "force-deploy": "npm run clean && npm run build-fast && gh-pages -d dist --dotfiles --add --message \"Force deploy: cache bust $(date)\"",
     "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "dependencies": {

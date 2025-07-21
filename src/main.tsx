@@ -45,17 +45,13 @@ try {
   // 🌐 Configuración de routing para GitHub Pages
   const basename = import.meta.env?.DEV ? '' : '/CyberWallet-Web';
   
+  console.log('🔵 [MAIN] Router basename configurado:', basename);
+  
   root.render(
     <React.StrictMode>
       <ErrorBoundary>
         <BrowserRouter basename={basename}>
-          <UnifiedThemeProvider>
-            <AuthProvider>
-              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
-                <App />
-              </LocalizationProvider>
-            </AuthProvider>
-          </UnifiedThemeProvider>
+          <App />
         </BrowserRouter>
       </ErrorBoundary>
     </React.StrictMode>
