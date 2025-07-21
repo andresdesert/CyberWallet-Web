@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom';
 import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
 import { FadeInUp, HoverScale, SlideInRight } from '@/components/ui/MicroInteractions';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useUnifiedTheme } from '@/context/UnifiedThemeContext';
 
 // 🎯 Hook personalizado para manejar scroll sticky moderno
@@ -107,10 +107,18 @@ const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
             ? `0 ${4 * shadowIntensity}px ${24 * shadowIntensity}px ${alpha('#000', theme.palette.mode === 'dark' ? 0.3 : 0.1)}`
             : 'none',
             
-        transform: 'none', // Eliminar transform que mueve el header
+        transform: 'none',
         
-        // 🎯 Altura mínima responsive para móviles más compacta
-        minHeight: isMobile ? '56px' : '80px',
+        // 📱 Altura optimizada para móviles - más compacta pero accesible
+        minHeight: isMobile ? '48px' : '80px',
+        maxHeight: isMobile ? '48px' : 'auto',
+        
+        // 📱 Asegurar que el header sea completamente visible
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
         
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         
@@ -380,6 +388,27 @@ const LandingHeader: React.FC = () => {
                 sx={{
                     ...getHeaderStyles(theme, scrollState, isMobile),
                     zIndex: 1300,
+                    // 📱 Indicador visual de scroll horizontal en móviles
+                    ...(isMobile && {
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            right: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '4px',
+                            height: '20px',
+                            background: `linear-gradient(180deg, transparent 0%, ${alpha(theme.palette.primary.main, 0.3)} 50%, transparent 100%)`,
+                            borderRadius: '2px',
+                            opacity: 0.6,
+                            pointerEvents: 'none',
+                            animation: 'pulse 2s infinite',
+                            '@keyframes pulse': {
+                                '0%, 100%': { opacity: 0.3 },
+                                '50%': { opacity: 0.7 },
+                            },
+                        }
+                    }),
                     '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -398,18 +427,52 @@ const LandingHeader: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="xl">
+                <Container 
+                    maxWidth="xl" 
+                    sx={{ 
+                        px: { xs: 0, sm: 2 }, // Sin padding en móviles para scroll completo
+                        // 📱 Habilitar scroll horizontal en móviles como respaldo
+                        ...(isMobile && {
+                            overflowX: 'auto',
+                            overflowY: 'visible',
+                            '&::-webkit-scrollbar': {
+                                height: '2px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: 'transparent',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: alpha(theme.palette.primary.main, 0.3),
+                                borderRadius: '2px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                                background: alpha(theme.palette.primary.main, 0.5),
+                            },
+                        })
+                    }}
+                >
                     <Toolbar sx={{ 
                         justifyContent: 'space-between', 
-                        py: scrollState.isScrolled ? (isMobile ? 0.5 : 0.5) : (isMobile ? 1 : 1.5), 
-                        minHeight: isMobile ? '56px' : '80px',
-                        px: isMobile ? 1 : 2, // Menos padding horizontal en móviles
-                        transition: 'padding 0.3s ease, min-height 0.3s ease' 
+                        alignItems: 'center',
+                        py: scrollState.isScrolled ? (isMobile ? 0.25 : 0.5) : (isMobile ? 0.5 : 1.5), 
+                        minHeight: isMobile ? '48px' : '80px',
+                        maxHeight: isMobile ? '48px' : 'auto',
+                        px: isMobile ? 1 : 0, // Padding mínimo en móviles
+                        transition: 'padding 0.3s ease, min-height 0.3s ease',
+                        // 📱 Configuración de scroll horizontal como respaldo
+                        width: isMobile ? 'max-content' : '100%',
+                        minWidth: isMobile ? '100%' : 'auto',
+                        overflow: 'visible',
+                        // 📱 Asegurar que el contenido sea scrolleable horizontalmente
+                        ...(isMobile && {
+                            gap: 1,
+                            flexWrap: 'nowrap',
+                        })
                     }}>
                         {/* 🎨 Logo con animación optimizado para móviles */}
                         <motion.div
                             animate={{ 
-                                scale: scrollState.isScrolled ? (isMobile ? 0.85 : 0.9) : 1,
+                                scale: scrollState.isScrolled ? (isMobile ? 0.9 : 0.9) : 1,
                             }}
                             transition={{ duration: 0.3 }}
                         >
@@ -417,13 +480,14 @@ const LandingHeader: React.FC = () => {
                                 display: 'flex', 
                                 alignItems: 'center', 
                                 cursor: 'pointer',
-                                minWidth: 0, // Permite que el flex shrink
-                                flex: '1 1 auto'
+                                minWidth: 0,
+                                flex: isMobile ? '0 0 auto' : '1 1 auto',
+                                maxWidth: isMobile ? 'auto' : 'none',
                             }}>
-                                {/* 🎯 Logo más pequeño en móviles */}
+                                {/* 🎯 Logo más compacto en móviles */}
                                 <CyberWalletLogo size={
                                     isMobile 
-                                        ? (scrollState.isScrolled ? 32 : 36) 
+                                        ? (scrollState.isScrolled ? 28 : 32) 
                                         : (scrollState.isScrolled ? 40 : 48)
                                 } />
                                 {/* Texto del logo solo en desktop */}
@@ -565,24 +629,133 @@ const LandingHeader: React.FC = () => {
                             </Box>
                         )}
 
-                        {/* 📱 Controles móviles optimizados */}
+                        {/* 📱 Controles móviles optimizados con scroll horizontal */}
                         {isMobile && (
                             <Box sx={{ 
                                 display: 'flex', 
                                 alignItems: 'center', 
-                                gap: 0.5, // Menos gap en móviles
+                                gap: 0.5,
                                 minWidth: 0,
-                                flex: '0 0 auto'
+                                flex: '0 0 auto',
+                                ml: 'auto',
+                                // 📱 Navegación horizontal scrolleable como respaldo
+                                overflowX: 'auto',
+                                overflowY: 'visible',
+                                maxWidth: '60vw', // Limitar ancho para permitir scroll
+                                '&::-webkit-scrollbar': {
+                                    height: '2px',
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    background: 'transparent',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    background: alpha(theme.palette.primary.main, 0.4),
+                                    borderRadius: '2px',
+                                },
                             }}>
-                                {/* 🌓 Toggle de tema compacto */}
+                                {/* 🚀 Mini navegación horizontal en móviles */}
+                                <Box sx={{ 
+                                    display: 'flex', 
+                                    gap: 0.25, 
+                                    alignItems: 'center',
+                                    minWidth: 'max-content', // Forzar contenido a no cortarse
+                                    pr: 1, // Padding derecho para scroll completo
+                                }}>
+                                    {/* 📍 Botones de navegación rápida en móviles */}
+                                    {navItems.slice(0, 2).map((item, index) => ( // Solo mostrar 2 elementos principales
+                                        <IconButton
+                                            key={item.label}
+                                            onClick={() => handleNavClick(item.href)}
+                                            size="small"
+                                            sx={{
+                                                background: alpha(theme.palette.secondary.main, 0.1),
+                                                border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                                                width: 28,
+                                                height: 28,
+                                                minWidth: 28,
+                                                padding: 0,
+                                                '&:hover': {
+                                                    background: alpha(theme.palette.secondary.main, 0.2),
+                                                },
+                                                transition: 'all 0.2s ease',
+                                            }}
+                                        >
+                                            {React.cloneElement(item.icon, { sx: { fontSize: '14px' } })}
+                                        </IconButton>
+                                    ))}
+
+                                    {/* 🌓 Toggle de tema compacto */}
+                                    <IconButton
+                                        onClick={toggleColorScheme}
+                                        size="small"
+                                        sx={{
+                                            background: alpha(theme.palette.primary.main, 0.1),
+                                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                            width: 28,
+                                            height: 28,
+                                            minWidth: 28,
+                                            padding: 0,
+                                            '&:hover': {
+                                                background: alpha(theme.palette.primary.main, 0.2),
+                                                transform: 'scale(1.05)',
+                                            },
+                                            transition: 'all 0.2s ease',
+                                        }}
+                                    >
+                                        {colorScheme === 'dark' ? 
+                                            <Brightness7 sx={{ fontSize: '14px' }} /> : 
+                                            <Brightness4 sx={{ fontSize: '14px' }} />
+                                        }
+                                    </IconButton>
+                                    
+                                    {/* 📱 Botón menú hamburguesa */}
+                                    <IconButton
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        edge="end"
+                                        onClick={handleDrawerToggle}
+                                        size="small"
+                                        sx={{
+                                            background: alpha(theme.palette.primary.main, 0.15),
+                                            border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                                            width: 32, // Ligeramente más grande para destacar
+                                            height: 32,
+                                            minWidth: 32,
+                                            padding: 0,
+                                            '&:hover': {
+                                                background: alpha(theme.palette.primary.main, 0.25),
+                                                transform: 'scale(1.1)',
+                                                borderColor: alpha(theme.palette.primary.main, 0.5),
+                                            },
+                                            transition: 'all 0.2s ease',
+                                        }}
+                                    >
+                                        <MenuIcon sx={{ fontSize: '16px', fontWeight: 'bold' }} />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                        )}
+
+                        {/* 📱 Versión anterior como respaldo
+                        {isMobile && (
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: 0.25, // Menos gap para pantallas muy pequeñas
+                                minWidth: 0,
+                                flex: '0 0 auto',
+                                ml: 'auto', // Empujar a la derecha
+                            }}>
                                 <IconButton
                                     onClick={toggleColorScheme}
                                     size="small"
                                     sx={{
                                         background: alpha(theme.palette.primary.main, 0.1),
                                         border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                                        width: 36,
-                                        height: 36,
+                                        width: 32, // Más pequeño para pantallas pequeñas
+                                        height: 32,
+                                        minWidth: 32,
+                                        padding: 0,
                                         '&:hover': {
                                             background: alpha(theme.palette.primary.main, 0.2),
                                             transform: 'scale(1.05)',
@@ -591,12 +764,11 @@ const LandingHeader: React.FC = () => {
                                     }}
                                 >
                                     {colorScheme === 'dark' ? 
-                                        <Brightness7 sx={{ fontSize: '18px' }} /> : 
-                                        <Brightness4 sx={{ fontSize: '18px' }} />
+                                        <Brightness7 sx={{ fontSize: '16px' }} /> : 
+                                        <Brightness4 sx={{ fontSize: '16px' }} />
                                     }
                                 </IconButton>
                                 
-                                {/* 📱 Botón menú hamburguesa */}
                                 <IconButton
                                     color="inherit"
                                     aria-label="open drawer"
@@ -606,8 +778,10 @@ const LandingHeader: React.FC = () => {
                                     sx={{
                                         background: alpha(theme.palette.primary.main, 0.1),
                                         border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                                        width: 36,
-                                        height: 36,
+                                        width: 32, // Más compacto
+                                        height: 32,
+                                        minWidth: 32,
+                                        padding: 0,
                                         '&:hover': {
                                             background: alpha(theme.palette.primary.main, 0.2),
                                             transform: 'scale(1.05)',
@@ -615,10 +789,11 @@ const LandingHeader: React.FC = () => {
                                         transition: 'all 0.2s ease',
                                     }}
                                 >
-                                    <MenuIcon sx={{ fontSize: '18px' }} />
+                                    <MenuIcon sx={{ fontSize: '16px' }} />
                                 </IconButton>
                             </Box>
                         )}
+                        */}
 
                         {/* 📱 Botón móvil */}
                         {/* ELIMINADO - Reemplazado por la sección de controles móviles optimizada arriba */}
@@ -638,12 +813,16 @@ const LandingHeader: React.FC = () => {
                     display: { xs: 'block', md: 'none' },
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
-                        width: { xs: '85vw', sm: 320 }, // 85% del viewport en móviles muy pequeños
-                        maxWidth: 320,
-                        background: alpha(theme.palette.background.paper, 0.95),
+                        width: { xs: '80vw', sm: 300 }, // 80% del viewport en móviles muy pequeños
+                        maxWidth: 300,
+                        background: alpha(theme.palette.background.paper, 0.98),
                         backdropFilter: 'blur(20px) saturate(200%)',
                         borderRight: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                         boxShadow: `0 8px 32px ${alpha('#000', 0.2)}`,
+                        // 📱 Asegurar que el drawer sea accesible
+                        top: 0,
+                        height: '100vh',
+                        overflow: 'auto',
                     },
                 }}
             >
@@ -693,10 +872,12 @@ const LandingHeader: React.FC = () => {
 
             {/* 📏 Spacer para header fixed - Optimizado para móviles */}
             <Toolbar sx={{ 
-                minHeight: scrollState.isScrolled 
-                    ? (isMobile ? '56px' : '64px') 
-                    : (isMobile ? '76px' : '80px'), 
-                transition: 'min-height 0.3s ease' 
+                minHeight: isMobile ? '48px' : '80px',
+                maxHeight: isMobile ? '48px' : '80px',
+                transition: 'min-height 0.3s ease',
+                // 📱 Asegurar que el espaciado sea consistente
+                padding: 0,
+                margin: 0,
             }} />
         </>
     );
