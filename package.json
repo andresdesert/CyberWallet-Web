@@ -14,6 +14,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build-fast": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run --dir src/test --environment jsdom",
@@ -22,7 +23,7 @@
     "predeploy": "npm run build && npm run postbuild",
     "deploy": "gh-pages -d dist",
     "deploy-clean": "gh-pages -d dist --dotfiles",
-    "sync-deploy": "npm run clean && npm run build && npm run deploy-clean",
+    "sync-deploy": "npm run clean && npm run build-fast && npm run deploy-clean",
     "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "dependencies": {

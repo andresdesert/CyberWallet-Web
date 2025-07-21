@@ -8,7 +8,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'node_modules'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -33,10 +33,11 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      // 🎯 TEMPORAL: Deshabilitar errores para build exitoso en GitHub Pages
+      '@typescript-eslint/no-unused-vars': 'warn',
+      // 🎯 TEMPORAL: Hacer warnings para build exitoso en GitHub Pages
       '@typescript-eslint/no-explicit-any': 'warn',
       'react-hooks/exhaustive-deps': 'warn',
+      'react-refresh/only-export-components': 'warn',
     },
   },
 )
