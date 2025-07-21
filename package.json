@@ -20,8 +20,8 @@
     "type-check": "tsc --noEmit",
     "postbuild": "echo. > dist\\.nojekyll",
     "predeploy": "npm run build && npm run postbuild",
-    "deploy": "gh-pages -d dist --force --remove \".\"",
-    "deploy-clean": "gh-pages -d dist --force --clean-exclude \"!.nojekyll\"",
+    "deploy": "gh-pages -d dist",
+    "deploy-clean": "gh-pages -d dist --dotfiles",
     "sync-deploy": "npm run clean && npm run build && npm run deploy-clean",
     "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
