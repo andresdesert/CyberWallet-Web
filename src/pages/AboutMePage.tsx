@@ -23,6 +23,8 @@ import {
   ListItemIcon,
   Divider,
   Skeleton,
+  Drawer,
+  SwipeableDrawer,
 } from '@mui/material';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import {
@@ -40,6 +42,10 @@ import {
   Business as BusinessIcon,
   Star as StarIcon,
   WhatsApp as WhatsAppIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  Home as HomeIcon,
+  Person as PersonIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import OptimizedImage from '../components/OptimizedImage';
@@ -359,6 +365,9 @@ const AboutMePage: React.FC = () => {
   // 🎯 TOKENS SEMÁNTICOS: Sistema unificado para contraste garantizado
   const semanticTokens = getActiveTokens(theme.palette.mode === 'dark');
   
+  // Mobile navigation state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   // Scroll management
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -375,6 +384,28 @@ const AboutMePage: React.FC = () => {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Mobile menu handlers
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuOpen(false);
+  };
+
+  const navigateToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    handleMobileMenuClose();
+  };
+
+  const navigateToHome = () => {
+    navigate('/');
+    handleMobileMenuClose();
   };
 
   const experienceData = [
@@ -480,19 +511,72 @@ const AboutMePage: React.FC = () => {
         <ParticleBackground />
       </Suspense>
       
-      {/* AppBar with Color Toggle */}
+      {/* AppBar with Mobile Navigation */}
       <AnimatedAppBar position="fixed" elevation={0}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={() => navigate(-1)}
-            sx={{ mr: 2 }}
-          >
-            <ArrowBackIcon />
-          </IconButton>
+        <Toolbar sx={{ 
+          minHeight: { xs: 56, sm: 64 },
+          px: { xs: 1, sm: 2 },
+          gap: { xs: 1, sm: 2 }
+        }}>
+          {/* Mobile Menu Button - Solo en móviles */}
+          {isMobile && (
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleMobileMenuToggle}
+              sx={{ 
+                mr: 1,
+                minWidth: 40,
+                width: 40,
+                height: 40,
+                // 🎯 CONTRASTE EXTREMO: Menú hamburguesa siempre visible
+                background: semanticTokens.surface.interactive,
+                border: `1px solid ${semanticTokens.border.interactive}`,
+                boxShadow: semanticTokens.shadow.sm,
+                backdropFilter: theme.palette.mode === 'dark' ? 'blur(20px)' : 'none',
+                borderRadius: '50%',
+                color: mode === 'dark' ? 'primary.main' : 'primary.main',
+                '&:hover': {
+                  backgroundColor: mode === 'dark' 
+                    ? alpha(theme.palette.primary.main, 0.2) 
+                    : alpha(theme.palette.primary.main, 0.2),
+                  transform: 'scale(1.05)',
+                },
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <MenuIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+          )}
+
+          {/* Back Button - Solo en desktop */}
+          {!isMobile && (
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => navigate(-1)}
+              sx={{ 
+                mr: { xs: 1, sm: 2 },
+                minWidth: { xs: 40, sm: 48 },
+                width: { xs: 40, sm: 48 },
+                height: { xs: 40, sm: 48 }
+              }}
+            >
+              <ArrowBackIcon sx={{ fontSize: { xs: '20px', sm: '24px' } }} />
+            </IconButton>
+          )}
           
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              flexGrow: 1, 
+              fontWeight: 600,
+              fontSize: { xs: '0.9rem', sm: '1.25rem' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}
+          >
             Curriculum Vitae
           </Typography>
           
@@ -506,8 +590,9 @@ const AboutMePage: React.FC = () => {
               boxShadow: semanticTokens.shadow.sm,
               backdropFilter: theme.palette.mode === 'dark' ? 'blur(20px)' : 'none',
               borderRadius: '50%',
-              width: 48,
-              height: 48,
+              width: { xs: 40, sm: 48 },
+              height: { xs: 40, sm: 48 },
+              minWidth: { xs: 40, sm: 48 },
               color: mode === 'dark' ? 'primary.main' : 'primary.main',
               '&:hover': {
                 backgroundColor: mode === 'dark' 
@@ -518,408 +603,811 @@ const AboutMePage: React.FC = () => {
               transition: 'all 0.2s ease',
             }}
           >
-            {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+            {mode === 'dark' ? 
+              <LightModeIcon sx={{ fontSize: { xs: '18px', sm: '24px' } }} /> : 
+              <DarkModeIcon sx={{ fontSize: { xs: '18px', sm: '24px' } }} />
+            }
           </IconButton>
         </Toolbar>
       </AnimatedAppBar>
 
-      {/* Hero Section */}
+      {/* Mobile Navigation Drawer */}
+      <SwipeableDrawer
+        anchor="left"
+        open={mobileMenuOpen}
+        onClose={handleMobileMenuClose}
+        onOpen={handleMobileMenuToggle}
+        PaperProps={{
+          sx: {
+            width: 280,
+            // 🎯 GLASS MORPHISM: Drawer con efecto cristal
+            ...migrateGetGlass.medium(theme.palette.mode),
+            backdropFilter: 'blur(20px)',
+            backgroundColor: theme.palette.mode === 'dark' 
+              ? 'rgba(30, 41, 59, 0.95)' 
+              : 'rgba(255, 255, 255, 0.95)',
+            borderRight: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+          }
+        }}
+      >
+        <Box sx={{ 
+          height: '100%', 
+          display: 'flex', 
+          flexDirection: 'column',
+          pt: 2
+        }}>
+          {/* Header del Drawer */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            px: 2,
+            pb: 2,
+            borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+          }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
+              Navegación
+            </Typography>
+            <IconButton 
+              onClick={handleMobileMenuClose}
+              size="small"
+              sx={{ 
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1)
+                }
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          {/* Menu Items */}
+          <List sx={{ flex: 1, pt: 1 }}>
+            <ListItem 
+              onClick={navigateToHome}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Inicio" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => navigateToSection('professional-summary')}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Resumen Profesional" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => navigateToSection('certification')}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <StarIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Certificación ISTQB" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => navigateToSection('technologies')}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Tecnologías" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => navigateToSection('experience')}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <WorkIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Experiencia Laboral" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => navigateToSection('education')}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="Formación Académica" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <Divider sx={{ my: 2, mx: 2 }} />
+            
+            {/* Acciones rápidas */}
+            <ListItem 
+              onClick={() => {
+                window.open('https://github.com/andresdesert', '_blank');
+                handleMobileMenuClose();
+              }}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <GitHubIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="GitHub" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+
+            <ListItem 
+              onClick={() => {
+                window.open('https://www.linkedin.com/in/andres-simahan/', '_blank');
+                handleMobileMenuClose();
+              }}
+              sx={{ 
+                cursor: 'pointer',
+                borderRadius: '8px',
+                mx: 1,
+                '&:hover': {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  '& .MuiListItemIcon-root': {
+                    color: 'primary.main',
+                  },
+                  '& .MuiListItemText-primary': {
+                    color: 'primary.main',
+                  }
+                }
+              }}
+            >
+              <ListItemIcon>
+                <LinkedInIcon />
+              </ListItemIcon>
+              <ListItemText 
+                primary="LinkedIn" 
+                primaryTypographyProps={{
+                  fontWeight: 500
+                }}
+              />
+            </ListItem>
+          </List>
+
+          {/* Footer del Drawer */}
+          <Box sx={{ 
+            p: 2, 
+            borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            textAlign: 'center'
+          }}>
+            <Typography variant="caption" color="text.secondary">
+              Andrés Simahan - Sr. QA Analyst
+            </Typography>
+          </Box>
+        </Box>
+      </SwipeableDrawer>
+
+      {/* Hero Section - Layout Reestructurado */}
       <GlassHeroSection
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         <Container maxWidth="lg">
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={4}
-            alignItems="center"
-          >
-            <Box sx={{ textAlign: 'center', minWidth: { md: 300 } }}>
-              <motion.div variants={itemVariants}>
-                <ProfileAvatar sx={{ mb: 3 }}>
-                  <OptimizedImage
-                    src={profilePhoto}
-                    alt="Andrés Simahan"
-                    width="100%"
-                    height="100%"
-                    objectFit="cover"
-                    loading="eager" // Cargar inmediatamente para imagen principal
-                  />
-                </ProfileAvatar>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  color="primary"
-                  gutterBottom
-                  sx={{
-                    // 🎯 RESPONSIVE: Tamaños adaptativos para móviles
-                    fontSize: { 
-                      xs: '1.8rem',  // 28.8px en móviles
-                      sm: '2.2rem',  // 35.2px en tablets
-                      md: '2.5rem',  // 40px en desktop
-                      lg: '3rem'     // 48px en pantallas grandes
-                    },
-                    lineHeight: { xs: 1.2, sm: 1.3, md: 1.2 },
-                    textAlign: { xs: 'center', md: 'center' },
-                    mb: { xs: 1, sm: 1.5, md: 2 }
-                  }}
-                >
-                  Andrés Simahan
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color="text.secondary"
-                  gutterBottom
-                  sx={{ 
-                    // 🎯 RESPONSIVE: Tamaños adaptativos para título secundario
-                    fontSize: { 
-                      xs: '1.1rem',  // 17.6px en móviles
-                      sm: '1.3rem',  // 20.8px en tablets
-                      md: '1.5rem',  // 24px en desktop
-                      lg: '1.8rem'   // 28.8px en pantallas grandes
-                    },
-                    fontWeight: { xs: 600, md: 500 },
-                    textAlign: { xs: 'center', md: 'center' },
-                    mb: { xs: 1, sm: 1.5, md: 1 }
-                  }}
-                >
-                  SR. QA Analyst
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  gutterBottom
-                  sx={{ 
-                    // 🎯 RESPONSIVE: Información de contacto adaptativa
-                    fontSize: { 
-                      xs: '0.85rem',  // 13.6px en móviles
-                      sm: '0.9rem',   // 14.4px en tablets
-                      md: '0.9rem',   // 14.4px en desktop
-                      lg: '1rem'      // 16px en pantallas grandes
-                    },
-                    textAlign: { xs: 'center', md: 'center' },
-                    lineHeight: { xs: 1.4, md: 1.5 },
-                    mb: { xs: 1.5, sm: 2, md: 2 },
-                    '& .phone-link': {
-                      color: 'inherit',
-                      textDecoration: 'none',
-                      cursor: 'pointer',
-                      padding: { xs: '4px 8px', sm: '2px 4px' },
-                      borderRadius: '4px',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        color: 'primary.main',
-                        backgroundColor: theme.palette.mode === 'dark' 
-                          ? 'rgba(59, 130, 246, 0.1)' 
-                          : 'rgba(59, 130, 246, 0.05)',
-                        textDecoration: 'underline',
-                      }
-                    }
-                  }}
-                >
-                  📍 Buenos Aires, Argentina | 📞{' '}
-                  <span 
-                    className="phone-link"
-                    onClick={() => window.open('https://wa.me/5491125144387', '_blank')}
+          <GlassCard sx={{ p: 4 }}>
+            {/* 🏗️ LAYOUT PRINCIPAL: Dos columnas iguales */}
+            <Box sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              gap: 4,
+              minHeight: '400px',
+              alignItems: 'stretch' // Importante para mismo height
+            }}>
+              
+              {/* ✅ COLUMNA 1: Foto y Datos Personales - 50% */}
+              <Box sx={{ 
+                flex: { xs: '1 1 100%', md: '1 1 50%' }, // 50% en desktop, 100% en móvil
+                display: 'flex', 
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+                p: { xs: 2, md: 3 },
+                border: '1px solid rgba(255, 255, 255, 0.1)', // Debug border
+                borderRadius: '12px',
+                background: alpha(theme.palette.primary.main, 0.02)
+              }}>
+                <motion.div variants={itemVariants} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <ProfileAvatar sx={{ mb: 3, mx: 'auto' }}>
+                    <OptimizedImage
+                      src={profilePhoto}
+                      alt="Andrés Simahan"
+                      width="100%"
+                      height="100%"
+                      objectFit="cover"
+                      loading="eager"
+                    />
+                  </ProfileAvatar>
+                  
+                  <Typography
+                    variant="h3"
+                    fontWeight="bold"
+                    color="primary"
+                    gutterBottom
+                    sx={{
+                      fontSize: { 
+                        xs: '1.8rem',
+                        sm: '2.2rem',
+                        md: '2.2rem', // Más pequeño en desktop para que quepa mejor
+                        lg: '2.5rem'
+                      },
+                      lineHeight: { xs: 1.2, sm: 1.3, md: 1.2 },
+                      textAlign: 'center',
+                      mb: { xs: 1, sm: 1.5, md: 1 }
+                    }}
                   >
-                    +54 9 11 2514 4387
-                  </span>
-                </Typography>
-                <Chip
-                  icon={<StarIcon />}
-                  label="ISTQB Certified Foundation Level Tester"
-                  color="primary"
-                  variant="outlined"
-                  sx={{
-                    // 🎯 MOBILE-FRIENDLY: Chip adaptativo
+                    Andrés Simahan
+                  </Typography>
+                  
+                  <Typography
+                    variant="h5"
+                    color="text.secondary"
+                    gutterBottom
+                    sx={{ 
+                      fontSize: { 
+                        xs: '1.1rem',
+                        sm: '1.3rem',
+                        md: '1.3rem',
+                        lg: '1.5rem'
+                      },
+                      fontWeight: { xs: 600, md: 500 },
+                      textAlign: 'center',
+                      mb: { xs: 1, sm: 1.5, md: 1 }
+                    }}
+                  >
+                    SR. QA Analyst
+                  </Typography>
+                  
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    gutterBottom
+                    sx={{ 
+                      fontSize: { 
+                        xs: '0.85rem',
+                        sm: '0.9rem',
+                        md: '0.9rem',
+                        lg: '1rem'
+                      },
+                      textAlign: 'center',
+                      lineHeight: { xs: 1.4, md: 1.5 },
+                      mb: { xs: 1.5, sm: 2, md: 2 },
+                      '& .phone-link': {
+                        color: 'inherit',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        padding: { xs: '4px 8px', sm: '2px 4px' },
+                        borderRadius: '4px',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          color: 'primary.main',
+                          backgroundColor: theme.palette.mode === 'dark' 
+                            ? 'rgba(59, 130, 246, 0.1)' 
+                            : 'rgba(59, 130, 246, 0.05)',
+                          textDecoration: 'underline',
+                        }
+                      }
+                    }}
+                  >
+                    📍 Buenos Aires, Argentina | 📞{' '}
+                    <span 
+                      className="phone-link"
+                      onClick={() => window.open('https://wa.me/5491125144387', '_blank')}
+                    >
+                      +54 9 11 2514 4387
+                    </span>
+                  </Typography>
+                  
+                  <Chip
+                    icon={<StarIcon />}
+                    label="ISTQB Certified Foundation Level Tester"
+                    color="primary"
+                    variant="outlined"
+                    sx={{
+                      mb: { xs: 1.5, sm: 2 },
+                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                      height: { xs: 'auto', sm: 32 },
+                      padding: { xs: '6px 10px', sm: '6px 12px' },
+                      background: semanticTokens.surface.secondary,
+                      border: `1px solid ${semanticTokens.border.default}`,
+                      backdropFilter: theme.palette.mode === 'dark' ? 'blur(10px)' : 'none',
+                      fontWeight: 600,
+                      alignSelf: 'center',
+                      '& .MuiChip-label': {
+                        padding: { xs: '0 6px', sm: '0 8px' },
+                        fontSize: 'inherit',
+                      },
+                      '& .MuiChip-icon': {
+                        fontSize: { xs: '14px', sm: '16px' },
+                        marginLeft: { xs: '4px', sm: '6px' },
+                      }
+                    }}
+                  />
+                  
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    gap: { xs: 1, sm: 1.5 },
+                    flexWrap: 'wrap', 
                     mb: { xs: 1.5, sm: 2 },
-                    fontSize: { xs: '0.75rem', sm: '0.8rem' },
-                    height: { xs: 'auto', sm: 32 },
-                    padding: { xs: '8px 12px', sm: '6px 12px' },
-                    // 🚀 SEMANTIC SURFACE: Chip con superficie semántica
-                    background: semanticTokens.surface.secondary,
-                    border: `1px solid ${semanticTokens.border.default}`,
-                    backdropFilter: theme.palette.mode === 'dark' ? 'blur(10px)' : 'none',
-                    fontWeight: 600,
-                    '& .MuiChip-label': {
-                      padding: { xs: '0 8px', sm: '0 12px' },
-                      fontSize: 'inherit',
-                    },
-                    '& .MuiChip-icon': {
-                      fontSize: { xs: '16px', sm: '18px' },
-                      marginLeft: { xs: '6px', sm: '8px' },
-                    }
-                  }}
-                />
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  gap: { xs: 1, sm: 2 },
-                  flexWrap: 'wrap', 
-                  mb: { xs: 1.5, sm: 2 },
-                  maxWidth: '100%'
-                }}>
-                  <Chip
-                    label="5+ años experiencia QA"
-                    size="small"
-                    color="secondary"
-                    variant="outlined"
-                    sx={{ 
-                      fontWeight: 500,
-                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                      height: { xs: 24, sm: 28 },
-                      '& .MuiChip-label': {
-                        padding: { xs: '0 6px', sm: '0 8px' }
-                      }
-                    }}
-                  />
-                  <Chip
-                    label="Sector Fintech & Banking"
-                    size="small"
-                    color="secondary"
-                    variant="outlined"
-                    sx={{ 
-                      fontWeight: 500,
-                      fontSize: { xs: '0.7rem', sm: '0.75rem' },
-                      height: { xs: 24, sm: 28 },
-                      '& .MuiChip-label': {
-                        padding: { xs: '0 6px', sm: '0 8px' }
-                      }
-                    }}
-                  />
-                </Box>
-              </motion.div>
-            </Box>
+                    maxWidth: '100%'
+                  }}>
+                    <Chip
+                      label="5+ años experiencia QA"
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
+                      sx={{ 
+                        fontWeight: 500,
+                        fontSize: { xs: '0.65rem', sm: '0.7rem' },
+                        height: { xs: 22, sm: 26 },
+                        '& .MuiChip-label': {
+                          padding: { xs: '0 4px', sm: '0 6px' }
+                        }
+                      }}
+                    />
+                    <Chip
+                      label="Sector Fintech & Banking"
+                      size="small"
+                      color="secondary"
+                      variant="outlined"
+                      sx={{ 
+                        fontWeight: 500,
+                        fontSize: { xs: '0.65rem', sm: '0.7rem' },
+                        height: { xs: 22, sm: 26 },
+                        '& .MuiChip-label': {
+                          padding: { xs: '0 4px', sm: '0 6px' }
+                        }
+                      }}
+                    />
+                  </Box>
+                </motion.div>
+              </Box>
 
-            <Box sx={{ flex: 1 }}>
-              <motion.div variants={itemVariants}>
-                <GlassCard>
-                  <CardContent sx={{ p: 4 }}>
-                    <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                      <BusinessIcon sx={{ mr: 2, color: 'primary.main' }} />
-                      Resumen Profesional
-                    </Typography>
-                    <Typography variant="body1" paragraph sx={{ fontSize: '1.1rem', lineHeight: 1.8 }}>
-                      Especialista en calidad de software <strong>certificado ISTQB Foundation Level 4.0</strong>, con 
-                      amplia experiencia en pruebas funcionales, manuales y de sistemas en entornos 
-                      ágiles. Poseo un sólido bagaje en testing, validación e integración de procesos 
-                      críticos en <strong>sectores financieros y tecnológicos</strong>. Actualmente, me encuentro 
-                      perfeccionándome en <strong>automatización, pruebas de rendimiento con K6 y 
-                      especializándome en ciberseguridad</strong>, impulsando la mejora continua y la 
-                      optimización de procesos en proyectos de alta complejidad.
-                    </Typography>
-                    
-                    <Box sx={{ mt: 3 }}>
-                      <Stack 
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={{ xs: 2, sm: 2 }}
+              {/* ✅ COLUMNA 2: Resumen Profesional - 50% */}
+              <Box sx={{ 
+                flex: { xs: '1 1 100%', md: '1 1 50%' }, // 50% en desktop, 100% en móvil
+                display: 'flex', 
+                flexDirection: 'column',
+                justifyContent: 'center',
+                p: { xs: 2, md: 3 },
+                border: '1px solid rgba(255, 255, 255, 0.1)', // Debug border
+                borderRadius: '12px',
+                background: alpha(theme.palette.secondary.main, 0.02)
+              }}
+              id="professional-summary"
+              >
+                <motion.div variants={itemVariants} style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <Typography variant="h4" gutterBottom sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    mb: 3,
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    textAlign: { xs: 'center', md: 'left' },
+                    fontSize: { xs: '1.5rem', md: '1.8rem', lg: '2rem' }
+                  }}>
+                    <BusinessIcon sx={{ mr: 2, color: 'primary.main' }} />
+                    Resumen Profesional
+                  </Typography>
+                  
+                  <Typography variant="body1" paragraph sx={{ 
+                    fontSize: { xs: '0.95rem', md: '1.05rem', lg: '1.1rem' }, 
+                    lineHeight: { xs: 1.6, md: 1.7, lg: 1.8 },
+                    textAlign: { xs: 'center', md: 'left' },
+                    mb: 3
+                  }}>
+                    Especialista en calidad de software <strong>certificado ISTQB Foundation Level 4.0</strong>, con 
+                    amplia experiencia en pruebas funcionales, manuales y de sistemas en entornos 
+                    ágiles. Poseo un sólido bagaje en testing, validación e integración de procesos 
+                    críticos en <strong>sectores financieros y tecnológicos</strong>. Actualmente, me encuentro 
+                    perfeccionándome en <strong>automatización, pruebas de rendimiento con K6 y 
+                    especializándome en ciberseguridad</strong>, impulsando la mejora continua y la 
+                    optimización de procesos en proyectos de alta complejidad.
+                  </Typography>
+                  
+                  <Box sx={{ mt: 'auto' }}>
+                    <Stack 
+                      direction={{ xs: 'column', sm: 'row' }}
+                      spacing={{ xs: 2, sm: 2 }}
+                      sx={{ 
+                        justifyContent: { xs: 'center', md: 'flex-start' },
+                        alignItems: 'center',
+                        width: '100%'
+                      }}
+                    >
+                      <ContactButton
+                        startIcon={<DownloadIcon />}
+                        onClick={() => window.open(cvFile, '_blank')}
                         sx={{ 
-                          justifyContent: 'center',
-                          width: '100%',
-                          maxWidth: { xs: '100%', sm: 'none' }
+                          minWidth: { xs: '100%', sm: 140 },
+                          minHeight: { xs: 48, sm: 44 },
+                          fontSize: { xs: '0.9rem', sm: '0.875rem' },
+                          padding: { xs: '12px 20px', sm: '12px 24px' },
+                          borderRadius: { xs: '12px', sm: '50px' },
                         }}
                       >
-                        <ContactButton
-                          startIcon={<DownloadIcon />}
-                          onClick={() => window.open(cvFile, '_blank')}
-                          sx={{ 
-                            // 🎯 MOBILE-FRIENDLY: Botón principal adaptativo
-                            minWidth: { xs: '100%', sm: 140 },
-                            minHeight: { xs: 48, sm: 44 },
-                            fontSize: { xs: '0.9rem', sm: '0.875rem' },
-                            padding: { xs: '12px 20px', sm: '12px 24px' },
-                            borderRadius: { xs: '12px', sm: '50px' },
-                          }}
-                        >
-                          Descargar CV
-                        </ContactButton>
-                        <Button
-                          variant="outlined"
-                          startIcon={<GitHubIcon />}
-                          onClick={() => window.open('https://github.com/andresdesert', '_blank')}
-                          sx={{ 
-                            // 🎯 MOBILE-FRIENDLY: Botón GitHub adaptativo
-                            borderRadius: { xs: '12px', sm: '50px' },
-                            textTransform: 'none', 
-                            minWidth: { xs: '100%', sm: 120 },
-                            minHeight: { xs: 48, sm: 44 },
-                            fontSize: { xs: '0.9rem', sm: '0.875rem' },
-                            padding: { xs: '12px 20px', sm: '12px 24px' },
-                            // 🎯 CONTRASTE EXTREMO: Botón siempre visible
+                        Descargar CV
+                      </ContactButton>
+                      <Button
+                        variant="outlined"
+                        startIcon={<GitHubIcon />}
+                        onClick={() => window.open('https://github.com/andresdesert', '_blank')}
+                        sx={{ 
+                          borderRadius: { xs: '12px', sm: '50px' },
+                          textTransform: 'none', 
+                          minWidth: { xs: '100%', sm: 120 },
+                          minHeight: { xs: 48, sm: 44 },
+                          fontSize: { xs: '0.9rem', sm: '0.875rem' },
+                          padding: { xs: '12px 20px', sm: '12px 24px' },
+                          borderColor: theme.palette.mode === 'dark' 
+                            ? 'rgb(255, 255, 255) !important' 
+                            : theme.palette.primary.main,
+                          color: theme.palette.mode === 'dark' 
+                            ? 'rgb(255, 255, 255) !important' 
+                            : theme.palette.primary.main,
+                          backgroundColor: theme.palette.mode === 'dark' 
+                            ? 'rgba(59, 130, 246, 0.1) !important' 
+                            : 'transparent',
+                          '&:hover': {
                             borderColor: theme.palette.mode === 'dark' 
-                              ? 'rgb(255, 255, 255) !important' 
-                              : theme.palette.primary.main,
-                            color: theme.palette.mode === 'dark' 
-                              ? 'rgb(255, 255, 255) !important' 
-                              : theme.palette.primary.main,
+                              ? 'rgb(59, 130, 246) !important' 
+                              : theme.palette.primary.dark,
                             backgroundColor: theme.palette.mode === 'dark' 
-                              ? 'rgba(59, 130, 246, 0.1) !important' 
-                              : 'transparent',
-                            '&:hover': {
-                              borderColor: theme.palette.mode === 'dark' 
-                                ? 'rgb(59, 130, 246) !important' 
-                                : theme.palette.primary.dark,
-                              backgroundColor: theme.palette.mode === 'dark' 
-                                ? 'rgba(59, 130, 246, 0.2) !important' 
-                                : alpha(theme.palette.primary.main, 0.1),
-                              transform: 'translateY(-1px)',
-                            }
-                          }}
-                        >
-                          GitHub
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          startIcon={<LinkedInIcon />}
-                          onClick={() => window.open('https://www.linkedin.com/in/andres-simahan/', '_blank')}
-                          sx={{ 
-                            // 🎯 MOBILE-FRIENDLY: Botón LinkedIn adaptativo
-                            borderRadius: { xs: '12px', sm: '50px' },
-                            textTransform: 'none', 
-                            minWidth: { xs: '100%', sm: 120 },
-                            minHeight: { xs: 48, sm: 44 },
-                            fontSize: { xs: '0.9rem', sm: '0.875rem' },
-                            padding: { xs: '12px 20px', sm: '12px 24px' },
-                            // 🎯 CONTRASTE EXTREMO: Botón siempre visible
+                              ? 'rgba(59, 130, 246, 0.2) !important' 
+                              : alpha(theme.palette.primary.main, 0.1),
+                            transform: 'translateY(-1px)',
+                          }
+                        }}
+                      >
+                        GitHub
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        startIcon={<LinkedInIcon />}
+                        onClick={() => window.open('https://www.linkedin.com/in/andres-simahan/', '_blank')}
+                        sx={{ 
+                          borderRadius: { xs: '12px', sm: '50px' },
+                          textTransform: 'none', 
+                          minWidth: { xs: '100%', sm: 120 },
+                          minHeight: { xs: 48, sm: 44 },
+                          fontSize: { xs: '0.9rem', sm: '0.875rem' },
+                          padding: { xs: '12px 20px', sm: '12px 24px' },
+                          borderColor: theme.palette.mode === 'dark' 
+                            ? 'rgb(255, 255, 255) !important' 
+                            : theme.palette.primary.main,
+                          color: theme.palette.mode === 'dark' 
+                            ? 'rgb(255, 255, 255) !important' 
+                            : theme.palette.primary.main,
+                          backgroundColor: theme.palette.mode === 'dark' 
+                            ? 'rgba(59, 130, 246, 0.1) !important' 
+                            : 'transparent',
+                          '&:hover': {
                             borderColor: theme.palette.mode === 'dark' 
-                              ? 'rgb(255, 255, 255) !important' 
-                              : theme.palette.primary.main,
-                            color: theme.palette.mode === 'dark' 
-                              ? 'rgb(255, 255, 255) !important' 
-                              : theme.palette.primary.main,
+                              ? 'rgb(59, 130, 246) !important' 
+                              : theme.palette.primary.dark,
                             backgroundColor: theme.palette.mode === 'dark' 
-                              ? 'rgba(59, 130, 246, 0.1) !important' 
-                              : 'transparent',
-                            '&:hover': {
-                              borderColor: theme.palette.mode === 'dark' 
-                                ? 'rgb(59, 130, 246) !important' 
-                                : theme.palette.primary.dark,
-                              backgroundColor: theme.palette.mode === 'dark' 
-                                ? 'rgba(59, 130, 246, 0.2) !important' 
-                                : alpha(theme.palette.primary.main, 0.1),
-                              transform: 'translateY(-1px)',
-                            }
-                          }}
-                        >
-                          LinkedIn
-                        </Button>
-                      </Stack>
-                    </Box>
-                  </CardContent>
-                </GlassCard>
-              </motion.div>
+                              ? 'rgba(59, 130, 246, 0.2) !important' 
+                              : alpha(theme.palette.primary.main, 0.1),
+                            transform: 'translateY(-1px)',
+                          }
+                        }}
+                      >
+                        LinkedIn
+                      </Button>
+                    </Stack>
+                  </Box>
+                </motion.div>
+              </Box>
             </Box>
-          </Stack>
+          </GlassCard>
         </Container>
       </GlassHeroSection>
 
-      {/* ISTQB Certification Banner Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          <GlassCard sx={{ mb: 6 }}>
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                <StarIcon sx={{ mr: 2, color: 'primary.main' }} />
-                Certificación Profesional
-              </Typography>
-              
-              <Box sx={{ 
-                display: 'flex',
-                flexDirection: { xs: 'column', md: 'row' },
-                alignItems: 'center',
-                gap: 4,
-                p: 3,
-                borderRadius: '16px',
-                background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)}, ${alpha(theme.palette.secondary.main, 0.03)})`,
-                border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-              }}>
-                {/* Banner Image */}
+      {/* ISTQB Certification Banner Section - Centrado y alineado */}
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        py: 4,
+        px: 2 
+      }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <GlassCard sx={{ mb: 6 }} id="certification">
+              <CardContent sx={{ p: 4 }}>
+                {/* Título centrado */}
                 <Box sx={{ 
-                  textAlign: 'center',
-                  minWidth: { md: 300 },
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  mb: 4 
                 }}>
-                  <OptimizedImage
-                    src={istqbBanner} 
-                    alt="ISTQB Certification Banner"
-                    width="100%"
-                    height="auto"
-                    borderRadius="12px"
-                    loading="lazy"
-                    sx={{
-                      boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.15)}`,
-                    }}
-                  />
+                  <Typography variant="h4" sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    fontSize: { xs: '1.6rem', md: '2rem' }
+                  }}>
+                    <StarIcon sx={{ mr: 2, color: 'primary.main' }} />
+                    Certificación Profesional
+                  </Typography>
                 </Box>
+                
+                {/* Contenedor principal centrado */}
+                <Box sx={{ 
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%'
+                }}>
+                  <Box sx={{ 
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4,
+                    p: 3,
+                    borderRadius: '16px',
+                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)}, ${alpha(theme.palette.secondary.main, 0.03)})`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                    maxWidth: '900px', // Limitar ancho máximo
+                    width: '100%'
+                  }}>
+                    {/* Banner Image - Centrado */}
+                    <Box sx={{ 
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      minWidth: { xs: 'auto', md: 280 },
+                      width: { xs: '100%', md: 'auto' }
+                    }}>
+                      <OptimizedImage
+                        src={istqbBanner} 
+                        alt="ISTQB Certification Banner"
+                        width="100%"
+                        height="auto"
+                        borderRadius="12px"
+                        loading="lazy"
+                        sx={{
+                          boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.15)}`,
+                          maxWidth: '280px',
+                          width: '100%'
+                        }}
+                      />
+                    </Box>
 
-                {/* Certification Details */}
-                <Box sx={{ flex: 1, textAlign: { xs: 'center', md: 'left' } }}>
-                  <Typography variant="h5" color="primary" gutterBottom sx={{ fontWeight: 600 }}>
-                    Certificación ISTQB®
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary" gutterBottom>
-                    Foundation Level 4.0 Certified Tester
-                  </Typography>
-                  
-                  <Box sx={{ mt: 2, mb: 3 }}>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                      <strong>Organismo Certificador:</strong> iSQI Group
-                    </Typography>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                      <strong>Fecha de Expedición:</strong> Enero 2025
-                    </Typography>
-                    <Typography variant="body1" sx={{ mb: 1 }}>
-                      <strong>ID de Credencial:</strong> 25-CTFL 4-256945-81
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2, fontStyle: 'italic' }}>
-                      Certificación internacional en fundamentos de testing de software, metodologías de QA y mejores prácticas en calidad.
-                    </Typography>
+                    {/* Certification Details - Todo centrado */}
+                    <Box sx={{ 
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      minWidth: 0 // Permite que el flex funcione correctamente
+                    }}>
+                      <Typography variant="h5" color="primary" gutterBottom sx={{ 
+                        fontWeight: 600,
+                        fontSize: { xs: '1.3rem', md: '1.5rem' }
+                      }}>
+                        Certificación ISTQB®
+                      </Typography>
+                      <Typography variant="h6" color="text.secondary" gutterBottom sx={{
+                        fontSize: { xs: '1.1rem', md: '1.25rem' }
+                      }}>
+                        Foundation Level 4.0 Certified Tester
+                      </Typography>
+                      
+                      <Box sx={{ mt: 2, mb: 3, width: '100%' }}>
+                        <Typography variant="body1" sx={{ mb: 1 }}>
+                          <strong>Organismo Certificador:</strong> iSQI Group
+                        </Typography>
+                        <Typography variant="body1" sx={{ mb: 1 }}>
+                          <strong>Fecha de Expedición:</strong> Enero 2025
+                        </Typography>
+                        <Typography variant="body1" sx={{ mb: 1 }}>
+                          <strong>ID de Credencial:</strong> 25-CTFL 4-256945-81
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ 
+                          mt: 2, 
+                          fontStyle: 'italic',
+                          maxWidth: '400px',
+                          mx: 'auto',
+                          lineHeight: 1.5
+                        }}>
+                          Certificación internacional en fundamentos de testing de software, metodologías de QA y mejores prácticas en calidad.
+                        </Typography>
+                      </Box>
+
+                      {/* Botón centrado */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        width: '100%' 
+                      }}>
+                        <Button
+                          variant="outlined"
+                          startIcon={<StarIcon />}
+                          onClick={() => window.open('https://scr.istqb.org/?name=Andres+Simahan&number=25-CTFL+4-256945-81&orderBy=relevancy&orderDirection=&dateStart=&dateEnd=&expiryStart=&expiryEnd=&certificationBody=&examProvider=&certificationLevel=&country=', '_blank')}
+                          sx={{ 
+                            borderRadius: '50px', 
+                            textTransform: 'none',
+                            px: 3,
+                            py: 1.5,
+                            borderColor: theme.palette.mode === 'dark' 
+                              ? 'rgb(245, 158, 11) !important' 
+                              : 'primary.main',
+                            color: theme.palette.mode === 'dark' 
+                              ? 'rgb(245, 158, 11) !important' 
+                              : 'primary.main',
+                            backgroundColor: theme.palette.mode === 'dark' 
+                              ? 'rgba(245, 158, 11, 0.1) !important' 
+                              : 'transparent',
+                            '&:hover': {
+                              borderColor: theme.palette.mode === 'dark' 
+                                ? 'rgb(251, 191, 36) !important' 
+                                : theme.palette.primary.dark,
+                              backgroundColor: theme.palette.mode === 'dark' 
+                                ? 'rgba(245, 158, 11, 0.2) !important' 
+                                : alpha(theme.palette.primary.main, 0.1),
+                              transform: 'translateY(-1px)',
+                            }
+                          }}
+                        >
+                          Verificar Certificación
+                        </Button>
+                      </Box>
+                    </Box>
                   </Box>
-
-                  <Button
-                    variant="outlined"
-                    startIcon={<StarIcon />}
-                    onClick={() => window.open('https://scr.istqb.org/?name=Andres+Simahan&number=25-CTFL+4-256945-81&orderBy=relevancy&orderDirection=&dateStart=&dateEnd=&expiryStart=&expiryEnd=&certificationBody=&examProvider=&certificationLevel=&country=', '_blank')}
-                    sx={{ 
-                      borderRadius: '50px', 
-                      textTransform: 'none',
-                      // 🎯 CONTRASTE EXTREMO: Botón certificación siempre visible
-                      borderColor: theme.palette.mode === 'dark' 
-                        ? 'rgb(245, 158, 11) !important' 
-                        : 'primary.main',
-                      color: theme.palette.mode === 'dark' 
-                        ? 'rgb(245, 158, 11) !important' 
-                        : 'primary.main',
-                      backgroundColor: theme.palette.mode === 'dark' 
-                        ? 'rgba(245, 158, 11, 0.1) !important' 
-                        : 'transparent',
-                      '&:hover': {
-                        borderColor: theme.palette.mode === 'dark' 
-                          ? 'rgb(251, 191, 36) !important' 
-                          : theme.palette.primary.dark,
-                        backgroundColor: theme.palette.mode === 'dark' 
-                          ? 'rgba(245, 158, 11, 0.2) !important' 
-                          : alpha(theme.palette.primary.main, 0.1),
-                        transform: 'translateY(-1px)',
-                      }
-                    }}
-                  >
-                    Verificar Certificación
-                  </Button>
                 </Box>
-              </Box>
-            </CardContent>
-          </GlassCard>
-        </motion.div>
-      </Container>
+              </CardContent>
+            </GlassCard>
+          </motion.div>
+        </Container>
+      </Box>
 
       {/* Technologies Section */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Container maxWidth="lg" sx={{ py: 8 }} id="technologies">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -968,7 +1456,7 @@ const AboutMePage: React.FC = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <GlassCard sx={{ mb: 6 }}>
+          <GlassCard sx={{ mb: 6 }} id="experience">
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <WorkIcon sx={{ mr: 2, color: 'primary.main' }} />
@@ -1052,7 +1540,7 @@ const AboutMePage: React.FC = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <GlassCard>
+          <GlassCard id="education">
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h4" gutterBottom sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <SchoolIcon sx={{ mr: 2, color: 'primary.main' }} />

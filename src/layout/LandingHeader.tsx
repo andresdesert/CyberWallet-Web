@@ -109,8 +109,8 @@ const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
             
         transform: 'none', // Eliminar transform que mueve el header
         
-        // 🎯 Altura mínima responsive para móviles
-        minHeight: isMobile ? '64px' : '80px',
+        // 🎯 Altura mínima responsive para móviles más compacta
+        minHeight: isMobile ? '56px' : '80px',
         
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         
@@ -189,21 +189,21 @@ const LandingHeader: React.FC = () => {
         window.open(urls[type], '_blank');
     };
 
-    // 🎨 Drawer content mejorado
+    // 🎨 Drawer content mejorado y optimizado para móviles
     const drawer = (
-        <Box sx={{ width: 300, p: 3 }}>
+        <Box sx={{ width: '100%', p: 2, maxWidth: 320 }}> {/* Ancho completo en móviles pequeños */}
             <Box sx={{ 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between', 
-                mb: 4,
+                mb: 3,
                 pb: 2,
                 borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
             }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <CyberWalletLogo size={40} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CyberWalletLogo size={36} />
                     <Box>
-                        <Typography variant="h6" fontWeight="bold">
+                        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1.1rem' }}>
                             CyberWallet
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -213,8 +213,11 @@ const LandingHeader: React.FC = () => {
                 </Box>
                 <IconButton 
                     onClick={handleDrawerToggle}
+                    size="small"
                     sx={{
                         background: alpha(theme.palette.primary.main, 0.1),
+                        width: 36,
+                        height: 36,
                         '&:hover': {
                             background: alpha(theme.palette.primary.main, 0.2),
                             transform: 'rotate(90deg)',
@@ -222,7 +225,7 @@ const LandingHeader: React.FC = () => {
                         transition: 'all 0.3s ease',
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon sx={{ fontSize: '18px' }} />
                 </IconButton>
             </Box>
             
@@ -398,35 +401,50 @@ const LandingHeader: React.FC = () => {
                 <Container maxWidth="xl">
                     <Toolbar sx={{ 
                         justifyContent: 'space-between', 
-                        py: scrollState.isScrolled ? (isMobile ? 0.8 : 0.5) : (isMobile ? 2 : 1.5), 
-                        minHeight: isMobile ? '64px' : '80px',
+                        py: scrollState.isScrolled ? (isMobile ? 0.5 : 0.5) : (isMobile ? 1 : 1.5), 
+                        minHeight: isMobile ? '56px' : '80px',
+                        px: isMobile ? 1 : 2, // Menos padding horizontal en móviles
                         transition: 'padding 0.3s ease, min-height 0.3s ease' 
                     }}>
-                        {/* 🎨 Logo con animación */}
+                        {/* 🎨 Logo con animación optimizado para móviles */}
                         <motion.div
                             animate={{ 
-                                scale: scrollState.isScrolled ? 0.9 : 1,
+                                scale: scrollState.isScrolled ? (isMobile ? 0.85 : 0.9) : 1,
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                {/* 🎯 CORREGIDO: Solo el logo, sin texto duplicado */}
-                                <CyberWalletLogo size={scrollState.isScrolled ? 40 : 48} />
-                                {/* 🎯 ELIMINADO: Texto duplicado "CyberWallet" */}
-                                {/* <Box sx={{ ml: 2 }}>
-                                    <Typography 
-                                        variant="h6" 
-                                        fontWeight="bold"
-                                        sx={{ 
-                                            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                                            backgroundClip: 'text',
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
-                                        }}
-                                    >
-                                        CyberWallet
-                                    </Typography>
-                                </Box> */}
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                cursor: 'pointer',
+                                minWidth: 0, // Permite que el flex shrink
+                                flex: '1 1 auto'
+                            }}>
+                                {/* 🎯 Logo más pequeño en móviles */}
+                                <CyberWalletLogo size={
+                                    isMobile 
+                                        ? (scrollState.isScrolled ? 32 : 36) 
+                                        : (scrollState.isScrolled ? 40 : 48)
+                                } />
+                                {/* Texto del logo solo en desktop */}
+                                {!isMobile && (
+                                    <Box sx={{ ml: 2 }}>
+                                        <Typography 
+                                            variant="h6" 
+                                            fontWeight="bold"
+                                            sx={{ 
+                                                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                                                backgroundClip: 'text',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                fontSize: scrollState.isScrolled ? '1.1rem' : '1.25rem',
+                                                transition: 'font-size 0.3s ease'
+                                            }}
+                                        >
+                                            CyberWallet
+                                        </Typography>
+                                    </Box>
+                                )}
                             </Box>
                         </motion.div>
 
@@ -547,30 +565,68 @@ const LandingHeader: React.FC = () => {
                             </Box>
                         )}
 
-                        {/* 📱 Botón móvil */}
+                        {/* 📱 Controles móviles optimizados */}
                         {isMobile && (
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                edge="start"
-                                onClick={handleDrawerToggle}
-                                sx={{
-                                    background: alpha(theme.palette.primary.main, 0.1),
-                                    '&:hover': {
-                                        background: alpha(theme.palette.primary.main, 0.2),
-                                        transform: 'scale(1.1)',
-                                    },
-                                    transition: 'all 0.3s ease',
-                                }}
-                            >
-                                <MenuIcon />
-                            </IconButton>
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: 0.5, // Menos gap en móviles
+                                minWidth: 0,
+                                flex: '0 0 auto'
+                            }}>
+                                {/* 🌓 Toggle de tema compacto */}
+                                <IconButton
+                                    onClick={toggleColorScheme}
+                                    size="small"
+                                    sx={{
+                                        background: alpha(theme.palette.primary.main, 0.1),
+                                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                        width: 36,
+                                        height: 36,
+                                        '&:hover': {
+                                            background: alpha(theme.palette.primary.main, 0.2),
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                >
+                                    {colorScheme === 'dark' ? 
+                                        <Brightness7 sx={{ fontSize: '18px' }} /> : 
+                                        <Brightness4 sx={{ fontSize: '18px' }} />
+                                    }
+                                </IconButton>
+                                
+                                {/* 📱 Botón menú hamburguesa */}
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="end"
+                                    onClick={handleDrawerToggle}
+                                    size="small"
+                                    sx={{
+                                        background: alpha(theme.palette.primary.main, 0.1),
+                                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                        width: 36,
+                                        height: 36,
+                                        '&:hover': {
+                                            background: alpha(theme.palette.primary.main, 0.2),
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                >
+                                    <MenuIcon sx={{ fontSize: '18px' }} />
+                                </IconButton>
+                            </Box>
                         )}
+
+                        {/* 📱 Botón móvil */}
+                        {/* ELIMINADO - Reemplazado por la sección de controles móviles optimizada arriba */}
                     </Toolbar>
                 </Container>
             </AppBar>
 
-            {/* 📱 Drawer móvil mejorado */}
+            {/* 📱 Drawer móvil optimizado para pantallas pequeñas */}
             <Drawer
                 variant="temporary"
                 open={mobileOpen}
@@ -582,7 +638,8 @@ const LandingHeader: React.FC = () => {
                     display: { xs: 'block', md: 'none' },
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
-                        width: 300,
+                        width: { xs: '85vw', sm: 320 }, // 85% del viewport en móviles muy pequeños
+                        maxWidth: 320,
                         background: alpha(theme.palette.background.paper, 0.95),
                         backdropFilter: 'blur(20px) saturate(200%)',
                         borderRight: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -634,11 +691,11 @@ const LandingHeader: React.FC = () => {
                 </MenuItem>
             </Menu>
 
-            {/* 📏 Spacer para header fixed */}
+            {/* 📏 Spacer para header fixed - Optimizado para móviles */}
             <Toolbar sx={{ 
                 minHeight: scrollState.isScrolled 
-                    ? (isMobile ? '64px' : '64px') 
-                    : (isMobile ? '96px' : '80px'), 
+                    ? (isMobile ? '56px' : '64px') 
+                    : (isMobile ? '76px' : '80px'), 
                 transition: 'min-height 0.3s ease' 
             }} />
         </>
