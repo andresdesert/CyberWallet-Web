@@ -534,7 +534,7 @@ const AboutMePage: React.FC = () => {
               <motion.div variants={itemVariants}>
                 <ProfileAvatar sx={{ mb: 3 }}>
                   <OptimizedImage
-                    src="/profile-photo.png"
+                    src={`${import.meta.env.BASE_URL}profile-photo.png`}
                     alt="Andrés Simahan"
                     width="100%"
                     height="100%"
@@ -717,7 +717,7 @@ const AboutMePage: React.FC = () => {
                       >
                         <ContactButton
                           startIcon={<DownloadIcon />}
-                          onClick={() => window.open('/CV-QA-Simahan.pdf', '_blank')}
+                          onClick={() => window.open(`${import.meta.env.BASE_URL}CV-QA-Simahan.pdf`, '_blank')}
                           sx={{ 
                             // 🎯 MOBILE-FRIENDLY: Botón principal adaptativo
                             minWidth: { xs: '100%', sm: 140 },
@@ -840,7 +840,7 @@ const AboutMePage: React.FC = () => {
                   minWidth: { md: 300 },
                 }}>
                   <OptimizedImage
-                    src="/Banner ISTQB.png" 
+                    src={`${import.meta.env.BASE_URL}Banner ISTQB.png`} 
                     alt="ISTQB Certification Banner"
                     width="100%"
                     height="auto"

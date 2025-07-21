@@ -109,6 +109,9 @@ const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
             
         transform: 'none', // Eliminar transform que mueve el header
         
+        // 🎯 Altura mínima responsive para móviles
+        minHeight: isMobile ? '64px' : '80px',
+        
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         
         '&::before': {
@@ -393,7 +396,12 @@ const LandingHeader: React.FC = () => {
                 }}
             >
                 <Container maxWidth="xl">
-                    <Toolbar sx={{ justifyContent: 'space-between', py: scrollState.isScrolled ? 0.5 : 1.5, transition: 'padding 0.3s ease' }}>
+                    <Toolbar sx={{ 
+                        justifyContent: 'space-between', 
+                        py: scrollState.isScrolled ? (isMobile ? 0.8 : 0.5) : (isMobile ? 2 : 1.5), 
+                        minHeight: isMobile ? '64px' : '80px',
+                        transition: 'padding 0.3s ease, min-height 0.3s ease' 
+                    }}>
                         {/* 🎨 Logo con animación */}
                         <motion.div
                             animate={{ 
@@ -627,7 +635,12 @@ const LandingHeader: React.FC = () => {
             </Menu>
 
             {/* 📏 Spacer para header fixed */}
-            <Toolbar sx={{ minHeight: scrollState.isScrolled ? '64px' : '80px', transition: 'min-height 0.3s ease' }} />
+            <Toolbar sx={{ 
+                minHeight: scrollState.isScrolled 
+                    ? (isMobile ? '64px' : '64px') 
+                    : (isMobile ? '96px' : '80px'), 
+                transition: 'min-height 0.3s ease' 
+            }} />
         </>
     );
 };
