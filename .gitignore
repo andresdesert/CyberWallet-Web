@@ -84,7 +84,7 @@ test-output/
 
 # === npm ===
 .npm
-package-lock.json
+# package-lock.json  # Comentado para permitir en GitHub Actions
 
 # === Runtime data ===
 pids
