@@ -2,7 +2,7 @@
   "name": "cyberwallet-web",
   "description": "Billetera Virtual adaptada para operar en GitHub page a modo demo",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "homepage": "https://andresdesert.github.io/CyberWallet-Web",
   "repository": {
