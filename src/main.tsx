@@ -42,10 +42,13 @@ const root = ReactDOM.createRoot(rootElement);
 console.log('🔵 [MAIN] Iniciando renderizado de la aplicación...');
 
 try {
+  // 🌐 Configuración de routing para GitHub Pages
+  const basename = import.meta.env?.DEV ? '' : '/CyberWallet-Web';
+  
   root.render(
     <React.StrictMode>
       <ErrorBoundary>
-        <BrowserRouter basename={import.meta.env.DEV ? '' : '/CyberWallet-Web'}>
+        <BrowserRouter basename={basename}>
           <UnifiedThemeProvider>
             <AuthProvider>
               <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>

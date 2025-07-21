@@ -8,10 +8,11 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
+  const isGitHubPages = !isDev;
   
   return {
     // 🌐 GitHub Pages configuration - only in production
-    base: isDev ? '/' : '/CyberWallet-Web/',
+    base: isGitHubPages ? '/CyberWallet-Web/' : '/',
     
     plugins: [
       react({
