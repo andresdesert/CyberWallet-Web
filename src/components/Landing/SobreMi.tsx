@@ -16,6 +16,7 @@ import {
     TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
 import { FadeInUp, HoverScale } from '@/components/ui/MicroInteractions';
+import { getAssetPath } from '@/utils/githubPagesConfig';
 
 interface Skill {
     label: string;
@@ -199,7 +200,7 @@ const SobreMi: React.FC = () => {
                                         Certificación
                                     </Typography>
                                     <Avatar
-                                        src={new URL('/istqb-badge.jpg', import.meta.url).href}
+                                        src={getAssetPath('assets/images/istqb-badge.jpg')}
                                         alt="ISTQB Certified Tester"
                                         sx={{
                                             width: 80,

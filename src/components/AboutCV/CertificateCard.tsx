@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { motion } from 'framer-motion';
+import { getAssetPath } from '@/utils/githubPagesConfig';
 
 
 const CertificateCard: React.FC = () => {
@@ -57,7 +58,7 @@ const CertificateCard: React.FC = () => {
                     >
                         <Box sx={{ mb: 3 }}>
                             <img 
-                                src="/istqb-badge.jpg" 
+                                src={getAssetPath('assets/images/istqb-badge.jpg')} 
                                 alt="ISTQB Badge" 
                                 style={{ 
                                     height: '120px', 

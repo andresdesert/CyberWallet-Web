@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Avatar, Button, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
-import { getAssetPath } from '../../utils/pathUtils';
+import { getAssetPath } from '@/utils/githubPagesConfig';
 
 import { useGlassmorphing } from '@/hooks/useGlassmorphing';
 import DownloadIcon from '@mui/icons-material/Download';
