@@ -1,13 +1,15 @@
 import { lazy, Suspense } from "react";
 import type { FC } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Box, CssBaseline, CircularProgress, Typography, useTheme, alpha } from "@mui/material";
+import { Box, CssBaseline, CircularProgress, Typography, useTheme, alpha, IconButton, Tooltip } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 import { I18nextProvider } from "react-i18next";
+import { Brightness4, Brightness7 } from '@mui/icons-material';
 import i18n from "./i18n/i18n";
-import { UnifiedThemeProvider } from '@/context/UnifiedThemeContext';
+import { UnifiedThemeProvider, useUnifiedTheme } from '@/context/UnifiedThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+import FloatingThemeToggle from '@/components/common/FloatingThemeToggle';
 
 // 🎨 Componente de carga ultra-simple
 const UltraSimpleLoadingFallback: FC = () => {
@@ -118,12 +120,58 @@ const LazyLandingPage = lazy(() => import("@/pages/LandingPage"));
 const LazyLoginPage = lazy(() => import("@/pages/LoginPage"));
 const LazyRegisterPage = lazy(() => import("@/pages/RegisterPage"));
 const LazyForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage"));
-const LazyDashboardPage = lazy(() => import("@/pages/DashboardPageNew"));
+const LazyDashboardPage = lazy(() => import("@/pages/ModernDashboard"));
 const LazyProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const LazySettingsPage = lazy(() => import("@/pages/SettingsPage"));
-const LazyAboutMePage = lazy(() => import("@/pages/AboutMePage"));
+const LazyAboutMePage = lazy(() => import("@/pages/AboutCVPage.tsx"));
 const LazyContactoPage = lazy(() => import("@/pages/ContactoPage"));
 const LazyNotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+
+// 🌙 Botón flotante global de cambio de tema
+const GlobalThemeToggle: FC = () => {
+    const theme = useTheme();
+    const { toggleColorScheme } = useUnifiedTheme();
+    
+    return (
+        <Box sx={{ 
+            position: 'fixed', 
+            bottom: 24, 
+            right: 24, 
+            zIndex: 1300 
+        }}>
+            <Tooltip title={theme.palette.mode === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}>
+                <IconButton
+                    onClick={toggleColorScheme}
+                    sx={{
+                        width: 56,
+                        height: 56,
+                        background: theme.palette.mode === 'dark'
+                            ? 'linear-gradient(135deg, #8B45BF 0%, #4B558B 100%)'
+                            : 'linear-gradient(135deg, #63B3ED 0%, #A855F7 100%)',
+                        color: 'white',
+                        boxShadow: theme.palette.mode === 'dark'
+                            ? '0 8px 32px rgba(139, 69, 191, 0.4)'
+                            : '0 8px 32px rgba(99, 179, 237, 0.4)',
+                        border: `1px solid ${alpha('#ffffff', 0.18)}`,
+                        backdropFilter: 'blur(10px)',
+                        '&:hover': {
+                            background: theme.palette.mode === 'dark'
+                                ? 'linear-gradient(135deg, #A855F7 0%, #8B45BF 100%)'
+                                : 'linear-gradient(135deg, #A855F7 0%, #63B3ED 100%)',
+                            transform: 'translateY(-2px)',
+                            boxShadow: theme.palette.mode === 'dark'
+                                ? '0 12px 40px rgba(139, 69, 191, 0.5)'
+                                : '0 12px 40px rgba(99, 179, 237, 0.5)',
+                        },
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                >
+                    {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                </IconButton>
+            </Tooltip>
+        </Box>
+    );
+};
 
 const App: FC = () => {
     console.log('🔵 [APP] App component starting...');
@@ -295,6 +343,9 @@ const App: FC = () => {
                                     } 
                                 />
                             </Routes>
+                            
+                            {/* 🌙 Botón flotante global de cambio de tema */}
+                            <FloatingThemeToggle />
                         </I18nextProvider>
                     </SnackbarProvider>
                 </AuthProvider>

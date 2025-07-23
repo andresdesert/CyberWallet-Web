@@ -14,17 +14,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build-fast": "vite build",
+    "build-prod": "cross-env NODE_ENV=production GITHUB_PAGES=true tsc -b && cross-env NODE_ENV=production GITHUB_PAGES=true vite build",
     "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
     "preview": "vite preview",
-    "test": "vitest run --environment jsdom --reporter=verbose",
     "type-check": "tsc --noEmit",
-    "postbuild": "echo. > dist\\.nojekyll",
-    "predeploy": "npm run build && npm run postbuild",
-    "deploy": "gh-pages -d dist",
-    "deploy-clean": "gh-pages -d dist --dotfiles",
-    "sync-deploy": "npm run clean && npm run build-fast && npm run deploy-clean",
-    "force-deploy": "npm run clean && npm run build-fast && gh-pages -d dist --dotfiles --add --message \"Force deploy: cache bust $(date)\"",
+    "postbuild": "echo. > dist\\.nojekyll && copy public\\404.html dist\\404.html",
+    "predeploy": "npm run clean && npm run build-prod",
+    "deploy": "gh-pages -d dist --dotfiles --no-cache --repo=https://github.com/andresdesert/CyberWallet-Web.git",
     "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "dependencies": {
@@ -37,7 +34,10 @@
     "@mui/material": "^7.2.0",
     "@mui/x-date-pickers": "^8.8.0",
     "@react-pdf/renderer": "^4.3.0",
+    "autoprefixer": "^10.4.21",
     "axios": "^1.10.0",
+    "cross-env": "^7.0.3",
+    "cssnano": "^7.1.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.6",
     "i18next": "^25.3.2",
@@ -50,8 +50,10 @@
     "react-dom": "^19.1.0",
     "react-i18next": "^15.6.0",
     "react-router-dom": "^7.6.3",
+    "rollup-plugin-visualizer": "^6.0.3",
     "swiper": "^11.2.10",
-    "swr": "^2.3.4"
+    "swr": "^2.3.4",
+    "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
@@ -61,8 +63,8 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "autoprefixer": "^10.4.21",
-    "cssnano": "^7.1.0",
+    "babel-plugin-dev-expression": "^0.2.3",
+    "babel-plugin-react-remove-properties": "^0.3.0",
     "eslint": "^9.31.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -70,12 +72,9 @@
     "gh-pages": "^6.1.1",
     "globals": "^16.3.0",
     "jsdom": "^26.1.0",
-    "rollup-plugin-visualizer": "^6.0.3",
-    "terser": "^5.43.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.37.0",
     "vite": "^7.0.4",
-    "vite-plugin-compression": "^0.5.1",
     "vitest": "^3.2.4"
   }
 }

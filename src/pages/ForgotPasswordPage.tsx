@@ -13,8 +13,6 @@ import {
 import { useTheme, alpha } from '@mui/material/styles';
 import NeumorphicTextField from '@/components/ui/NeumorphicTextField';
 import NeumorphicSkeleton from '@/components/ui/NeumorphicSkeleton';
-import { emailRegex } from '@/helpers/validators';
-import ParticleBackground from '@/components/ParticleBackground';
 import axiosInstance from '@/api/axiosInstance';
 import log from 'loglevel';
 import EmailIcon from '@mui/icons-material/Email';
@@ -83,7 +81,7 @@ const ForgotPasswordPage: React.FC = () => {
     if (!value.trim()) {
       return t('forgot.email_required');
     }
-    if (!emailRegex.test(value)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return t('forgot.email_invalid');
     }
     return null;
@@ -197,7 +195,6 @@ const ForgotPasswordPage: React.FC = () => {
 
   return (
       <AppLayout>
-        <ParticleBackground />
         <PageContainer maxWidth={480}>
           {pageLoading ? (
               <Stack spacing={3}>

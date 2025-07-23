@@ -1,9 +1,8 @@
 // src/hooks/useCotizaciones.ts
-import useSWR from 'swr';
+import { useState, useEffect } from 'react';
 import { cotizacionesMock } from '@/mocks/cotizacionesMock';
 
-// 💰 Tipo de cotización
-export interface DollarRate {
+export interface Cotizacion {
   nombre: string;
   compra: number;
   venta: number;
@@ -11,21 +10,36 @@ export interface DollarRate {
   timestamp: string;
 }
 
-// Hook para obtener cotizaciones simuladas
 export const useCotizaciones = () => {
-  const { data: cotizaciones, error, isValidating: isLoading } = useSWR<DollarRate[]>(
-    'cotizaciones',
-    () => Promise.resolve(cotizacionesMock),
-    {
-      refreshInterval: 300000, // Refrescar cada 5 minutos
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-    }
-  );
+  const [cotizaciones, setCotizaciones] = useState<Cotizacion[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    // Simular carga de datos
+    const loadCotizaciones = async () => {
+      try {
+        setIsLoading(true);
+        setIsError(false);
+        
+        // Simular delay de API
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        setCotizaciones(cotizacionesMock);
+      } catch (error) {
+        console.error('Error loading cotizaciones:', error);
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCotizaciones();
+  }, []);
 
   return {
-    cotizaciones: cotizaciones ?? [],
+    cotizaciones,
     isLoading,
-    isError: !!error,
+    isError,
   };
 };

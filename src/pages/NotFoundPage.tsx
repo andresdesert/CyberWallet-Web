@@ -23,6 +23,21 @@ const NotFoundPage: React.FC = () => {
                         px: 2,
                     }}
                 >
+                    {/* 🖼️ Imagen 404 personalizada */}
+                    <Box
+                        component="img"
+                        src="./404-not-found.jpg"
+                        alt="404 - Página no encontrada"
+                        sx={{
+                            maxWidth: { xs: '280px', sm: '400px' },
+                            width: '100%',
+                            height: 'auto',
+                            mb: 3,
+                            borderRadius: 2,
+                            objectFit: 'contain',
+                        }}
+                    />
+                    
                     <Typography
                         variant="h1"
                         sx={{

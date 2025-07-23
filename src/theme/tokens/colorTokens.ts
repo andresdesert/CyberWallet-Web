@@ -57,14 +57,14 @@ const brandSeeds = {
   }
 };
 
-// Light Mode - Surface Elevation System
+// Light Mode - Surface Elevation System mejorado con más vida
 export const lightTokens: ColorTokens = {
   surface: {
     page: 'oklch(97% 0.01 220)',       // #F5F7FA - Gris muy claro
-    primary: 'oklch(100% 0 0)',       // #FFFFFF - Blanco puro para cards
-    secondary: 'oklch(98% 0.01 220)', // #FAFBFC - Casi blanco con hint azul
-    elevated: 'oklch(100% 0 0)',      // #FFFFFF - Modals
-    interactive: 'oklch(96% 0.02 220)', // #F0F4F8 - Hover subtle
+    primary: 'linear-gradient(135deg, oklch(100% 0 0) 0%, oklch(98.5% 0.005 220) 100%)', // Gradiente sutil
+    secondary: 'oklch(96.5% 0.012 220)', // Más saturado que antes
+    elevated: 'linear-gradient(135deg, oklch(100% 0 0) 0%, oklch(98% 0.008 220) 100%)', // Gradiente para modals
+    interactive: 'oklch(94% 0.018 220)', // Más saturación en hover
   },
   
   text: {

@@ -1,29 +1,26 @@
 import React from 'react';
-import {
-  Container,
-  Box,
+import { 
+  Box, 
+  Container, 
   Button,
   useTheme,
-  useMediaQuery,
-  alpha
+  alpha,
 } from '@mui/material';
 import { KeyboardArrowUp } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import Hero from '../components/Landing/Hero';
+import TechnologySection from '../components/Landing/TechnologySection';
+import Testimonials from '../components/Landing/Testimonials';
+import EducationalFooter from '../components/Landing/EducationalFooter';
+import LandingHeader from '../layout/LandingHeader';
 import { useTranslation } from 'react-i18next';
-
-// Componentes locales
-import LandingHeader from '@/layout/LandingHeader';
-import LandingSidebar from '@/layout/LandingSidebar';
-import Hero from '@/components/Landing/Hero';
-import TechnologySection from '@/components/Landing/TechnologySection';
-import Testimonials from '@/components/Landing/Testimonials';
-import EducationalFooter from '@/components/Landing/EducationalFooter';
+import { useResponsiveBreakpoint } from '@/hooks/useEnvironment';
 
 const LandingPage: React.FC = () => {
   const { t } = useTranslation('landing');
-  const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // 🎯 NUEVA ESTRATEGIA: Mobile-first con graceful degradation
+  const { shouldShowMobileNav, isMobile } = useResponsiveBreakpoint();
 
   // Función para volver arriba suavemente
   const scrollToTop = () => {
@@ -38,12 +35,14 @@ const LandingPage: React.FC = () => {
       minHeight: '100vh',
       width: '100%',
       background: theme.palette.mode === 'dark'
-        ? `linear-gradient(135deg, #181f2a 0%, #232b3e 100%)`
-        : `linear-gradient(135deg, #f6f7fb 0%, #e9ecf3 100%)`,
+        ? `linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #1a202c 100%)`
+        : `linear-gradient(135deg, #f7fafc 0%, #edf2f7 50%, #f7fafc 100%)`,
       position: 'relative',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      // Responsive padding
+      px: { xs: 0, sm: 0 }, // Sin padding horizontal extra
       '&::before': {
         content: '""',
         position: 'absolute',
@@ -52,39 +51,79 @@ const LandingPage: React.FC = () => {
         right: 0,
         bottom: 0,
         background: theme.palette.mode === 'dark'
-          ? `radial-gradient(circle at 60% 40%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 70%)`
-          : `radial-gradient(circle at 60% 40%, ${alpha(theme.palette.primary.main, 0.06)} 0%, transparent 70%)`,
+          ? `radial-gradient(circle at 60% 40%, ${alpha('#6366f1', 0.06)} 0%, transparent 70%),
+             radial-gradient(circle at 20% 80%, ${alpha('#8B45BF', 0.04)} 0%, transparent 60%)` // Tonos violetas más intensos
+          : `radial-gradient(circle at 60% 40%, ${alpha('#6366f1', 0.04)} 0%, transparent 70%)`,
         pointerEvents: 'none',
         zIndex: 0
       }
     }}>
       <LandingHeader />
-      <Container maxWidth="xl" sx={{ py: 4, mx: 'auto', textAlign: 'center', position: 'relative', zIndex: 1, px: { xs: 2, md: 4 } }}>
+      
+      <Container 
+        maxWidth="xl" 
+        sx={{ 
+          width: '100%', 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          position: 'relative', 
+          zIndex: 1,
+          px: { xs: 2, sm: 3, md: 4 },
+          py: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
         <Hero />
-        <Box sx={{ mt: 8, mx: 'auto', textAlign: 'center', maxWidth: '1200px', position: 'relative', zIndex: 1 }}>
+        
+        <Box sx={{ 
+          mt: { xs: 6, sm: 8, md: 10 }, 
+          mx: 'auto', 
+          textAlign: 'center', 
+          maxWidth: '1200px', 
+          position: 'relative', 
+          zIndex: 1 
+        }}>
           <TechnologySection />
         </Box>
-        <Box sx={{ mt: 8, mx: 'auto', textAlign: 'center', maxWidth: '1200px', position: 'relative', zIndex: 1 }}>
+        
+        <Box sx={{ 
+          mt: { xs: 6, sm: 8, md: 10 }, 
+          mx: 'auto', 
+          textAlign: 'center', 
+          maxWidth: '1200px', 
+          position: 'relative', 
+          zIndex: 1 
+        }}>
           <Testimonials />
         </Box>
-        <Box sx={{ mt: 8, mb: 4, mx: 'auto', textAlign: 'center', maxWidth: '1200px', position: 'relative', zIndex: 1 }}>
+        
+        <Box sx={{ 
+          mt: { xs: 6, sm: 8, md: 10 }, 
+          mb: 4, 
+          mx: 'auto', 
+          textAlign: 'center', 
+          maxWidth: '1200px', 
+          position: 'relative', 
+          zIndex: 1 
+        }}>
           <EducationalFooter />
         </Box>
+        
         <Box sx={{ mt: 4, mb: 8, textAlign: 'center' }}>
           <Button
             variant="contained"
             color="primary"
             onClick={scrollToTop}
-            size="large"
+            size={isMobile ? "medium" : "large"}
             startIcon={<KeyboardArrowUp />}
             sx={{ 
-              px: 4, 
-              py: 1.5,
+              px: { xs: 3, sm: 4 }, 
+              py: { xs: 1, sm: 1.5 },
               background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               '&:hover': {
                 background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
                 transform: 'translateY(-2px)',
-                boxShadow: `0 8px 25px ${theme.palette.primary.main}40`,
+                boxShadow: `0 8px 25px ${alpha(theme.palette.primary.main, 0.4)}`,
               },
               transition: 'all 0.3s ease'
             }}
@@ -93,7 +132,9 @@ const LandingPage: React.FC = () => {
           </Button>
         </Box>
       </Container>
-      {isMobile && <LandingSidebar />}
+      
+      {/* 🎯 NOTA: UnifiedNavigation deshabilitado para landing page 
+          ya que LandingHeader maneja toda la navegación necesaria */}
     </Box>
   );
 };

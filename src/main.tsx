@@ -2,13 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from '@/App';
-import { UnifiedThemeProvider } from '@/context/UnifiedThemeContext';
 import '@/index.css';
 import '@/styles/radical-dark-mode-fix.css'; // 🚨 RADICAL DARK MODE FIX
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { es } from 'date-fns/locale';
-import { AuthProvider } from '@/context/AuthContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import logger from '@/utils/logger';
 
@@ -43,8 +38,10 @@ console.log('🔵 [MAIN] Iniciando renderizado de la aplicación...');
 
 try {
   // 🌐 Configuración de routing para GitHub Pages
-  const basename = import.meta.env?.DEV ? '' : '/CyberWallet-Web';
+  const isGitHubPages = import.meta.env.VITE_GITHUB_PAGES === 'true';
+  const basename = isGitHubPages ? '/CyberWallet-Web' : '';
   
+  console.log('🔵 [MAIN] GITHUB_PAGES mode:', isGitHubPages);
   console.log('🔵 [MAIN] Router basename configurado:', basename);
   
   root.render(

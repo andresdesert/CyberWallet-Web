@@ -227,7 +227,8 @@ const Testimonials: React.FC = () => {
           spaceBetween={theme.spacing(4)}
           speed={800} // ✅ Velocidad de transición más fluida
           breakpoints={{
-            0: { slidesPerView: 1, spaceBetween: 16 },
+            0: { slidesPerView: 1, spaceBetween: 12 }, // Mobile muy pequeño
+            350: { slidesPerView: 1, spaceBetween: 16 }, // Mobile 350px
             600: { slidesPerView: 2, spaceBetween: 20 },
             900: { slidesPerView: 3, spaceBetween: 24 },
             1200: { slidesPerView: 3, spaceBetween: 32 }
@@ -245,7 +246,7 @@ const Testimonials: React.FC = () => {
             }
           }}
           style={{ 
-            padding: `0 ${theme.spacing(2)}`,
+            padding: `0 ${theme.spacing(1)}`, // Menos padding en mobile
             // ✅ Asegurar que el contenedor mantenga altura
             minHeight: '350px',
           }}
@@ -264,7 +265,7 @@ const Testimonials: React.FC = () => {
                   tabIndex={0}
                   sx={{
                     width: "100%",
-                    height: 320, // Altura fija para uniformidad
+                    height: { xs: 280, sm: 320 }, // Altura ajustada para mobile
                     display: "flex",
                     flexDirection: "column",
                     background: alpha(theme.palette.background.paper, 0.6),
@@ -287,11 +288,11 @@ const Testimonials: React.FC = () => {
                   {/* — Header: Avatar + Datos — */}
                   <Box
                     sx={{
-                      p: theme.spacing(3),
-                      pb: theme.spacing(2),
+                      p: { xs: theme.spacing(2), sm: theme.spacing(3) },
+                      pb: { xs: theme.spacing(1.5), sm: theme.spacing(2) },
                       display: "flex",
                       alignItems: "center",
-                      gap: 2,
+                      gap: { xs: 1.5, sm: 2 },
                       borderBottom: `1px solid ${alpha(
                         theme.palette.divider,
                         0.1

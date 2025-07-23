@@ -1,7 +1,6 @@
 // 🎨 CYBERWALLET UNIFIED THEME SYSTEM 2025-2026
 // Sistema de temas unificado con design tokens OKLCH semánticos
-// Basado en principios de diseño visual y 12 leyes de UX/UI
-// ✅ WCAG 2.2 AA/AAA compliance | Material Design 3 | 8pt Grid System
+// Optimizado para GitHub Pages production
 
 import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme, responsiveFontSizes } from '@mui/material/styles';
@@ -11,18 +10,19 @@ import { getActiveTokens, generateCSSVariables, type ColorTokens } from '@/theme
 import { convertSemanticTokensForMui } from '@/theme/utils/colorConverter';
 import { withAlpha } from '@/theme/utils/alphaUtils';
 
-// 🎯 Tipos de sistema de colores
+// 🎯 Tipos del sistema
 type ColorScheme = PaletteMode;
+export type ThemeMode = 'light' | 'dark';
 
-// 📐 8pt Grid System - Google Material Design Standard
+// 📐 8pt Grid System
 const GRID_BASE = 8;
 const spacing = (factor: number) => `${GRID_BASE * factor}px`;
 
-// 🎯 Extensiones de tipos para MUI con principios de diseño visual
+// 🎯 Extensiones de tipos para MUI
 declare module '@mui/material/styles' {
   interface Palette {
     custom: {
-      // 🎨 1. CONTRASTE - WCAG 2.2 AA/AAA ratios (4.5:1 / 7:1)
+      // Superficies
       bodyBackgroundPrimary: string;
       bodyBackgroundSecondary: string;
       glassBorder: string;
@@ -30,25 +30,25 @@ declare module '@mui/material/styles' {
       neumoLightShadow: string;
       neumoDarkShadow: string;
       
-      // 🎨 2. COLOR - Sistema semántico funcional
+      // Colores base
       primary: string;
       secondary: string;
       accent: string;
       info: string;
       surface: string;
       
-      // 📝 3. JERARQUÍA VISUAL - Tipografía con peso y tamaño
+      // Textos
       textPrimary: string;
       textSecondary: string;
       textTertiary: string;
       textInverse: string;
       
-      // 💰 4. COLOR SEMÁNTICO - Estados financieros críticos
-      success: string;      // Verde = éxito, positivo
-      warning: string;      // Ámbar = advertencia
-      error: string;        // Rojo = error, negativo
+      // Estados semánticos
+      success: string;
+      warning: string;
+      error: string;
       
-      // 🔲 5. PROXIMIDAD - Bordes para agrupamiento visual
+      // Bordes
       borderLight: string;
       borderDefault: string;
       borderStrong: string;
@@ -84,57 +84,39 @@ declare module '@mui/material/styles' {
   }
 }
 
-// 🎨 Context interface con principios UX
+// 🎯 Context interface
 interface UnifiedThemeContextType {
   theme: Theme;
   colorScheme: ColorScheme;
-  mode: 'light' | 'dark' | 'auto';
+  mode: ThemeMode;
   toggleColorScheme: () => void;
-  setMode: (mode: 'light' | 'dark' | 'auto') => void;
+  setMode: (mode: ThemeMode) => void;
   systemPrefersDark: boolean;
   semanticTokens: ColorTokens;
 }
 
 const UnifiedThemeContext = createContext<UnifiedThemeContextType | undefined>(undefined);
 
-// 🌟 GLASSMORPHISM EFFECT - Tendencia 2025 con blur y transparencia
-const glassEffect = {
-  medium: (colorScheme: PaletteMode) => ({
-    background: colorScheme === 'dark' 
-      ? 'rgba(13, 15, 17, 0.85)' 
-      : 'rgba(255, 255, 255, 0.85)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid',
-    borderColor: colorScheme === 'dark' 
-      ? 'rgba(255, 255, 255, 0.1)' 
-      : 'rgba(0, 0, 0, 0.1)',
-  })
-};
-
-// 🎨 FUNCIÓN PRINCIPAL - CREAR TEMA PROFESIONAL 2025-2026
-// Aplicando todos los principios de diseño visual
+// 🎨 FUNCIÓN PRINCIPAL - CREAR TEMA PROFESIONAL
 const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
   const isLight = colorScheme === 'light';
   
-  // 🚀 Tokens semánticos OKLCH para máximo contraste WCAG AAA
+  // 🚀 Tokens semánticos OKLCH
   const oklchTokens = getActiveTokens(colorScheme === 'dark');
-  
-  // 🔧 CONVERTIR OKLCH A RGB PARA COMPATIBILIDAD CON MATERIAL-UI
   const semanticTokens = convertSemanticTokensForMui(oklchTokens);
 
   const baseTheme = createTheme({
     palette: {
       mode: colorScheme,
       
-      // 🎨 1. CONTRASTE - Colores primarios con ratios WCAG 2.2
+      // 🎨 Colores primarios
       primary: {
-        main: semanticTokens.text.brand,           // 7:1 contrast ratio
+        main: semanticTokens.text.brand,
         light: semanticTokens.border.interactive,
         dark: semanticTokens.text.brand,
-        contrastText: semanticTokens.text.inverse, // Máximo contraste
+        contrastText: semanticTokens.text.inverse,
       },
 
-      // 🌿 2. COLOR - Secundarios complementarios
       secondary: {
         main: semanticTokens.border.interactive,
         light: semanticTokens.text.brand,
@@ -142,54 +124,53 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
         contrastText: semanticTokens.text.inverse,
       },
 
-      // ✅ 3. COLOR SEMÁNTICO - Estados con significado universal
+      // ✅ Estados semánticos
       success: {
-        main: semanticTokens.financial.positive,    // Verde = éxito
+        main: semanticTokens.financial.positive,
         light: withAlpha(semanticTokens.financial.positive, 0.1),
         dark: semanticTokens.financial.positive,
         contrastText: semanticTokens.text.inverse,
       },
 
       warning: {
-        main: semanticTokens.financial.warning,     // Ámbar = precaución  
+        main: semanticTokens.financial.warning,
         light: withAlpha(semanticTokens.financial.warning, 0.1),
         dark: semanticTokens.financial.warning,
         contrastText: semanticTokens.text.inverse,
       },
 
       error: {
-        main: semanticTokens.financial.negative,    // Rojo = error/pérdida
+        main: semanticTokens.financial.negative,
         light: withAlpha(semanticTokens.financial.negative, 0.1),
         dark: semanticTokens.financial.negative,
         contrastText: semanticTokens.text.inverse,
       },
 
       info: {
-        main: semanticTokens.financial.info,        // Azul = información
+        main: semanticTokens.financial.info,
         light: withAlpha(semanticTokens.financial.info, 0.1),
         dark: semanticTokens.financial.info,
         contrastText: semanticTokens.text.inverse,
       },
 
-      // 🎨 4. ESPACIADO Y ALINEACIÓN - Superficies con jerarquía
+      // 🎨 Superficies
       background: {
-        default: semanticTokens.surface.page,       // Fondo principal
-        paper: semanticTokens.surface.primary,      // Cards y modales
+        default: semanticTokens.surface.page,
+        paper: semanticTokens.surface.primary,
       },
 
-      // 📝 5. JERARQUÍA VISUAL - Tipografía con contraste escalonado
+      // 📝 Textos
       text: {
-        primary: semanticTokens.text.primary,       // Títulos principales
-        secondary: semanticTokens.text.secondary,   // Subtítulos  
-        disabled: semanticTokens.text.tertiary,     // Texto auxiliar
+        primary: semanticTokens.text.primary,
+        secondary: semanticTokens.text.secondary,
+        disabled: semanticTokens.text.tertiary,
       },
 
-      // 🔲 6. PROXIMIDAD - Divisores para agrupamiento
       divider: semanticTokens.border.subtle,
 
-      // 🎨 Paleta personalizada con todos los principios aplicados
+      // 🎨 Paleta personalizada
       custom: {
-        // CONTRASTE Y SUPERFICIES
+        // Superficies
         bodyBackgroundPrimary: semanticTokens.surface.page,
         bodyBackgroundSecondary: semanticTokens.surface.secondary,
         glassBorder: semanticTokens.border.subtle,
@@ -197,25 +178,25 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
         neumoLightShadow: colorScheme === 'dark' ? 'rgb(31, 35, 40)' : 'rgb(255, 255, 255)',
         neumoDarkShadow: colorScheme === 'dark' ? 'rgb(13, 15, 17)' : 'rgb(200, 205, 220)',
         
-        // COLOR FUNCIONAL
+        // Colores
         primary: semanticTokens.text.brand,
         secondary: semanticTokens.border.interactive,
         accent: semanticTokens.text.brand,
         info: semanticTokens.financial.info,
         surface: semanticTokens.surface.primary,
         
-        // JERARQUÍA TEXTUAL
+        // Textos
         textPrimary: semanticTokens.text.primary,
         textSecondary: semanticTokens.text.secondary,
         textTertiary: semanticTokens.text.tertiary,
         textInverse: semanticTokens.text.inverse,
         
-        // COLOR SEMÁNTICO FINANCIERO
+        // Estados
         success: semanticTokens.financial.positive,
         warning: semanticTokens.financial.warning,
         error: semanticTokens.financial.negative,
         
-        // PROXIMIDAD Y AGRUPAMIENTO
+        // Bordes
         borderLight: semanticTokens.border.subtle,
         borderDefault: semanticTokens.border.default,
         borderStrong: semanticTokens.border.strong,
@@ -223,73 +204,66 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
       },
     },
 
-    // 📝 7. TIPOGRAFÍA - Escala modular basada en principios de legibilidad
+    // 📝 Tipografía
     typography: {
-      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif', // Fuente optimizada para fintech
-      
-      // Pesos tipográficos profesionales
+      fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
       fontWeightLight: 300,
       fontWeightRegular: 400,
       fontWeightMedium: 500,
       fontWeightBold: 700,
       
-      // Escala tipográfica basada en proporción áurea (1.618)
       h1: {
-        fontSize: '2.5rem',      // 40px - Títulos principales
+        fontSize: '2.5rem',
         lineHeight: 1.2,
         fontWeight: 700,
         letterSpacing: '-0.02em',
       },
       h2: {
-        fontSize: '2rem',        // 32px - Subtítulos importantes
+        fontSize: '2rem',
         lineHeight: 1.3,
         fontWeight: 700,
         letterSpacing: '-0.01em',
       },
       h3: {
-        fontSize: '1.5rem',      // 24px - Secciones
+        fontSize: '1.5rem',
         lineHeight: 1.4,
         fontWeight: 600,
       },
       h4: {
-        fontSize: '1.25rem',     // 20px - Subsecciones
+        fontSize: '1.25rem',
         lineHeight: 1.4,
         fontWeight: 600,
       },
       h5: {
-        fontSize: '1.125rem',    // 18px - Elementos destacados
+        fontSize: '1.125rem',
         lineHeight: 1.5,
         fontWeight: 500,
       },
       h6: {
-        fontSize: '1rem',        // 16px - Títulos menores
+        fontSize: '1rem',
         lineHeight: 1.5,
         fontWeight: 500,
       },
       body1: {
-        fontSize: '1rem',        // 16px - Texto principal
-        lineHeight: 1.6,         // Legibilidad óptima
+        fontSize: '1rem',
+        lineHeight: 1.6,
       },
       body2: {
-        fontSize: '0.875rem',    // 14px - Texto secundario
+        fontSize: '0.875rem',
         lineHeight: 1.5,
       },
       caption: {
-        fontSize: '0.75rem',     // 12px - Etiquetas y notas
+        fontSize: '0.75rem',
         lineHeight: 1.4,
       },
     },
 
-    // 🎨 8. ESPACIADO - 8pt Grid System (estándar Google)
     spacing: GRID_BASE,
 
-    // 🎯 9. CONSISTENCIA VISUAL - Componentes estandarizados
     components: {
-      // BASELINE CSS - Configuración global del body
       MuiCssBaseline: {
         styleOverrides: {
           body: {
-            // 🌟 BACKGROUND GRADIENT - Usando RGB en lugar de OKLCH para compatibilidad
             background: colorScheme === 'dark' 
               ? `linear-gradient(135deg, 
                   rgb(20, 22, 28) 0%, 
@@ -300,41 +274,37 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
             backgroundAttachment: 'fixed',
             minHeight: '100vh',
             fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-            fontSize: '16px',        // Base 16px para accesibilidad
-            lineHeight: 1.6,         // Altura de línea óptima
+            fontSize: '16px',
+            lineHeight: 1.6,
             color: semanticTokens.text.primary,
-            transition: 'all 0.2s ease-in-out', // Microinteracciones suaves
+            transition: 'all 0.2s ease-in-out',
             
-            // 🎯 INYECCIÓN DE VARIABLES CSS GLOBALES
             ...generateCSSVariables(oklchTokens),
           },
         },
       },
 
-      // PAPER - Superficies con elevación
       MuiPaper: {
         styleOverrides: {
           root: {
             backgroundColor: semanticTokens.surface.primary,
             border: `1px solid ${semanticTokens.border.subtle}`,
-            borderRadius: spacing(1.5),    // 12px - Radio suave
+            borderRadius: spacing(1.5),
             boxShadow: semanticTokens.shadow.md,
             transition: 'all 0.2s ease-in-out',
           },
         },
       },
 
-      // CARDS - Contenedores principales con feedback visual
       MuiCard: {
         styleOverrides: {
           root: {
             backgroundColor: semanticTokens.surface.primary,
             border: `1px solid ${semanticTokens.border.subtle}`,
-            borderRadius: spacing(2),      // 16px - Modernidad
+            borderRadius: spacing(2),
             boxShadow: semanticTokens.shadow.md,
             transition: 'all 0.2s ease-in-out',
             
-            // 🎯 FEEDBACK VISUAL - Hover states
             '&:hover': {
               transform: 'translateY(-2px)',
               boxShadow: semanticTokens.shadow.lg,
@@ -344,17 +314,15 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
         },
       },
 
-      // BUTTONS - CTAs con microinteracciones
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: spacing(1),      // 8px - Consistencia
-            padding: `${spacing(1.5)} ${spacing(3)}`, // 12px 24px
+            borderRadius: spacing(1),
+            padding: `${spacing(1.5)} ${spacing(3)}`,
             fontWeight: 500,
-            textTransform: 'none',         // Legibilidad natural
+            textTransform: 'none',
             transition: 'all 0.2s ease-in-out',
             
-            // 🎯 MOTION - Microinteracciones suaves
             '&:hover': {
               transform: 'translateY(-1px)',
             },
@@ -375,7 +343,6 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
         },
       },
 
-      // INPUT FIELDS - Estados claros y accesibles
       MuiTextField: {
         styleOverrides: {
           root: {
@@ -399,7 +366,6 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
       },
     },
 
-    // 🎨 10. SOMBRAS - Elevación con jerarquía visual
     shadows: [
       'none',
       semanticTokens.shadow.sm,
@@ -411,27 +377,25 @@ const createProfessionalTheme = (colorScheme: ColorScheme): Theme => {
       ...Array(18).fill(semanticTokens.shadow.financial),
     ] as any,
 
-    // 🎯 11. FORMA - Border radius consistente
     shape: {
-      borderRadius: GRID_BASE,       // 8px base
+      borderRadius: GRID_BASE,
     },
 
-    // ⚡ 12. MOTION - Transiciones naturales y predecibles  
     transitions: {
       duration: {
-        shortest: 150,    // Micro-feedback
-        shorter: 200,     // Hover states
-        short: 250,       // Componentes pequeños
-        standard: 300,    // Componentes medianos
-        complex: 375,     // Componentes complejos
+        shortest: 150,
+        shorter: 200,
+        short: 250,
+        standard: 300,
+        complex: 375,
         enteringScreen: 225,
         leavingScreen: 195,
       },
       easing: {
-        easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',  // Natural
-        easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',    // Salida suave
-        easeIn: 'cubic-bezier(0.4, 0, 1, 1)',       // Entrada suave
-        sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',      // Decisivo
+        easeInOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        easeOut: 'cubic-bezier(0.0, 0, 0.2, 1)',
+        easeIn: 'cubic-bezier(0.4, 0, 1, 1)',
+        sharp: 'cubic-bezier(0.4, 0, 0.6, 1)',
       },
     },
   });
@@ -448,7 +412,7 @@ export const useUnifiedTheme = (): UnifiedThemeContextType => {
   return context;
 };
 
-// 🎨 Provider del tema unificado con todos los principios aplicados
+// 🎨 Provider del tema unificado
 interface UnifiedThemeProviderProps {
   children: React.ReactNode;
   defaultColorScheme?: ColorScheme;
@@ -456,40 +420,31 @@ interface UnifiedThemeProviderProps {
 
 export const UnifiedThemeProvider: React.FC<UnifiedThemeProviderProps> = ({ 
   children, 
-  defaultColorScheme = 'light' 
+  defaultColorScheme = 'dark'
 }) => {
-  // 🎯 PREFERENCIAS DEL USUARIO - Respeta configuración del sistema
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [mode, setModeState] = useState<'light' | 'dark' | 'auto'>('auto');
+  const [mode, setModeState] = useState<ThemeMode>('dark'); // 🌙 Dark by default
   
-  // Determinar el color scheme actual basado en el mode
-  const colorScheme: ColorScheme = useMemo(() => {
-    if (mode === 'auto') {
-      return prefersDarkMode ? 'dark' : 'light';
-    }
-    return mode;
-  }, [mode, prefersDarkMode]);
+  // Determinar el color scheme actual (simplificado)
+  const colorScheme: ColorScheme = mode;
 
-  // 🔄 FEEDBACK VISUAL - Cambio de tema suave
+  // 🔄 Toggle color scheme (solo entre light y dark)
   const toggleColorScheme = useCallback(() => {
     setModeState((prevMode) => {
-      if (prevMode === 'light') return 'dark';
-      if (prevMode === 'dark') return 'auto';
-      return 'light'; // auto -> light
+      return prevMode === 'light' ? 'dark' : 'light';
     });
   }, []);
 
-  const setMode = useCallback((newMode: 'light' | 'dark' | 'auto') => {
+  const setMode = useCallback((newMode: ThemeMode) => {
     setModeState(newMode);
   }, []);
 
-  // 🎨 MEMOIZACIÓN - Performance optimizada
+  // 🎨 Memoización del tema
   const theme = useMemo(() => createProfessionalTheme(colorScheme), [colorScheme]);
   const semanticTokens = useMemo(() => getActiveTokens(colorScheme === 'dark'), [colorScheme]);
 
-  // 💾 PERSISTENCIA - Recordar preferencia del usuario
+  // 💾 Persistencia
   useEffect(() => {
-    const savedMode = localStorage.getItem('themeMode') as 'light' | 'dark' | 'auto' | null;
+    const savedMode = localStorage.getItem('themeMode') as ThemeMode | null;
     if (savedMode) {
       setModeState(savedMode);
     }
@@ -498,9 +453,9 @@ export const UnifiedThemeProvider: React.FC<UnifiedThemeProviderProps> = ({
   useEffect(() => {
     localStorage.setItem('themeMode', mode);
     
-    // 🚨 TÉCNICA RADICAL: Forzar clase CSS en body para dark mode
+    // Aplicar clase CSS al body
     const body = document.body;
-    body.className = body.className.replace(/\b(light|dark)\b/g, ''); // Limpiar clases previas
+    body.className = body.className.replace(/\b(light|dark)\b/g, '');
     
     if (colorScheme === 'dark') {
       body.classList.add('dark');
@@ -509,9 +464,6 @@ export const UnifiedThemeProvider: React.FC<UnifiedThemeProviderProps> = ({
       body.classList.add('light');
       body.setAttribute('data-theme', 'light');
     }
-    
-    console.log('🚨 RADICAL FIX - Body classes:', body.className);
-    console.log('🚨 RADICAL FIX - Color scheme:', colorScheme);
   }, [mode, colorScheme]);
 
   const contextValue = useMemo(
@@ -521,10 +473,10 @@ export const UnifiedThemeProvider: React.FC<UnifiedThemeProviderProps> = ({
       mode,
       toggleColorScheme,
       setMode,
-      systemPrefersDark: prefersDarkMode,
+      systemPrefersDark: false, // No más detección automática
       semanticTokens,
     }),
-    [theme, colorScheme, mode, toggleColorScheme, setMode, prefersDarkMode, semanticTokens]
+    [theme, colorScheme, mode, toggleColorScheme, setMode, semanticTokens]
   );
 
   return (

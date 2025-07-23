@@ -25,23 +25,27 @@ jobs:
         node-version: '20'
         cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci --prefer-offline --no-audit --no-fund
+    - name: Install dependencies with fallback
+      run: |
+        npm ci --prefer-offline --no-audit --no-fund --production=false || true
+        node scripts/github-deps-fallback.cjs
 
     - name: Type check
       run: npm run type-check
       continue-on-error: true
 
-    - name: Lint
-      run: npm run lint
+    - name: Lint (Production Rules)
+      run: npm run lint-prod
       continue-on-error: true
 
     - name: Run tests
       run: npm run test -- --run
       continue-on-error: true
 
-    - name: Build (skip type check)
-      run: npx vite build
+    - name: Build for GitHub Pages
+      run: npm run build-github
+      env:
+        NODE_ENV: production
 
     - name: Add .nojekyll
       run: touch ./dist/.nojekyll

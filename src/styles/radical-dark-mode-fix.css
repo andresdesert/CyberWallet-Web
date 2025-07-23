@@ -1,82 +1,149 @@
-/* 🚨 RADICAL DARK MODE FIX - Override CSS para garantizar visibilidad */
-/* Aplicar solo cuando body tiene la clase dark o dark mode activo */
+/* 🚨 RADICAL DARK MODE FIX - Correcciones críticas para modo oscuro */
 
-[data-theme="dark"] .MuiCard-root,
-body[class*="dark"] .MuiCard-root,
-.dark .MuiCard-root {
-  background-color: rgb(30, 41, 59) !important;
-  border: 2px solid rgb(71, 85, 105) !important;
-  color: rgb(255, 255, 255) !important;
+/* 
+ * Este archivo contiene correcciones específicas para problemas de contraste
+ * y legibilidad en modo oscuro extremo
+ */
+
+/* ================================
+   🎨 CORRECCIONES DE CONTRASTE
+   ================================ */
+
+/* Material-UI Dark Mode Overrides */
+.MuiPaper-root[data-theme="dark"] {
+    background-color: rgba(18, 24, 38, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
 }
 
-[data-theme="dark"] .MuiPaper-root,
-body[class*="dark"] .MuiPaper-root,
-.dark .MuiPaper-root {
-  background-color: rgb(30, 41, 59) !important;
-  border: 1px solid rgb(71, 85, 105) !important;
-  color: rgb(255, 255, 255) !important;
+/* Text Contrast Fixes */
+[data-theme="dark"] .MuiTypography-root {
+    color: rgba(255, 255, 255, 0.95) !important;
 }
 
-[data-theme="dark"] .MuiAppBar-root,
-body[class*="dark"] .MuiAppBar-root,
-.dark .MuiAppBar-root {
-  background-color: rgb(30, 41, 59) !important;
-  border-bottom: 2px solid rgb(71, 85, 105) !important;
-  color: rgb(255, 255, 255) !important;
+[data-theme="dark"] .MuiTypography-body2 {
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
-[data-theme="dark"] .MuiChip-root,
-body[class*="dark"] .MuiChip-root,
-.dark .MuiChip-root {
-  background-color: rgb(51, 65, 85) !important;
-  border: 1px solid rgb(100, 116, 139) !important;
-  color: rgb(255, 255, 255) !important;
+/* Input Fields Dark Mode */
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
-[data-theme="dark"] .MuiButton-root,
-body[class*="dark"] .MuiButton-root,
-.dark .MuiButton-root {
-  color: rgb(255, 255, 255) !important;
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root fieldset {
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-[data-theme="dark"] .MuiButton-outlined,
-body[class*="dark"] .MuiButton-outlined,
-.dark .MuiButton-outlined {
-  border-color: rgb(71, 85, 105) !important;
-  background-color: rgba(30, 41, 59, 0.8) !important;
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root:hover fieldset {
+    border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* Forzar texto visible en dark mode */
-[data-theme="dark"] .MuiTypography-root,
-body[class*="dark"] .MuiTypography-root,
-.dark .MuiTypography-root {
-  color: rgb(255, 255, 255) !important;
+/* Button Contrast Fixes */
+[data-theme="dark"] .MuiButton-outlined {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
-[data-theme="dark"] .MuiTypography-colorTextSecondary,
-body[class*="dark"] .MuiTypography-colorTextSecondary,
-.dark .MuiTypography-colorTextSecondary {
-  color: rgb(226, 232, 240) !important;
+[data-theme="dark"] .MuiButton-outlined:hover {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-/* Forzar background de página en dark mode */
-[data-theme="dark"] body,
-body[class*="dark"],
-.dark body {
-  background-color: rgb(0, 0, 0) !important;
-  color: rgb(255, 255, 255) !important;
+/* ================================
+   🔧 ACCESSIBILITY IMPROVEMENTS
+   ================================ */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    [data-theme="dark"] * {
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    [data-theme="dark"] .MuiButton-contained {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    }
 }
 
-/* Forzar contenedores principales */
-[data-theme="dark"] .MuiContainer-root,
-body[class*="dark"] .MuiContainer-root,
-.dark .MuiContainer-root {
-  color: rgb(255, 255, 255) !important;
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="dark"] * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
-/* Override para cualquier elemento con background transparente o problemático */
-[data-theme="dark"] *[style*="background"],
-body[class*="dark"] *[style*="background"],
-.dark *[style*="background"] {
-  background-color: rgb(30, 41, 59) !important;
+/* ================================
+   🎯 SPECIFIC COMPONENT FIXES
+   ================================ */
+
+/* AppBar Dark Mode */
+[data-theme="dark"] .MuiAppBar-root {
+    background-color: rgba(13, 15, 17, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Drawer Dark Mode */
+[data-theme="dark"] .MuiDrawer-paper {
+    background-color: rgba(18, 24, 38, 0.98) !important;
+    backdrop-filter: blur(30px) !important;
+}
+
+/* Card Components */
+[data-theme="dark"] .MuiCard-root {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Dialog Dark Mode */
+[data-theme="dark"] .MuiDialog-paper {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ================================
+   ⚡ PERFORMANCE OPTIMIZATIONS
+   ================================ */
+
+/* GPU Acceleration for Dark Theme */
+[data-theme="dark"] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+html[data-theme="dark"] {
+    background-color: #0d0f11 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ================================
+   🌙 CUSTOM SCROLLBAR DARK
+   ================================ */
+
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.7);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.8);
+}
+
+/* Firefox Scrollbar */
+[data-theme="dark"] * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.7) rgba(30, 41, 59, 0.5);
 }

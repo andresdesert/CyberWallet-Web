@@ -3,52 +3,32 @@ import {
   Box, 
   Paper, 
   Typography, 
-  Stepper, 
-  Step, 
-  StepLabel, 
   Button, 
-  TextField,
   Container,
   Alert,
   Collapse,
   IconButton,
-  Chip,
-  Stack,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControlLabel,
-  Checkbox,
-  Divider,
-  Card,
-  CardContent,
-  Avatar,
   useTheme,
-  alpha
+  alpha,
+  Card,
+  CardContent
 } from '@mui/material';
 import { 
   Info, 
   Close, 
-  Home, 
-  ArrowBack, 
-  ArrowForward, 
-  Person,
-  Badge,
-  LocationOn,
-  AccountCircle,
-  ContentCopy,
+  Login,
   AutoAwesome,
-  Login
+  ContentCopy,
+  Rocket,
+  Security,
+  Speed
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { getActiveTokens } from '@/theme/tokens/colorTokens';
-
-const steps = ['Datos personales', 'Datos de identidad', 'Dirección'];
+import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
 
 const RegisterPage: React.FC = () => {
-    const [currentStep, setCurrentStep] = useState(0);
     const [showDemoAlert, setShowDemoAlert] = useState(true);
     const navigate = useNavigate();
     const theme = useTheme();
@@ -63,295 +43,47 @@ const RegisterPage: React.FC = () => {
 
     const copyToClipboard = (text: string, type: string) => {
         navigator.clipboard.writeText(text).then(() => {
-            alert(`${type} copiado al portapapeles!`);
+            // TODO: Replace with proper notification system
+            console.warn(`${type} copiado al portapapeles`);
         });
+    };
+
+    const autoLogin = () => {
+        // Simular login automático y redirigir al dashboard
+        navigate('/dashboard');
     };
 
     const goToLogin = () => {
         navigate('/login');
     };
-    
-    // Mock form data
-    const [formData, setFormData] = useState({
-        // Datos personales
-        nombre: 'Juan Carlos',
-        apellido: 'Pérez',
-        email: 'juan.perez@email.com',
-        telefono: '+54 9 11 1234-5678',
-        fechaNacimiento: '1990-05-15',
-        
-        // Datos de identidad
-        tipoDocumento: 'DNI',
-        numeroDocumento: '35123456',
-        cuil: '20-35123456-7',
-        
-        // Dirección
-        calle: 'Av. Corrientes',
-        numero: '1234',
-        piso: '5',
-        departamento: 'B',
-        codigoPostal: '1043',
-        ciudad: 'Buenos Aires',
-        provincia: 'CABA'
-    });
 
-    const handleNext = () => {
-        if (currentStep < steps.length - 1) {
-            setCurrentStep((prev) => prev + 1);
-        }
-    };
-
-    const handleBack = () => {
-        if (currentStep > 0) {
-            setCurrentStep((prev) => prev - 1);
-        }
-    };
-
-    const handleGoToLogin = () => {
-        navigate('/login');
-    };
-
-    const handleGoHome = () => {
+    const goHome = () => {
         navigate('/');
-    };
-
-    const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    };
-
-    const renderStepIcon = (index: number) => {
-        const icons = [Person, Badge, LocationOn];
-        const Icon = icons[index];
-        return (
-            <Avatar
-                sx={{
-                    bgcolor: currentStep >= index ? 'primary.main' : 'grey.300',
-                    color: 'white',
-                    width: 40,
-                    height: 40
-                }}
-            >
-                <Icon />
-            </Avatar>
-        );
-    };
-
-    const renderStepContent = () => {
-        switch (currentStep) {
-            case 0: 
-                return (
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Stack spacing={3}>
-                            <Typography variant="h6" color="primary" gutterBottom>
-                                Información Personal
-                            </Typography>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Nombre"
-                                    value={formData.nombre}
-                                    onChange={(e) => handleInputChange('nombre', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Apellido"
-                                    value={formData.apellido}
-                                    onChange={(e) => handleInputChange('apellido', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Box>
-                            <TextField
-                                label="Email"
-                                type="email"
-                                value={formData.email}
-                                onChange={(e) => handleInputChange('email', e.target.value)}
-                                variant="outlined"
-                                fullWidth
-                            />
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Teléfono"
-                                    value={formData.telefono}
-                                    onChange={(e) => handleInputChange('telefono', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Fecha de Nacimiento"
-                                    type="date"
-                                    value={formData.fechaNacimiento}
-                                    onChange={(e) => handleInputChange('fechaNacimiento', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                    InputLabelProps={{ shrink: true }}
-                                />
-                            </Box>
-                        </Stack>
-                    </motion.div>
-                );
-                
-            case 1: 
-                return (
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Stack spacing={3}>
-                            <Typography variant="h6" color="primary" gutterBottom>
-                                Datos de Identidad
-                            </Typography>
-                            <FormControl fullWidth>
-                                <InputLabel>Tipo de Documento</InputLabel>
-                                <Select
-                                    value={formData.tipoDocumento}
-                                    onChange={(e) => handleInputChange('tipoDocumento', e.target.value)}
-                                    label="Tipo de Documento"
-                                >
-                                    <MenuItem value="DNI">DNI</MenuItem>
-                                    <MenuItem value="PASAPORTE">Pasaporte</MenuItem>
-                                    <MenuItem value="LC">Libreta Cívica</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Número de Documento"
-                                    value={formData.numeroDocumento}
-                                    onChange={(e) => handleInputChange('numeroDocumento', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="CUIL/CUIT"
-                                    value={formData.cuil}
-                                    onChange={(e) => handleInputChange('cuil', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Box>
-                            <Alert severity="info" sx={{ borderRadius: '12px' }}>
-                                <Typography variant="body2">
-                                    📷 En un registro real, aquí subirías fotos del frente y dorso de tu documento.
-                                </Typography>
-                            </Alert>
-                        </Stack>
-                    </motion.div>
-                );
-                
-            case 2: 
-                return (
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <Stack spacing={3}>
-                            <Typography variant="h6" color="primary" gutterBottom>
-                                Dirección de Residencia
-                            </Typography>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '2fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Calle"
-                                    value={formData.calle}
-                                    onChange={(e) => handleInputChange('calle', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Número"
-                                    value={formData.numero}
-                                    onChange={(e) => handleInputChange('numero', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Box>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', sm: '1fr 1fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Piso"
-                                    value={formData.piso}
-                                    onChange={(e) => handleInputChange('piso', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Depto"
-                                    value={formData.departamento}
-                                    onChange={(e) => handleInputChange('departamento', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <TextField
-                                    label="Código Postal"
-                                    value={formData.codigoPostal}
-                                    onChange={(e) => handleInputChange('codigoPostal', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                            </Box>
-                            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
-                                <TextField
-                                    label="Ciudad"
-                                    value={formData.ciudad}
-                                    onChange={(e) => handleInputChange('ciudad', e.target.value)}
-                                    variant="outlined"
-                                    fullWidth
-                                />
-                                <FormControl fullWidth>
-                                    <InputLabel>Provincia</InputLabel>
-                                    <Select
-                                        value={formData.provincia}
-                                        onChange={(e) => handleInputChange('provincia', e.target.value)}
-                                        label="Provincia"
-                                    >
-                                        <MenuItem value="CABA">CABA</MenuItem>
-                                        <MenuItem value="Buenos Aires">Buenos Aires</MenuItem>
-                                        <MenuItem value="Córdoba">Córdoba</MenuItem>
-                                        <MenuItem value="Santa Fe">Santa Fe</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                            <FormControlLabel
-                                control={<Checkbox defaultChecked />}
-                                label="Acepto los términos y condiciones"
-                            />
-                        </Stack>
-                    </motion.div>
-                );
-                
-            default: 
-                return <Typography>Error: paso inválido</Typography>;
-        }
     };
 
     return (
         <Box
             sx={{
                 minHeight: '100vh',
-                background: theme.palette.mode === 'dark'
-                    ? `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.grey[900]} 100%)`
-                    : `linear-gradient(135deg, ${theme.palette.primary.main}10 0%, ${theme.palette.secondary.main}10 100%)`,
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                py: 4,
+                p: { xs: 1, sm: 2 },
                 position: 'relative',
-                overflow: 'hidden',
+                overflow: 'auto',
+                boxSizing: 'border-box',
             }}
         >
-            {/* Background decorations */}
+            {/* Efectos de fondo animados */}
             <Box
                 sx={{
                     position: 'absolute',
-                    top: -100,
-                    left: -100,
-                    width: 200,
-                    height: 200,
-                    background: `radial-gradient(circle, ${theme.palette.primary.main}20 0%, transparent 70%)`,
+                    top: '10%',
+                    left: '10%',
+                    width: { xs: 200, sm: 300 },
+                    height: { xs: 200, sm: 300 },
+                    background: `radial-gradient(circle, ${alpha(theme.palette.primary.main, 0.15)} 0%, transparent 70%)`,
                     borderRadius: '50%',
                     animation: 'float 6s ease-in-out infinite',
                 }}
@@ -359,17 +91,29 @@ const RegisterPage: React.FC = () => {
             <Box
                 sx={{
                     position: 'absolute',
-                    bottom: -150,
-                    right: -150,
-                    width: 300,
-                    height: 300,
-                    background: `radial-gradient(circle, ${theme.palette.secondary.main}15 0%, transparent 70%)`,
+                    bottom: '15%',
+                    right: '15%',
+                    width: { xs: 150, sm: 250 },
+                    height: { xs: 150, sm: 250 },
+                    background: `radial-gradient(circle, ${alpha(theme.palette.secondary.main, 0.12)} 0%, transparent 70%)`,
                     borderRadius: '50%',
                     animation: 'float 8s ease-in-out infinite reverse',
                 }}
             />
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '60%',
+                    left: '5%',
+                    width: { xs: 100, sm: 180 },
+                    height: { xs: 100, sm: 180 },
+                    background: `radial-gradient(circle, ${alpha(theme.palette.info.main, 0.1)} 0%, transparent 70%)`,
+                    borderRadius: '50%',
+                    animation: 'pulse 4s ease-in-out infinite',
+                }}
+            />
 
-            <Container maxWidth="md">
+            <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 10 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -392,126 +136,97 @@ const RegisterPage: React.FC = () => {
                             }
                             sx={{ 
                                 mb: 3,
-                                mx: 'auto',
-                                maxWidth: 700,
                                 borderRadius: '16px',
-                                background: `linear-gradient(135deg, ${theme.palette.warning.main}10, ${theme.palette.primary.main}08)`,
-                                border: `1px solid ${theme.palette.warning.main}30`,
+                                background: theme.palette.mode === 'dark'
+                                    ? `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.1)}, ${alpha(theme.palette.primary.main, 0.08)})`
+                                    : `linear-gradient(135deg, ${alpha(theme.palette.warning.main, 0.08)}, ${alpha(theme.palette.primary.main, 0.06)})`,
+                                border: `1px solid ${alpha(theme.palette.warning.main, 0.2)}`,
+                                backdropFilter: 'blur(10px)',
                                 '& .MuiAlert-message': {
                                     width: '100%',
                                     textAlign: 'center',
-                                }
+                                },
                             }}
                         >
-                            <Box sx={{ width: '100%' }}>
-                                <Typography variant="body2" fontWeight="700" sx={{ mb: 1, color: 'warning.main' }}>
-                                    🎭 Esto es solo una demostración
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                                    No necesitas registrarte. Esta aplicación está en modo demo con datos simulados.
-                                </Typography>
-                                
-                                {/* Credenciales demo en forma de T */}
-                                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mb: 3 }}>
-                                    {/* Fila superior - Email */}
-                                    <Box sx={{ 
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        gap: 1,
-                                        p: 1.5,
-                                        bgcolor: semanticTokens.surface.secondary,
-                                        borderRadius: '12px',
-                                        border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                                        minWidth: 280
-                                    }}>
-                                        <Typography variant="body2" fontWeight="600" color="text.primary">
-                                            📧 demo@cyberwallet.com
-                                        </Typography>
-                                        <IconButton 
-                                            size="small" 
-                                            onClick={() => copyToClipboard(demoCredentials.email, 'Email')}
-                                            sx={{ ml: 'auto' }}
-                                        >
-                                            <ContentCopy fontSize="small" />
-                                        </IconButton>
-                                    </Box>
-
-                                    {/* Fila inferior - Password */}
-                                    <Box sx={{ 
-                                        display: 'flex', 
-                                        alignItems: 'center', 
-                                        gap: 1,
-                                        p: 1.5,
-                                        bgcolor: semanticTokens.surface.secondary,
-                                        borderRadius: '12px',
-                                        border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
-                                        minWidth: 280
-                                    }}>
-                                        <Typography variant="body2" fontWeight="600" color="text.primary">
-                                            🔑 demo123
-                                        </Typography>
-                                        <IconButton 
-                                            size="small" 
-                                            onClick={() => copyToClipboard(demoCredentials.password, 'Contraseña')}
-                                            sx={{ ml: 'auto' }}
-                                        >
-                                            <ContentCopy fontSize="small" />
-                                        </IconButton>
-                                    </Box>
+                            <Typography variant="body2" fontWeight="700" sx={{ mb: 1, color: 'warning.main' }}>
+                                🚀 Esta es solo una demostración
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                                No necesitas registrarte. Esta aplicación está en modo demo con datos simulados.
+                            </Typography>
+                            
+                            {/* Credenciales demo */}
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1.5 }}>
+                                <Box sx={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: 1,
+                                    p: 1.5,
+                                    bgcolor: theme.palette.mode === 'dark'
+                                        ? alpha(theme.palette.background.paper, 0.7)
+                                        : alpha(theme.palette.common.white, 0.8),
+                                    borderRadius: '12px',
+                                    border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                                    minWidth: 250,
+                                }}>
+                                    <Typography variant="body2" fontWeight="600" sx={{ flex: 1, fontSize: '0.875rem' }}>
+                                        📧 {demoCredentials.email}
+                                    </Typography>
+                                    <IconButton size="small" onClick={() => copyToClipboard(demoCredentials.email, 'Email')}>
+                                        <ContentCopy fontSize="small" />
+                                    </IconButton>
                                 </Box>
-
-                                {/* Botones de acción */}
-                                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-                                    <Button
-                                        variant="contained"
-                                        size="small"
-                                        startIcon={<Login />}
-                                        onClick={goToLogin}
-                                        sx={{
-                                            borderRadius: '20px',
-                                            textTransform: 'none',
-                                            px: 3,
-                                            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                            '&:hover': {
-                                                background: `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
-                                            }
-                                        }}
-                                    >
-                                        Ir al Login
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        size="small"
-                                        startIcon={<Home />}
-                                        onClick={handleGoHome}
-                                        sx={{
-                                            borderRadius: '20px',
-                                            textTransform: 'none',
-                                            px: 3,
-                                        }}
-                                    >
-                                        Volver al Inicio
-                                    </Button>
-                                </Stack>
+                                
+                                <Box sx={{ 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: 1,
+                                    p: 1.5,
+                                    bgcolor: theme.palette.mode === 'dark'
+                                        ? alpha(theme.palette.background.paper, 0.7)
+                                        : alpha(theme.palette.common.white, 0.8),
+                                    borderRadius: '12px',
+                                    border: `1px solid ${alpha(theme.palette.divider, 0.2)}`,
+                                    minWidth: 250,
+                                }}>
+                                    <Typography variant="body2" fontWeight="600" sx={{ flex: 1, fontSize: '0.875rem' }}>
+                                        🔑 {demoCredentials.password}
+                                    </Typography>
+                                    <IconButton size="small" onClick={() => copyToClipboard(demoCredentials.password, 'Contraseña')}>
+                                        <ContentCopy fontSize="small" />
+                                    </IconButton>
+                                </Box>
                             </Box>
                         </Alert>
                     </Collapse>
+                </motion.div>
 
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
                     <Paper
                         elevation={0}
                         sx={{
                             p: { xs: 3, sm: 4 },
                             borderRadius: '24px',
                             background: theme.palette.mode === 'dark'
-                                ? `linear-gradient(135deg, ${semanticTokens.surface.primary} 0%, ${theme.palette.grey[800]} 100%)`
-                                : `linear-gradient(135deg, ${theme.palette.common.white} 0%, ${theme.palette.grey[50]} 100%)`,
+                                ? `linear-gradient(135deg, ${semanticTokens.surface.primary} 0%, ${alpha(theme.palette.background.paper, 0.95)} 100%)`
+                                : `linear-gradient(135deg, 
+                                    rgba(255, 255, 255, 0.95) 0%, 
+                                    rgba(248, 250, 252, 0.9) 50%, 
+                                    rgba(243, 244, 246, 0.95) 100%)`,
                             backdropFilter: 'blur(20px)',
-                            border: `3px solid ${theme.palette.primary.main}20`,
+                            border: theme.palette.mode === 'dark'
+                                ? `3px solid ${alpha(theme.palette.primary.main, 0.2)}`
+                                : `3px solid ${alpha(theme.palette.primary.main, 0.15)}`,
                             boxShadow: theme.palette.mode === 'dark'
-                                ? `0 20px 60px ${theme.palette.background.default}60, 0 8px 32px ${theme.palette.primary.main}20`
-                                : `0 20px 60px ${theme.palette.grey[200]}80, 0 8px 32px ${theme.palette.primary.main}15`,
+                                ? `0 25px 70px ${alpha(theme.palette.background.default, 0.6)}, 0 12px 40px ${alpha(theme.palette.primary.main, 0.2)}`
+                                : `0 30px 80px ${alpha(theme.palette.primary.main, 0.12)}, 0 16px 50px ${alpha(theme.palette.secondary.main, 0.08)}`,
                             position: 'relative',
                             overflow: 'hidden',
+                            textAlign: 'center',
                             '&::before': {
                                 content: '""',
                                 position: 'absolute',
@@ -523,154 +238,171 @@ const RegisterPage: React.FC = () => {
                             }
                         }}
                     >
-                        {/* Header */}
-                        <Box sx={{ textAlign: 'center', mb: 4 }}>
-                            <motion.div
-                                initial={{ scale: 0.8 }}
-                                animate={{ scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                            >
-                                <Typography 
-                                    variant="h4" 
-                                    fontWeight={700}
-                                    sx={{
-                                        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                        backgroundClip: 'text',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                        mb: 1
-                                    }}
-                                >
-                                    Crear Cuenta
-                                </Typography>
-                                <Typography variant="body1" color="text.secondary">
-                                    Completa los siguientes pasos para registrarte
-                                </Typography>
-                            </motion.div>
-                        </Box>
-
-                        {/* Navigation Buttons */}
-                        <Box sx={{ display: 'flex', gap: 2, mb: 4, justifyContent: 'center' }}>
-                            <Button
-                                variant="outlined"
-                                startIcon={<Home />}
-                                onClick={handleGoHome}
-                                sx={{ borderRadius: '20px' }}
-                            >
-                                Inicio
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                startIcon={<AccountCircle />}
-                                onClick={handleGoToLogin}
-                                sx={{ borderRadius: '20px' }}
-                            >
-                                Iniciar Sesión
-                            </Button>
-                        </Box>
-
-                        <Divider sx={{ mb: 4 }} />
-
-                        {/* Stepper */}
-                        <Box sx={{ mb: 4 }}>
-                            <Stepper 
-                                activeStep={currentStep} 
-                                alternativeLabel
+                        {/* Logo y título */}
+                        <motion.div
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                        >
+                            <CyberWalletLogo size={80} animated />
+                        </motion.div>
+                        
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5, duration: 0.8 }}
+                        >
+                            <Typography
+                                variant="h3"
+                                component="h1"
                                 sx={{
-                                    '& .MuiStepConnector-line': {
-                                        borderColor: theme.palette.divider,
-                                        borderTopWidth: 2,
-                                    },
-                                    '& .Mui-active .MuiStepConnector-line': {
-                                        borderColor: theme.palette.primary.main,
-                                    },
-                                    '& .Mui-completed .MuiStepConnector-line': {
-                                        borderColor: theme.palette.primary.main,
-                                    }
+                                    fontWeight: 700,
+                                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    mb: 2,
+                                    mt: 3,
+                                    fontSize: { xs: '2rem', sm: '2.5rem' },
+                                    animation: 'glow 2s ease-in-out infinite alternate',
                                 }}
                             >
-                                {steps.map((label, index) => (
-                                    <Step key={index}>
-                                        <StepLabel
-                                            StepIconComponent={() => renderStepIcon(index)}
-                                            sx={{
-                                                '& .MuiStepLabel-label': {
-                                                    fontWeight: currentStep === index ? 600 : 400,
-                                                    color: currentStep >= index ? 'primary.main' : 'text.secondary'
-                                                }
-                                            }}
-                                        >
-                                            {label}
-                                        </StepLabel>
-                                    </Step>
-                                ))}
-                            </Stepper>
-                        </Box>
-
-                        {/* Form Content */}
-                        <Card 
-                            sx={{ 
-                                mb: 4, 
-                                borderRadius: '16px',
-                                background: semanticTokens.surface.primary,
-                                border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
-                            }}
-                        >
-                            <CardContent sx={{ p: 4 }}>
-                                {renderStepContent()}
-                            </CardContent>
-                        </Card>
-
-                        {/* Navigation Buttons */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Button 
-                                disabled={currentStep === 0} 
-                                onClick={handleBack}
-                                startIcon={<ArrowBack />}
-                                sx={{ borderRadius: '20px' }}
+                                Página Demo
+                            </Typography>
+                            
+                            <Typography 
+                                variant="h6" 
+                                sx={{ 
+                                    color: 'text.secondary',
+                                    mb: 4,
+                                    lineHeight: 1.6,
+                                    fontSize: { xs: '1rem', sm: '1.25rem' },
+                                }}
                             >
-                                Atrás
-                            </Button>
-                            
-                            <Typography variant="body2" color="text.secondary">
-                                Paso {currentStep + 1} de {steps.length}
+                                ¡No necesitas registrarte! <br />
+                                Esta es una demostración completa con datos simulados.
                             </Typography>
-                            
-                            {currentStep === steps.length - 1 ? (
-                                <Button 
-                                    variant="contained"
-                                    onClick={handleGoToLogin}
-                                    endIcon={<AccountCircle />}
-                                    sx={{ borderRadius: '20px' }}
-                                >
-                                    Ir al Login Demo
-                                </Button>
-                            ) : (
-                                <Button 
-                                    onClick={handleNext}
-                                    variant="contained"
-                                    endIcon={<ArrowForward />}
-                                    sx={{ borderRadius: '20px' }}
-                                >
-                                    Siguiente
-                                </Button>
-                            )}
-                        </Box>
+                        </motion.div>
 
-                        {/* Demo Notice */}
-                        <Alert 
-                            severity="info" 
-                            sx={{ 
-                                mt: 4, 
-                                borderRadius: '12px',
-                                background: alpha(theme.palette.info.main, 0.1)
-                            }}
+                        {/* Características demo */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7, duration: 0.6 }}
                         >
-                            <Typography variant="body2">
-                                💡 <strong>Recordatorio:</strong> Este es un formulario de demostración. 
-                                Los datos se precargan automáticamente para mostrar la funcionalidad.
-                            </Typography>
-                        </Alert>
+                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mb: 4 }}>
+                                <Card sx={{ 
+                                    flex: 1, 
+                                    background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)}, ${alpha(theme.palette.info.main, 0.06)})`,
+                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                }}>
+                                    <CardContent sx={{ textAlign: 'center', p: 2 }}>
+                                        <Rocket sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
+                                        <Typography variant="body2" fontWeight="600">
+                                            Acceso Inmediato
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                
+                                <Card sx={{ 
+                                    flex: 1, 
+                                    background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.08)}, ${alpha(theme.palette.success.main, 0.06)})`,
+                                    border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                                }}>
+                                    <CardContent sx={{ textAlign: 'center', p: 2 }}>
+                                        <Security sx={{ fontSize: 40, color: 'secondary.main', mb: 1 }} />
+                                        <Typography variant="body2" fontWeight="600">
+                                            Datos Simulados
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                
+                                <Card sx={{ 
+                                    flex: 1, 
+                                    background: `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.08)}, ${alpha(theme.palette.warning.main, 0.06)})`,
+                                    border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+                                }}>
+                                    <CardContent sx={{ textAlign: 'center', p: 2 }}>
+                                        <Speed sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
+                                        <Typography variant="body2" fontWeight="600">
+                                            Experiencia Completa
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Box>
+                        </motion.div>
+
+                        {/* Botones de acción */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.9, duration: 0.6 }}
+                        >
+                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mb: 3 }}>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    size="large"
+                                    onClick={autoLogin}
+                                    startIcon={<AutoAwesome />}
+                                    sx={{
+                                        py: 1.5,
+                                        borderRadius: 3,
+                                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                        color: theme.palette.primary.contrastText,
+                                        fontWeight: 600,
+                                        fontSize: { xs: '1rem', sm: '1.1rem' },
+                                        boxShadow: theme.shadows[8],
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
+                                            transform: 'translateY(-2px)',
+                                            boxShadow: theme.shadows[12],
+                                        },
+                                    }}
+                                >
+                                    Ingresar Automáticamente
+                                </Button>
+                                
+                                <Button
+                                    fullWidth
+                                    variant="outlined"
+                                    size="large"
+                                    onClick={goToLogin}
+                                    startIcon={<Login />}
+                                    sx={{
+                                        py: 1.5,
+                                        borderRadius: 3,
+                                        borderColor: theme.palette.primary.main,
+                                        color: theme.palette.primary.main,
+                                        fontWeight: 600,
+                                        fontSize: { xs: '1rem', sm: '1.1rem' },
+                                        transition: 'all 0.3s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                            transform: 'translateY(-1px)',
+                                        },
+                                    }}
+                                >
+                                    Ir al Login
+                                </Button>
+                            </Box>
+                            
+                            <Button
+                                variant="text"
+                                onClick={goHome}
+                                sx={{
+                                    color: 'text.secondary',
+                                    textDecoration: 'underline',
+                                    '&:hover': {
+                                        backgroundColor: 'transparent',
+                                        color: 'primary.main',
+                                    },
+                                }}
+                            >
+                                Volver al Inicio
+                            </Button>
+                        </motion.div>
                     </Paper>
                 </motion.div>
             </Container>
@@ -678,8 +410,18 @@ const RegisterPage: React.FC = () => {
             <style>
                 {`
                 @keyframes float {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-20px); }
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    50% { transform: translateY(-20px) rotate(2deg); }
+                }
+                
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); opacity: 0.8; }
+                    50% { transform: scale(1.05); opacity: 1; }
+                }
+                
+                @keyframes glow {
+                    0% { filter: brightness(1); }
+                    100% { filter: brightness(1.1); }
                 }
                 `}
             </style>

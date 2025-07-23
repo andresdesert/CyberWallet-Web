@@ -1,4 +1,4 @@
-// vite.config.ts
+// vite.config.ts - OPTIMIZED FOR PRODUCTION & GITHUB PAGES
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -8,34 +8,57 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
-  const isGitHubPages = mode === 'production';
+  const isProd = mode === 'production';
+  // 🌐 GitHub Pages: Utilizar ruta base solo en producción para evitar problemas en desarrollo
+  const isGitHubPages = isProd && process.env.GITHUB_PAGES === 'true';
   
   console.log('🔵 [VITE] Build mode:', mode);
+  console.log('🔵 [VITE] Production mode:', isProd);
   console.log('🔵 [VITE] GitHub Pages mode:', isGitHubPages);
   
   return {
-    // 🌐 GitHub Pages configuration - OPTIMIZED
+    // 🌐 GitHub Pages configuration - OPTIMIZED para evitar rutas rotas
     base: isGitHubPages ? '/CyberWallet-Web/' : '/',
     
     plugins: [
       react({
         babel: {
-          plugins: ['@emotion/babel-plugin'],
+          plugins: [
+            '@emotion/babel-plugin',
+            ...(isProd ? [
+              'babel-plugin-dev-expression',
+              ['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]
+            ] : [])
+          ],
         },
       }),
       // 🗜️ COMPRESIÓN GZIP/BROTLI: Reduce transferencia en ~70%
-      compression({
-        algorithm: 'gzip',
-        threshold: 1024,
-        deleteOriginFile: false,
-      }),
-      compression({
-        algorithm: 'brotliCompress',
-        threshold: 1024,
-        deleteOriginFile: false,
-        ext: '.br',
-      }),
+      ...(isProd ? [
+        compression({
+          algorithm: 'gzip',
+          threshold: 1024,
+          deleteOriginFile: false,
+        }),
+        compression({
+          algorithm: 'brotliCompress',
+          threshold: 1024,
+          deleteOriginFile: false,
+          ext: '.br',
+        })
+      ] : [])
     ],
+    
+    // 🔧 Configuración específica para prevenir errores de producción
+    define: {
+      // Reemplazar process.env por import.meta.env para compatibilidad con Vite
+      'process.env.NODE_ENV': JSON.stringify(mode),
+      'import.meta.env.VITE_GITHUB_PAGES': JSON.stringify(isGitHubPages),
+      __DEV__: JSON.stringify(isDev),
+      __PROD__: JSON.stringify(isProd),
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '2.0.0'),
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+      global: 'globalThis',
+    },
     
     resolve: {
       alias: {
@@ -68,17 +91,23 @@ export default defineConfig(({ mode }) => {
       },
     },
     
-    // Configuración optimizada de CSS
+    // Configuración optimizada de CSS - CONSISTENTE dev/prod
     css: {
       devSourcemap: isDev,
-      postcss: !isDev ? {
+      postcss: {
         plugins: [
-          autoprefixer(),
-          cssnano({
-            preset: 'default',
+          autoprefixer({
+            grid: 'autoplace',
+            flexbox: 'no-2009'
           }),
+          ...(isDev ? [] : [cssnano({
+            preset: ['default', {
+              discardComments: { removeAll: true },
+              normalizeWhitespace: false
+            }]
+          })])
         ],
-      } : undefined,
+      },
     },
     
     // Optimizaciones avanzadas de dependencias
@@ -94,9 +123,6 @@ export default defineConfig(({ mode }) => {
         'motion',
       ],
       esbuildOptions: {
-        define: {
-          global: 'globalThis',
-        },
         jsx: 'automatic',
       },
     },
@@ -106,20 +132,20 @@ export default defineConfig(({ mode }) => {
       target: 'es2020',
       outDir: 'dist',
       assetsDir: 'assets',
-      sourcemap: false,
+      sourcemap: isDev,
       minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: true,
-          drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info'],
+          drop_console: !isDev,
+          drop_debugger: !isDev,
+          pure_funcs: isDev ? [] : ['console.log', 'console.info'],
           passes: 2,
         },
         mangle: {
           safari10: true,
         },
         format: {
-          comments: false,
+          comments: isDev,
         },
       },
       cssMinify: true,
@@ -164,12 +190,6 @@ export default defineConfig(({ mode }) => {
       },
       assetsInlineLimit: 4096,
       cssCodeSplit: true,
-    },
-    
-    // Variables de entorno
-    define: {
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '2.0.0'),
-      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
     },
   };
 });

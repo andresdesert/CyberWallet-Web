@@ -1,7 +1,27 @@
 
 # CyberWallet-Web 🚀
 
-Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages como demo.
+Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages como demo. Incluye el portafolio profesional completo de **Andrés Simahan** - Senior QA Analyst certificado ISTQB Foundation Level 4.0.
+
+## 🎯 **Optimizaciones Implementadas (2025)**
+
+### 📱 **Mobile Navigation Fix**
+- ✅ **Solucionado problema de hidratación** entre desarrollo y producción
+- ✅ **Navegación móvil consistente** en ambos modos
+- ✅ **Componente fallback robusto** para máxima compatibilidad
+- ✅ **Layout responsive optimizado** para todas las resoluciones
+
+### 🏗️ **AboutMe Layout Optimizado** 
+- ✅ **Centrado perfecto** consistente entre dev y prod
+- ✅ **Avatar responsive** con tamaños adaptativos
+- ✅ **Tipografía escalable** sin desbordamiento
+- ✅ **Glassmorphism mejorado** para mejor contraste
+
+### 🔧 **GitHub Pages Ready**
+- ✅ **`.gitignore` optimizado** para incluir archivos críticos (PDF, PNG, JPG)
+- ✅ **SPA routing fix** para manejo correcto de rutas
+- ✅ **Asset loading mejorado** con fallbacks
+- ✅ **PWA capabilities** completas
 
 ## 🌟 Características
 
@@ -13,7 +33,45 @@ Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages com
 
 ## 🚀 Demo en Vivo
 
-**[Ver Demo](https://andresdesert.github.io/CyberWallet-Web/)**
+**[🌐 Ver Demo](https://andresdesert.github.io/CyberWallet-Web/)**
+
+### 📋 **Enlaces Directos**
+- 🏠 **Landing Page**: https://andresdesert.github.io/CyberWallet-Web/
+- 👤 **About Me/CV**: https://andresdesert.github.io/CyberWallet-Web/about-me  
+- 📄 **PDF del CV**: https://andresdesert.github.io/CyberWallet-Web/CV-QA-Simahan.pdf
+- 🎮 **Dashboard Demo**: https://andresdesert.github.io/CyberWallet-Web/dashboard
+
+## 🚀 **Despliegue Rápido**
+
+### 📦 **Para Recrear el Repositorio GitHub**
+```bash
+# 1. Ejecutar script de despliegue automatizado
+.\deploy-github.bat
+
+# O manualmente:
+npm ci
+npm run build
+git init
+git remote add origin https://github.com/andresdesert/CyberWallet-Web.git
+git branch -M main
+git add .
+git commit -m "🚀 Initial deployment"
+git push -u origin main --force
+```
+
+### 🧪 **Para Testing Local**
+```bash
+# Testing desarrollo vs producción
+.\test-prod-optimized.bat
+
+# Testing navegación móvil
+.\test-mobile-nav.bat
+
+# Desarrollo local
+npm run dev      # http://localhost:5173
+npm run build    # Construir para producción  
+npm run preview  # Preview local: http://localhost:4173
+```
 
 > **QA Engineer & Full-Stack Developer** especializado en automatización, testing y desarrollo de productos digitales de alta calidad.
 

@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
                 justifyContent: 'center',
                 position: 'relative',
                 background: `radial-gradient(circle at 50% 50%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 70%)`,
-                py: { xs: 8, sm: 12 },
+                py: { xs: 4, sm: 6, md: 8 }, // Padding vertical optimizado
                 px: { xs: 2, sm: 4 }
             }}
         >
@@ -74,26 +74,6 @@ const Hero: React.FC = () => {
                                 animated={true}
                             />
                         </motion.div>
-                    </FadeInUp>
-
-                    {/* 🎯 Texto de marca */}
-                    <FadeInUp delay={0.15}>
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            sx={{
-                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
-                                fontWeight: 600,
-                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                mb: 2,
-                                letterSpacing: '0.05em'
-                            }}
-                        >
-                            CyberWallet
-                        </Typography>
                     </FadeInUp>
 
                     {/* 🎯 Título principal */}
@@ -152,10 +132,11 @@ const Hero: React.FC = () => {
                     <FadeInUp delay={0.35}>
                         <Box sx={{ 
                             display: 'flex', 
-                            gap: 3, 
+                            gap: { xs: 2, sm: 3 }, 
                             flexWrap: 'wrap', 
                             justifyContent: 'center',
-                            alignItems: 'center' 
+                            alignItems: 'center',
+                            flexDirection: { xs: 'column', sm: 'row' }
                         }}>
                             {/* Botón principal: Registrarse */}
                             <motion.div
@@ -168,15 +149,15 @@ const Hero: React.FC = () => {
                                     onClick={() => navigate('/register')}
                                     startIcon={<span style={{ fontSize: '1.2rem' }}>🚀</span>}
                                     sx={{
-                                        px: 6,
+                                        px: { xs: 4, sm: 6 },
                                         py: 2,
-                                        fontSize: '1.2rem',
+                                        fontSize: { xs: '1rem', sm: '1.2rem' },
                                         fontWeight: 700,
                                         borderRadius: '16px',
                                         background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
                                         boxShadow: `0 8px 32px ${theme.palette.primary.main}40`,
                                         border: `2px solid ${theme.palette.primary.main}`,
-                                        minWidth: 220,
+                                        minWidth: { xs: 200, sm: 220 },
                                         textTransform: 'none',
                                         '&:hover': {
                                             background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.dark})`,
@@ -204,9 +185,9 @@ const Hero: React.FC = () => {
                                         size="large"
                                         onClick={() => navigate('/login')}
                                         sx={{
-                                            px: 3,
+                                            px: { xs: 2, sm: 3 },
                                             py: 1.5,
-                                            fontSize: '1rem',
+                                            fontSize: { xs: '0.9rem', sm: '1rem' },
                                             fontWeight: 500,
                                             color: theme.palette.primary.main,
                                             textTransform: 'none',
@@ -229,6 +210,71 @@ const Hero: React.FC = () => {
                                     </Button>
                                 </Tooltip>
                             </motion.div>
+                        </Box>
+                        
+                        {/* Segunda fila de botones */}
+                        <Box sx={{ 
+                            display: 'flex', 
+                            gap: { xs: 1.5, sm: 2 }, 
+                            flexWrap: 'wrap', 
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            mt: { xs: 2, sm: 3 },
+                            flexDirection: { xs: 'column', sm: 'row' }
+                        }}>
+                            {/* Botón: Sobre Mi */}
+                            <Button
+                                variant="text"
+                                onClick={() => {
+                                    navigate('/about-me');
+                                    // Scroll to top when navigating
+                                    setTimeout(() => {
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }, 100);
+                                }}
+                                sx={{
+                                    px: { xs: 2, sm: 3 },
+                                    py: 1,
+                                    fontSize: { xs: '0.85rem', sm: '0.95rem' },
+                                    fontWeight: 500,
+                                    color: theme.palette.text.secondary,
+                                    textTransform: 'none',
+                                    borderRadius: '8px',
+                                    '&:hover': {
+                                        color: theme.palette.primary.main,
+                                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                                    }
+                                }}
+                            >
+                                Sobre Mí
+                            </Button>
+                            
+                            {/* Botón: Características */}
+                            <Button
+                                variant="text"
+                                onClick={() => {
+                                    // Scroll suave a la sección de tecnología
+                                    const techSection = document.getElementById('technology-section');
+                                    if (techSection) {
+                                        techSection.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }}
+                                sx={{
+                                    px: { xs: 2, sm: 3 },
+                                    py: 1,
+                                    fontSize: { xs: '0.85rem', sm: '0.95rem' },
+                                    fontWeight: 500,
+                                    color: theme.palette.text.secondary,
+                                    textTransform: 'none',
+                                    borderRadius: '8px',
+                                    '&:hover': {
+                                        color: theme.palette.primary.main,
+                                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                                    }
+                                }}
+                            >
+                                Características
+                            </Button>
                         </Box>
                     </FadeInUp>
                 </Box>

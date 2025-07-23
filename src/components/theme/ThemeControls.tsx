@@ -36,7 +36,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // 🎯 Interfaz para opciones de tema
 interface ThemeOption {
-  value: 'light' | 'dark' | 'auto';
+  value: 'light' | 'dark';
   label: string;
   description: string;
   icon: React.ReactElement;
@@ -70,21 +70,10 @@ export const ThemeControls: React.FC = () => {
       shortcut: '⌘D',
       gradient: 'linear-gradient(135deg, #374151 0%, #111827 100%)',
     },
-    {
-      value: 'auto',
-      label: 'Automático',
-      description: `Se adapta al sistema (${systemPrefersDark ? 'Oscuro' : 'Claro'})`,
-      icon: <SettingsBrightness />,
-      shortcut: '⌘A',
-      gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-    },
   ];
 
   // 🎨 Función para obtener el icono dinámico
   const getDynamicIcon = () => {
-    if (mode === 'auto') {
-      return <AutoAwesome sx={{ fontSize: '1.2rem' }} />;
-    }
     return colorScheme === 'dark' 
       ? <Brightness4 sx={{ fontSize: '1.2rem' }} /> 
       : <BrightnessHigh sx={{ fontSize: '1.2rem' }} />;
@@ -124,7 +113,7 @@ export const ThemeControls: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const handleModeChange = (newMode: 'light' | 'dark' | 'auto') => {
+  const handleModeChange = (newMode: 'light' | 'dark') => {
     setMode(newMode);
     handleClose();
     
@@ -146,10 +135,6 @@ export const ThemeControls: React.FC = () => {
           case 'd':
             event.preventDefault();
             setMode('dark');
-            break;
-          case 'a':
-            event.preventDefault();
-            setMode('auto');
             break;
         }
       }
