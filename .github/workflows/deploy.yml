@@ -43,9 +43,10 @@ jobs:
       continue-on-error: true
 
     - name: Build for GitHub Pages
-      run: npm run build
+      run: npm run build-prod
       env:
         NODE_ENV: production
+        GITHUB_PAGES: true
 
     - name: Add .nojekyll
       run: touch ./dist/.nojekyll
