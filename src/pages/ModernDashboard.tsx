@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
-import { getActiveTokens } from '../theme/tokens/colorTokens';
 import {
   Box,
   Container,
@@ -90,7 +89,6 @@ const mockData = {
 
 const ModernDashboard: React.FC = () => {
   const theme = useTheme();
-  const semanticTokens = getActiveTokens(theme.palette.mode === 'dark');
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [balanceVisible, setBalanceVisible] = useState(true);
@@ -268,9 +266,7 @@ const ModernDashboard: React.FC = () => {
 
   return (
     <Box sx={{ 
-      minHeight: 'auto',
-      maxHeight: 'calc(100vh - 64px)', // Altura máxima menos header
-      overflow: 'auto',
+      minHeight: '100vh',
       background: theme.palette.mode === 'dark' 
         ? '#0d1421'
         : '#f8fafc',
@@ -278,16 +274,11 @@ const ModernDashboard: React.FC = () => {
       p: { xs: 1, sm: 2, md: 3 } // Padding progresivo
     }}>
       <Container 
-        maxWidth="xl" 
+        maxWidth="lg" 
         sx={{ 
-          py: { xs: 2, md: 3 }, // Reducido padding vertical
+          py: { xs: 1, sm: 2, md: 3 }, 
           position: 'relative',
-          zIndex: 2,
-          width: '100%',
-          maxWidth: '100vw',
-          minHeight: 'auto', // Cambio crítico
-          height: 'fit-content',
-          px: { xs: 1, sm: 2, md: 3 }
+          px: { xs: 1, sm: 2, md: 3 } // Control de padding horizontal
         }}
       >
         {/* Header Section */}
@@ -326,7 +317,7 @@ const ModernDashboard: React.FC = () => {
 
           {/* Logo de CyberWallet móvil - Solo visible en pantallas pequeñas */}
           <Box sx={{ 
-            display: { xs: 'flex', sm: 'none' },
+            display: { xs: 'flex', md: 'none' },
             justifyContent: 'center',
             alignItems: 'center',
             opacity: 0.9,
@@ -375,9 +366,9 @@ const ModernDashboard: React.FC = () => {
             />
           </Box>
 
-          {/* Logo de CyberWallet PRINCIPAL - Visible desde tablet en adelante */}
+          {/* Logo de CyberWallet en el centro - Mejorado y más visible */}
           <Box sx={{ 
-            display: { xs: 'none', sm: 'flex' },
+            display: { xs: 'none', md: 'flex' },
             justifyContent: 'center',
             alignItems: 'center',
             opacity: 1,
@@ -506,13 +497,21 @@ const ModernDashboard: React.FC = () => {
           <Stack direction="row" spacing={2}>
             <Card sx={{ 
               borderRadius: 2, 
-              backgroundColor: semanticTokens.surface.primary,
-              border: `1px solid ${semanticTokens.border.subtle}`,
+              backgroundColor: theme.palette.mode === 'dark'
+                ? alpha('#475569', 0.8)
+                : alpha('#f1f5f9', 0.95),
+              border: theme.palette.mode === 'dark'
+                ? `1px solid ${alpha('#64748b', 0.3)}`
+                : `1px solid ${alpha('#cbd5e1', 0.4)}`,
               transition: 'all 0.2s ease',
               '&:hover': {
-                backgroundColor: semanticTokens.surface.interactive,
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? alpha('#64748b', 0.9)
+                  : alpha('#e2e8f0', 1),
                 transform: 'translateY(-1px)',
-                boxShadow: semanticTokens.shadow.md
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+                  : '0 4px 12px rgba(0, 0, 0, 0.15)'
               }
             }}>
               <Tooltip title="Actualizar datos">
@@ -552,13 +551,21 @@ const ModernDashboard: React.FC = () => {
             
             <Card sx={{ 
               borderRadius: 2, 
-              backgroundColor: semanticTokens.surface.primary,
-              border: `1px solid ${semanticTokens.border.subtle}`,
+              backgroundColor: theme.palette.mode === 'dark'
+                ? alpha('#475569', 0.8)
+                : alpha('#f1f5f9', 0.95),
+              border: theme.palette.mode === 'dark'
+                ? `1px solid ${alpha('#64748b', 0.3)}`
+                : `1px solid ${alpha('#cbd5e1', 0.4)}`,
               transition: 'all 0.2s ease',
               '&:hover': {
-                backgroundColor: semanticTokens.surface.interactive,
+                backgroundColor: theme.palette.mode === 'dark'
+                  ? alpha('#64748b', 0.9)
+                  : alpha('#e2e8f0', 1),
                 transform: 'translateY(-1px)',
-                boxShadow: semanticTokens.shadow.md
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+                  : '0 4px 12px rgba(0, 0, 0, 0.15)'
               }
             }}>
               <Tooltip title="Notificaciones">
@@ -808,23 +815,19 @@ const ModernDashboard: React.FC = () => {
                 height: '100%',
                 background: theme.palette.mode === 'dark' 
                   ? `linear-gradient(145deg, ${alpha('#475569', 0.95)} 0%, ${alpha('#64748b', 0.85)} 50%, ${alpha('#52525b', 0.9)} 100%)`
-                  : `linear-gradient(145deg, 
-                      ${alpha('#f8fafc', 0.95)} 0%, 
-                      ${alpha('#ffffff', 0.98)} 30%, 
-                      ${alpha('#f1f5f9', 0.92)} 70%, 
-                      ${alpha('#e2e8f0', 0.85)} 100%)`, // Gradiente con vida, no blanco plano
-                backdropFilter: 'blur(20px)',
+                  : 'linear-gradient(145deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)',
+                backdropFilter: 'blur(10px)',
                 border: theme.palette.mode === 'dark' 
                   ? `1px solid ${alpha('#94a3b8', 0.5)}`
-                  : `1px solid ${alpha('#e2e8f0', 0.6)}`,
+                  : `1px solid ${alpha('#cbd5e1', 0.3)}`,
                 boxShadow: theme.palette.mode === 'light' 
-                  ? '0 8px 32px rgba(59, 130, 246, 0.12), 0 4px 16px rgba(6, 182, 212, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                  ? '0 10px 40px rgba(59, 130, 246, 0.15), 0 4px 20px rgba(6, 182, 212, 0.08)' 
                   : '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(148, 163, 184, 0.25)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.3s ease',
                 '&:hover': {
-                  transform: 'translateY(-3px)',
+                  transform: 'translateY(-2px)',
                   boxShadow: theme.palette.mode === 'light' 
-                    ? '0 12px 48px rgba(59, 130, 246, 0.18), 0 6px 24px rgba(6, 182, 212, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1)'
+                    ? '0 16px 50px rgba(59, 130, 246, 0.2), 0 6px 25px rgba(6, 182, 212, 0.12)' 
                     : '0 12px 40px rgba(0, 0, 0, 0.4), 0 6px 25px rgba(148, 163, 184, 0.35)'
                 }
               }}>
@@ -890,15 +893,11 @@ const ModernDashboard: React.FC = () => {
           <Card sx={{ 
             background: theme.palette.mode === 'dark' 
               ? `linear-gradient(145deg, ${alpha('#475569', 0.95)} 0%, ${alpha('#64748b', 0.85)} 50%, ${alpha('#52525b', 0.9)} 100%)`
-              : `linear-gradient(145deg, 
-                  ${alpha('#f8fafc', 0.95)} 0%, 
-                  ${alpha('#ffffff', 0.98)} 30%, 
-                  ${alpha('#f1f5f9', 0.92)} 70%, 
-                  ${alpha('#e2e8f0', 0.85)} 100%)`, // Gradiente con vida
-            backdropFilter: 'blur(20px)',
+              : 'linear-gradient(145deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)',
+            backdropFilter: 'blur(10px)',
             border: theme.palette.mode === 'dark' 
               ? `1px solid ${alpha('#94a3b8', 0.5)}`
-              : `1px solid ${alpha('#e2e8f0', 0.6)}`,
+              : `1px solid ${alpha('#cbd5e1', 0.3)}`,
             boxShadow: theme.palette.mode === 'light' 
               ? '0 10px 40px rgba(6, 182, 212, 0.12), 0 4px 20px rgba(59, 130, 246, 0.06)' 
               : '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(148, 163, 184, 0.25)',
@@ -1014,17 +1013,13 @@ const ModernDashboard: React.FC = () => {
               <Card sx={{
                 background: theme.palette.mode === 'dark' 
                   ? `linear-gradient(145deg, ${alpha('#475569', 0.95)} 0%, ${alpha('#64748b', 0.85)} 50%, ${alpha('#52525b', 0.9)} 100%)`
-                  : `linear-gradient(145deg, 
-                      ${alpha('#f8fafc', 0.95)} 0%, 
-                      ${alpha('#ffffff', 0.98)} 30%, 
-                      ${alpha('#f1f5f9', 0.92)} 70%, 
-                      ${alpha('#e2e8f0', 0.85)} 100%)`, // Gradiente con vida
-                backdropFilter: 'blur(20px)',
+                  : 'linear-gradient(145deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)',
+                backdropFilter: 'blur(10px)',
                 border: theme.palette.mode === 'dark' 
                   ? `1px solid ${alpha('#94a3b8', 0.5)}`
-                  : `1px solid ${alpha('#e2e8f0', 0.6)}`,
+                  : `1px solid ${alpha('#cbd5e1', 0.3)}`,
                 boxShadow: theme.palette.mode === 'light' 
-                  ? '0 8px 32px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(6, 182, 212, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                  ? '0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 16px rgba(0, 0, 0, 0.04)' 
                   : '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(148, 163, 184, 0.2)'
               }}>
                 <CardContent>
@@ -1078,17 +1073,13 @@ const ModernDashboard: React.FC = () => {
                 height: '100%',
                 background: theme.palette.mode === 'dark' 
                   ? `linear-gradient(145deg, ${alpha('#475569', 0.95)} 0%, ${alpha('#64748b', 0.85)} 50%, ${alpha('#52525b', 0.9)} 100%)`
-                  : `linear-gradient(145deg, 
-                      ${alpha('#f8fafc', 0.95)} 0%, 
-                      ${alpha('#ffffff', 0.98)} 30%, 
-                      ${alpha('#f1f5f9', 0.92)} 70%, 
-                      ${alpha('#e2e8f0', 0.85)} 100%)`, // Gradiente con vida
-                backdropFilter: 'blur(20px)',
+                  : 'linear-gradient(145deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)',
+                backdropFilter: 'blur(10px)',
                 border: theme.palette.mode === 'dark' 
                   ? `1px solid ${alpha('#94a3b8', 0.5)}`
-                  : `1px solid ${alpha('#e2e8f0', 0.6)}`,
+                  : `1px solid ${alpha('#cbd5e1', 0.3)}`,
                 boxShadow: theme.palette.mode === 'light' 
-                  ? '0 8px 32px rgba(59, 130, 246, 0.08), 0 4px 16px rgba(6, 182, 212, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                  ? '0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 16px rgba(0, 0, 0, 0.04)' 
                   : '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(148, 163, 184, 0.2)'
               }}>
                 <CardContent>
@@ -1275,80 +1266,118 @@ const ModernDashboard: React.FC = () => {
         </Alert>
       </Snackbar>
 
-      {/* 🥚 Enhanced Easter Egg FAB - Visible and Attractive */}
+      {/* 🥚 Easter Egg Button - Botón prohibido con diseño mejorado */}
       <Button
         onClick={handleEasterEgg}
-        variant="contained"
+        size="small"
+        variant="outlined"
         sx={{
           position: 'fixed',
-          bottom: 24,
-          left: 24,
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
+          bottom: 20,
+          left: 20,
+          opacity: 0.85,
+          fontSize: '12px',
+          fontWeight: 600,
+          px: 2,
+          py: 1,
           minWidth: 'auto',
-          opacity: 0.9,
-          zIndex: 1000,
-          // 🎯 CONTRASTE EXTREMO: FAB siempre visible como en el backup
-          background: theme.palette.mode === 'dark'
-            ? `linear-gradient(135deg, rgb(59, 130, 246), rgb(139, 92, 246)) !important`
-            : `linear-gradient(135deg, ${semanticTokens.surface.primary}, ${alpha(theme.palette.primary.main, 0.9)})`,
-          border: theme.palette.mode === 'dark' 
-            ? `2px solid rgb(59, 130, 246) !important` 
-            : `1px solid ${semanticTokens.border.interactive}`,
+          borderRadius: 3,
+          borderWidth: 2,
+          borderColor: theme.palette.mode === 'dark' 
+            ? '#94a3b8' 
+            : '#3b82f6',
           color: theme.palette.mode === 'dark' 
-            ? 'rgb(255, 255, 255) !important' 
-            : 'primary.main',
-          backdropFilter: 'blur(16px)',
+            ? '#f1f5f9' 
+            : '#1e40af',
+          background: theme.palette.mode === 'dark' 
+            ? `linear-gradient(135deg, ${alpha('#475569', 0.9)} 0%, ${alpha('#64748b', 0.7)} 100%)`
+            : `linear-gradient(135deg, ${alpha('#dbeafe', 0.9)} 0%, ${alpha('#bfdbfe', 0.8)} 100%)`,
+          backdropFilter: 'blur(8px)',
           boxShadow: theme.palette.mode === 'dark'
-            ? `0 8px 25px rgba(59, 130, 246, 0.4) !important`
-            : semanticTokens.shadow.financial,
-          transform: easterEggClicks > 0 ? 'scale(1.1)' : 'scale(1)',
+            ? '0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)'
+            : '0 4px 20px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+          transform: easterEggClicks > 0 ? 'scale(1.05)' : 'scale(1)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          // � Efecto de pulso cuando se acerca al objetivo
-          ...(easterEggClicks > 20 && {
-            animation: 'easterEggPulse 1s ease-in-out infinite',
-            '@keyframes easterEggPulse': {
-              '0%, 100%': { 
-                transform: 'scale(1)',
-                boxShadow: theme.palette.mode === 'dark'
-                  ? '0 8px 25px rgba(59, 130, 246, 0.4)'
-                  : semanticTokens.shadow.financial
-              },
-              '50%': { 
-                transform: 'scale(1.15)',
-                boxShadow: theme.palette.mode === 'dark'
-                  ? '0 12px 35px rgba(255, 215, 0, 0.6)'
-                  : '0 12px 35px rgba(220, 38, 38, 0.5)'
-              }
-            }
-          }),
+          zIndex: 1000,
+          // 🎨 Efecto de brillo sutil
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: '-100%',
+            width: '100%',
+            height: '100%',
+            background: `linear-gradient(90deg, transparent, ${alpha('#ffffff', 0.4)}, transparent)`,
+            transition: 'left 0.5s',
+          },
           '&:hover': {
             opacity: 1,
-            background: theme.palette.mode === 'dark'
-              ? `linear-gradient(135deg, rgb(99, 170, 255), rgb(179, 132, 255)) !important`
-              : semanticTokens.surface.interactive,
-            transform: 'translateY(-2px) scale(1.05)',
+            transform: 'scale(1.1) translateY(-2px)',
+            borderColor: theme.palette.mode === 'dark' 
+              ? '#cbd5e1' 
+              : '#2563eb',
+            background: theme.palette.mode === 'dark' 
+              ? `linear-gradient(135deg, ${alpha('#64748b', 0.95)} 0%, ${alpha('#94a3b8', 0.8)} 100%)`
+              : `linear-gradient(135deg, ${alpha('#bfdbfe', 1)} 0%, ${alpha('#93c5fd', 0.9)} 100%)`,
             boxShadow: theme.palette.mode === 'dark'
-              ? `0 12px 35px rgba(59, 130, 246, 0.6) !important`
-              : semanticTokens.shadow.lg,
+              ? '0 8px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25)'
+              : '0 8px 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 1)',
+            // 🌟 Activar brillo en hover
+            '&::before': {
+              left: '100%',
+            }
           },
           '&:active': {
-            transform: 'translateY(0px) scale(0.95)',
-          }
+            transform: 'scale(0.95) translateY(0px)',
+          },
+          // 🎯 Animación especial cuando se acerca al rickroll
+          ...(easterEggClicks > 25 && {
+            animation: 'easterEggWiggle 0.6s ease-in-out infinite',
+            borderColor: theme.palette.mode === 'dark' ? '#f59e0b' : '#dc2626',
+            background: theme.palette.mode === 'dark'
+              ? `linear-gradient(135deg, ${alpha('#dc2626', 0.3)} 0%, ${alpha('#f59e0b', 0.2)} 100%)`
+              : `linear-gradient(135deg, ${alpha('#fee2e2', 0.9)} 0%, ${alpha('#fef3c7', 0.8)} 100%)`,
+            '@keyframes easterEggWiggle': {
+              '0%': { transform: 'rotate(0deg) scale(1.05)' },
+              '25%': { transform: 'rotate(2deg) scale(1.08)' },
+              '75%': { transform: 'rotate(-2deg) scale(1.08)' },
+              '100%': { transform: 'rotate(0deg) scale(1.05)' }
+            }
+          }),
+          // 🔥 Efecto de pulso para clicks medios
+          ...(easterEggClicks > 15 && easterEggClicks <= 25 && {
+            animation: 'easterEggPulse 1.5s ease-in-out infinite',
+            '@keyframes easterEggPulse': {
+              '0%': { 
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 4px 20px rgba(0, 0, 0, 0.4)'
+                  : '0 4px 20px rgba(59, 130, 246, 0.25)' 
+              },
+              '50%': { 
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 6px 25px rgba(168, 85, 247, 0.4)'
+                  : '0 6px 25px rgba(139, 92, 246, 0.4)' 
+              },
+              '100%': { 
+                boxShadow: theme.palette.mode === 'dark'
+                  ? '0 4px 20px rgba(0, 0, 0, 0.4)'
+                  : '0 4px 20px rgba(59, 130, 246, 0.25)' 
+              }
+            }
+          })
         }}
       >
         🔒 {easterEggClicks === 0 
-          ? 'no tocar'
-          : easterEggClicks < 10
-            ? `🔓 ${easterEggClicks}/30`
-            : easterEggClicks < 20
-              ? `✨ ${easterEggClicks}/30`
-              : easterEggClicks < 28
-                ? `🚀 ¡${easterEggClicks}/30!`
-                : easterEggClicks < 30
-                  ? `🎯 ¡¡${easterEggClicks}/30!!`
-                  : '🎉 ¡RICKROLL!'
+          ? 'botón sin uso "no tocar"' 
+          : easterEggClicks < 5 
+            ? '😠 te dije que no' 
+            : easterEggClicks < 10 
+              ? '🤨 sigues aquí...' 
+              : easterEggClicks < 20 
+                ? '😏 ¿en serio?' 
+                : easterEggClicks < 27 
+                  ? '🎵 algo se acerca...' 
+                  : '🚨 ¡PELIGRO!'
         }
       </Button>
 
@@ -1358,12 +1387,6 @@ const ModernDashboard: React.FC = () => {
         onClose={() => setEasterEggDialog(false)}
         maxWidth="sm"
         fullWidth
-        sx={{
-          '& .MuiDialog-container': {
-            alignItems: 'center',
-            justifyContent: 'center',
-          }
-        }}
         PaperProps={{
           sx: {
             borderRadius: 3,
@@ -1372,9 +1395,6 @@ const ModernDashboard: React.FC = () => {
               : `linear-gradient(135deg, ${alpha('#ffffff', 0.95)} 0%, ${alpha('#f7fafc', 0.95)} 100%)`,
             backdropFilter: 'blur(20px)',
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-            position: 'relative',
-            top: 'auto',
-            margin: '32px auto',
           }
         }}
       >

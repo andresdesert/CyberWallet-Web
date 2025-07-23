@@ -17,11 +17,9 @@ import {
     LightMode as LightModeIcon,
     Login as LoginIcon,
     PersonAdd as RegisterIcon,
-    Translate as TranslateIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useUnifiedTheme } from '../context/UnifiedThemeContext';
-import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
 import LandingSidebar from '@/layout/LandingSidebar';
@@ -73,7 +71,6 @@ const LandingHeader: React.FC = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { colorScheme, toggleColorScheme } = useUnifiedTheme();
-    const { i18n } = useTranslation();
     
     // 📱 Mobile-first responsive
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -103,12 +100,6 @@ const LandingHeader: React.FC = () => {
 
     const handleRegister = () => {
         navigate('/register');
-    };
-
-    const toggleLanguage = () => {
-        const currentLang = i18n.language;
-        const newLang = currentLang === 'es' ? 'en' : 'es';
-        i18n.changeLanguage(newLang);
     };
 
     return (
@@ -189,20 +180,6 @@ const LandingHeader: React.FC = () => {
                             alignItems: 'center', 
                             gap: { xs: 1, sm: 2 } 
                         }}>
-                            {/* Language Toggle */}
-                            <motion.div
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <ThemeToggleButton
-                                    onClick={toggleLanguage}
-                                    size={isMobile ? "small" : "medium"}
-                                    aria-label="Toggle language"
-                                >
-                                    <TranslateIcon fontSize={isMobile ? "small" : "medium"} />
-                                </ThemeToggleButton>
-                            </motion.div>
-                            
                             {/* Theme Toggle */}
                             <motion.div
                                 whileHover={{ scale: 1.1 }}
@@ -223,47 +200,6 @@ const LandingHeader: React.FC = () => {
                             {/* 📱 Desktop Navigation */}
                             {!isMobile && (
                                 <Box sx={{ display: 'flex', gap: 1.5, ml: 2 }}>
-                                    {/* Navigation Links */}
-                                    <motion.div
-                                        initial={{ y: -20, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{ duration: 0.5, delay: 0.15 }}
-                                        whileHover={{ scale: 1.02 }}
-                                    >
-                                        <NavButton
-                                            variant="text"
-                                            onClick={() => {
-                                                navigate('/about-me');
-                                                setTimeout(() => {
-                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                                }, 100);
-                                            }}
-                                            size={isTablet ? "small" : "medium"}
-                                        >
-                                            Sobre Mí
-                                        </NavButton>
-                                    </motion.div>
-
-                                    <motion.div
-                                        initial={{ y: -20, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{ duration: 0.5, delay: 0.18 }}
-                                        whileHover={{ scale: 1.02 }}
-                                    >
-                                        <NavButton
-                                            variant="text"
-                                            onClick={() => {
-                                                const featuresSection = document.getElementById('features-section');
-                                                if (featuresSection) {
-                                                    featuresSection.scrollIntoView({ behavior: 'smooth' });
-                                                }
-                                            }}
-                                            size={isTablet ? "small" : "medium"}
-                                        >
-                                            Características
-                                        </NavButton>
-                                    </motion.div>
-
                                     <motion.div
                                         initial={{ y: -20, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}

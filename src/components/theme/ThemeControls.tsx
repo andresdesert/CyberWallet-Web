@@ -21,10 +21,8 @@ import {
 import {
   LightMode,
   DarkMode,
-  SettingsBrightness,
   Check,
   Palette,
-  AutoAwesome,
   Computer,
   BrightnessHigh,
   Brightness4,
@@ -70,6 +68,7 @@ export const ThemeControls: React.FC = () => {
       shortcut: '⌘D',
       gradient: 'linear-gradient(135deg, #374151 0%, #111827 100%)',
     },
+
   ];
 
   // 🎨 Función para obtener el icono dinámico
@@ -136,6 +135,7 @@ export const ThemeControls: React.FC = () => {
             event.preventDefault();
             setMode('dark');
             break;
+
         }
       }
     };

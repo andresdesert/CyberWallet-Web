@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
                         >
                             <Avatar
                                 alt="Andrés Simahan"
-                                src={getAssetPath('profile-photo.png')}
+                                src={getAssetPath('assets/images/profile-photo.png')}
                                 sx={{ 
                                     width: 140, 
                                     height: 140, 
@@ -89,7 +89,7 @@ const Hero: React.FC = () => {
                                     variant="contained"
                                     color="primary"
                                     startIcon={<DownloadIcon />}
-                                    href={getAssetPath('CV-QA-Simahan.pdf')}
+                                    href={getAssetPath('assets/documents/CV-QA-Simahan.pdf')}
                                     download="CV-QA-Andres-Simahan.pdf"
                                     sx={{
                                         borderRadius: 2,

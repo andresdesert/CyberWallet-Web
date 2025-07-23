@@ -424,7 +424,7 @@ export const UnifiedThemeProvider: React.FC<UnifiedThemeProviderProps> = ({
 }) => {
   const [mode, setModeState] = useState<ThemeMode>('dark'); // 🌙 Dark by default
   
-  // Determinar el color scheme actual (simplificado)
+  // Determinar el color scheme actual
   const colorScheme: ColorScheme = mode;
 
   // 🔄 Toggle color scheme (solo entre light y dark)

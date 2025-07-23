@@ -42,15 +42,15 @@ export const UnifiedThemeProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setThemeMode(prev => prev === 'light' ? 'dark' : 'light');
   }, []);
 
-  // Tema MUI con colores violeta preservados
+  // Tema MUI básico
   const muiTheme = useMemo(() => createTheme({
     palette: {
       mode: colorScheme,
       primary: {
-        main: colorScheme === 'dark' ? '#8B45BF' : '#6366f1', // Violeta preservado
+        main: colorScheme === 'dark' ? '#6366f1' : '#4f46e5',
       },
       secondary: {
-        main: colorScheme === 'dark' ? '#A855F7' : '#d97706', // Violeta claro / Naranja
+        main: colorScheme === 'dark' ? '#f59e0b' : '#d97706',
       },
     },
     typography: {

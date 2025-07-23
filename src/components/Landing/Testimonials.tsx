@@ -265,7 +265,7 @@ const Testimonials: React.FC = () => {
                   tabIndex={0}
                   sx={{
                     width: "100%",
-                    height: { xs: 280, sm: 320 }, // Altura ajustada para mobile
+                    height: 320, // Altura fija para uniformidad
                     display: "flex",
                     flexDirection: "column",
                     background: alpha(theme.palette.background.paper, 0.6),
@@ -288,11 +288,11 @@ const Testimonials: React.FC = () => {
                   {/* — Header: Avatar + Datos — */}
                   <Box
                     sx={{
-                      p: { xs: theme.spacing(2), sm: theme.spacing(3) },
-                      pb: { xs: theme.spacing(1.5), sm: theme.spacing(2) },
+                      p: theme.spacing(3),
+                      pb: theme.spacing(2),
                       display: "flex",
                       alignItems: "center",
-                      gap: { xs: 1.5, sm: 2 },
+                      gap: 2,
                       borderBottom: `1px solid ${alpha(
                         theme.palette.divider,
                         0.1

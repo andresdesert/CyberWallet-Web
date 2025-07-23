@@ -51,9 +51,9 @@ const LandingPage: React.FC = () => {
         right: 0,
         bottom: 0,
         background: theme.palette.mode === 'dark'
-          ? `radial-gradient(circle at 60% 40%, ${alpha('#6366f1', 0.06)} 0%, transparent 70%),
-             radial-gradient(circle at 20% 80%, ${alpha('#8B45BF', 0.04)} 0%, transparent 60%)` // Tonos violetas más intensos
-          : `radial-gradient(circle at 60% 40%, ${alpha('#6366f1', 0.04)} 0%, transparent 70%)`,
+          ? `radial-gradient(circle at 60% 40%, ${alpha('#4299e1', 0.04)} 0%, transparent 70%),
+             radial-gradient(circle at 20% 80%, ${alpha('#9f7aea', 0.03)} 0%, transparent 60%)`
+          : `radial-gradient(circle at 60% 40%, ${alpha(theme.palette.primary.main, 0.03)} 0%, transparent 70%)`,
         pointerEvents: 'none',
         zIndex: 0
       }
@@ -76,7 +76,7 @@ const LandingPage: React.FC = () => {
         <Hero />
         
         <Box sx={{ 
-          mt: { xs: 6, sm: 8, md: 10 }, 
+          mt: { xs: 5, sm: 6, md: 8 }, 
           mx: 'auto', 
           textAlign: 'center', 
           maxWidth: '1200px', 
@@ -87,7 +87,7 @@ const LandingPage: React.FC = () => {
         </Box>
         
         <Box sx={{ 
-          mt: { xs: 6, sm: 8, md: 10 }, 
+          mt: { xs: 4, sm: 6, md: 7 }, 
           mx: 'auto', 
           textAlign: 'center', 
           maxWidth: '1200px', 
@@ -98,7 +98,7 @@ const LandingPage: React.FC = () => {
         </Box>
         
         <Box sx={{ 
-          mt: { xs: 6, sm: 8, md: 10 }, 
+          mt: { xs: 4, sm: 6, md: 7 }, 
           mb: 4, 
           mx: 'auto', 
           textAlign: 'center', 

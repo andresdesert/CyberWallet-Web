@@ -15,13 +15,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "build-prod": "cross-env NODE_ENV=production GITHUB_PAGES=true tsc -b && cross-env NODE_ENV=production GITHUB_PAGES=true vite build",
+    "build-github": "cross-env NODE_ENV=production GITHUB_PAGES=true tsc -b && cross-env NODE_ENV=production GITHUB_PAGES=true vite build",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "postbuild": "cross-env-shell 'touch dist/.nojekyll && cp public/404.html dist/404.html' || (echo. > dist\\.nojekyll && copy public\\404.html dist\\404.html)",
+    "postbuild": "echo. > dist\\.nojekyll && copy public\\404.html dist\\404.html",
     "predeploy": "npm run clean && npm run build-prod",
     "deploy": "gh-pages -d dist --dotfiles --no-cache --repo=https://github.com/andresdesert/CyberWallet-Web.git",
+    "deploy-github": "node scripts/deploy-github-pages.cjs",
+    "optimize-gh-pages": "node scripts/optimize-for-github-pages.cjs",
     "clean": "if exist dist rmdir /s /q dist && if exist node_modules\\.cache rmdir /s /q node_modules\\.cache"
   },
   "dependencies": {

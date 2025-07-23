@@ -38,7 +38,7 @@ Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages com
 ### 📋 **Enlaces Directos**
 - 🏠 **Landing Page**: https://andresdesert.github.io/CyberWallet-Web/
 - 👤 **About Me/CV**: https://andresdesert.github.io/CyberWallet-Web/about-me  
-- 📄 **PDF del CV**: https://andresdesert.github.io/CyberWallet-Web/CV-QA-Simahan.pdf
+- 📄 **PDF del CV**: https://andresdesert.github.io/CyberWallet-Web/assets/documents/CV-QA-Simahan.pdf
 - 🎮 **Dashboard Demo**: https://andresdesert.github.io/CyberWallet-Web/dashboard
 
 ## 🚀 **Despliegue Rápido**

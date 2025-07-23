@@ -210,7 +210,7 @@ const resources = {
       "logout": "Cerrar Sesión",
       "dark_mode": "Modo Oscuro",
       "light_mode": "Modo Claro",
-      "auto_mode": "Automático",
+  
       "spanish": "Español",
       "english": "Inglés",
       "portuguese": "Portugués"
@@ -421,7 +421,7 @@ const resources = {
       "logout": "Logout",
       "dark_mode": "Dark Mode",
       "light_mode": "Light Mode",
-      "auto_mode": "Auto",
+  
       "spanish": "Spanish",
       "english": "English",
       "portuguese": "Portuguese"

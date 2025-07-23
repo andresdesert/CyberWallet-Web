@@ -18,7 +18,7 @@ const EducationalFooter: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <Box sx={{ py: { xs: 4, sm: 5, md: 6 } }}> {/* Padding vertical reducido */}
+        <Box sx={{ py: 8 }}>
             <Container maxWidth="lg">
                 <FadeInUp>
                     <Paper
@@ -82,13 +82,7 @@ const EducationalFooter: React.FC = () => {
                             <Button
                                 variant="contained"
                                 size="large"
-                                onClick={() => {
-                                    navigate('/about-me');
-                                    // Scroll to top when navigating
-                                    setTimeout(() => {
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    }, 100);
-                                }}
+                                onClick={() => navigate('/about-me')}
                                 startIcon={<PersonIcon />}
                                 sx={{
                                     px: 4,

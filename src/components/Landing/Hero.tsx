@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
                 justifyContent: 'center',
                 position: 'relative',
                 background: `radial-gradient(circle at 50% 50%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 70%)`,
-                py: { xs: 4, sm: 6, md: 8 }, // Padding vertical optimizado
+                py: { xs: 8, sm: 12 },
                 px: { xs: 2, sm: 4 }
             }}
         >
@@ -74,6 +74,26 @@ const Hero: React.FC = () => {
                                 animated={true}
                             />
                         </motion.div>
+                    </FadeInUp>
+
+                    {/* 🎯 Texto de marca */}
+                    <FadeInUp delay={0.15}>
+                        <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                                fontWeight: 600,
+                                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                mb: 2,
+                                letterSpacing: '0.05em'
+                            }}
+                        >
+                            CyberWallet
+                        </Typography>
                     </FadeInUp>
 
                     {/* 🎯 Título principal */}
@@ -225,13 +245,7 @@ const Hero: React.FC = () => {
                             {/* Botón: Sobre Mi */}
                             <Button
                                 variant="text"
-                                onClick={() => {
-                                    navigate('/about-me');
-                                    // Scroll to top when navigating
-                                    setTimeout(() => {
-                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    }, 100);
-                                }}
+                                onClick={() => navigate('/about-cv')}
                                 sx={{
                                     px: { xs: 2, sm: 3 },
                                     py: 1,

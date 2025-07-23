@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
 
                 <IconButton
                     component="a"
-                    href="/cv/CV-QA-Simahan.pdf"
+                    href="/assets/documents/CV-QA-Simahan.pdf"
                     download
                     aria-label="Descargar CV"
                     sx={{ color: 'text.primary' }}

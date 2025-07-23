@@ -190,6 +190,17 @@ export default defineConfig(({ mode }) => {
       },
       assetsInlineLimit: 4096,
       cssCodeSplit: true,
+      // 🎯 CRÍTICO: Asegurar que las rutas sean absolutas para GitHub Pages
+      ...(isGitHubPages && {
+        rollupOptions: {
+          output: {
+            // Forzar rutas absolutas para GitHub Pages
+            assetFileNames: 'assets/[name]-[hash].[ext]',
+            chunkFileNames: 'assets/js/[name]-[hash].js',
+            entryFileNames: 'assets/js/[name]-[hash].js'
+          }
+        }
+      })
     },
   };
 });

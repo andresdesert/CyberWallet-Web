@@ -72,18 +72,12 @@ const LoginPage: React.FC = () => {
         <Box
             sx={{
                 minHeight: '100vh',
-                maxHeight: '100vh',
-                width: '100%',
-                maxWidth: '100vw',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 p: 2,
                 position: 'relative',
                 overflow: 'hidden',
-                // 🎯 CRÍTICO: Constraints para evitar stretching en producción
-                aspectRatio: 'auto',
-                boxSizing: 'border-box',
             }}
         >
             {/* Efectos de fondo mejorados */}
@@ -248,14 +242,12 @@ const LoginPage: React.FC = () => {
                         borderRadius: '24px',
                         background: theme.palette.mode === 'dark'
                             ? `linear-gradient(135deg, ${semanticTokens.surface.primary} 0%, ${theme.palette.grey[800]} 100%)`
-                            : `linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.98) 50%, rgba(241,245,249,0.95) 100%)`,
+                            : `linear-gradient(135deg, ${theme.palette.common.white} 0%, ${theme.palette.grey[50]} 100%)`,
                         backdropFilter: 'blur(20px)',
-                        border: theme.palette.mode === 'dark'
-                            ? `3px solid ${theme.palette.primary.main}20`
-                            : `2px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                        border: `3px solid ${theme.palette.primary.main}20`,
                         boxShadow: theme.palette.mode === 'dark'
                             ? `0 20px 60px ${theme.palette.background.default}60, 0 8px 32px ${theme.palette.primary.main}20`
-                            : `0 20px 60px rgba(0,0,0,0.08), 0 8px 32px ${alpha(theme.palette.primary.main, 0.12)}, inset 0 1px 0 rgba(255,255,255,0.9)`,
+                            : `0 20px 60px ${theme.palette.grey[200]}80, 0 8px 32px ${theme.palette.primary.main}15`,
                         position: 'relative',
                         overflow: 'hidden',
                         '&::before': {
@@ -266,20 +258,7 @@ const LoginPage: React.FC = () => {
                             right: 0,
                             height: '4px',
                             background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                        },
-                        // Efecto sutil de brillo en light mode
-                        ...(theme.palette.mode === 'light' && {
-                            '&::after': {
-                                content: '""',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                background: `radial-gradient(circle at 50% 0%, ${alpha(theme.palette.primary.main, 0.03)} 0%, transparent 50%)`,
-                                pointerEvents: 'none',
-                            }
-                        })
+                        }
                     }}
                 >
                     {/* Header */}

@@ -83,14 +83,14 @@ const TechnologySection: React.FC = () => {
       component="section"
       id="technology-section" // Cambiamos el ID para que sea más claro
       sx={{
-        py: { xs: 3, sm: 4, md: 5 }, // Padding vertical reducido como pediste
+        py: 'clamp(4rem, 10vw, 8rem)',
         background: theme.palette.mode === 'dark'
           ? `linear-gradient(180deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 100%)`
           : `linear-gradient(180deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, transparent 100%)`
       }}
     >
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 5 } }}> {/* Margin bottom reducido */}
+        <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 } }}>
           <Typography
             component="h2"
             variant="h3"
