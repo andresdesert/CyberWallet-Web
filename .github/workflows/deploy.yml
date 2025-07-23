@@ -25,10 +25,8 @@ jobs:
         node-version: '20'
         cache: 'npm'
 
-    - name: Install dependencies with fallback
-      run: |
-        npm ci --prefer-offline --no-audit --no-fund --production=false || true
-        node scripts/github-deps-fallback.cjs
+    - name: Install dependencies
+      run: npm ci --prefer-offline --no-audit --no-fund --production=false
 
     - name: Type check
       run: npm run type-check
