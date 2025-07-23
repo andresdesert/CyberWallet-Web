@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import AppLayout from '@/layout/AppLayout';
 import PageContainer from '@/layout/PageContainer';
+import { getAssetPath } from '@/utils/githubPagesConfig';
 
 const NotFoundPage: React.FC = () => {
     const theme = useTheme();
@@ -26,7 +27,7 @@ const NotFoundPage: React.FC = () => {
                     {/* 🖼️ Imagen 404 personalizada */}
                     <Box
                         component="img"
-                        src="/assets/images/404-not-found.jpg"
+                        src={getAssetPath('assets/images/404-not-found.jpg')}
                         alt="404 - Página no encontrada"
                         sx={{
                             maxWidth: { xs: '280px', sm: '400px' },
