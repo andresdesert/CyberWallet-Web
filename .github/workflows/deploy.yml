@@ -26,9 +26,7 @@ jobs:
           rm -rf dist || true # Elimina el directorio 'dist' si existe, ignora errores si no
           rm -rf node_modules/.cache || true # Elimina el caché de node_modules si existe, ignora errores
           npm run build 
-          touch dist/.nojekyll
-          cp public/404.html dist/404.html 
-
+          
       - name: Deploy to GitHub Pages
         run: npm run deploy
         env:
