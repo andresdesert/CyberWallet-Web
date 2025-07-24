@@ -17,7 +17,7 @@
     "build-fast": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prod": "npm run build && vite preview --port 5173 --host",
+    "prod": "npm run build && vite --port 5173 --host",
     "test": "vitest run --environment jsdom --reporter=verbose",
     "type-check": "tsc --noEmit",
     "postbuild": "echo. > dist\\.nojekyll && copy public\\404.html dist\\404.html",

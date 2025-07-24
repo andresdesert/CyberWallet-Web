@@ -160,7 +160,7 @@ const ModernDashboard: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/landing');
+    navigate('/');
     setSnackbar({ open: true, message: 'Sesión cerrada exitosamente', severity: 'success' });
   };
 
