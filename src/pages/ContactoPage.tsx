@@ -110,7 +110,16 @@ const ContactoPage: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ 
+      py: 4,
+      // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+      width: '100%',
+      maxWidth: '100vw',
+      minHeight: '100vh',
+      maxHeight: '100vh',
+      aspectRatio: 'auto',
+      boxSizing: 'border-box',
+    }}>
       {/* Header con botón de regreso */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

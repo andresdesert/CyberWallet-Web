@@ -84,6 +84,11 @@ const TechnologySection: React.FC = () => {
       id="tecnologia-vanguardia"
       sx={{
         py: 'clamp(4rem, 10vw, 8rem)',
+        // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+        width: '100%',
+        maxWidth: '100vw',
+        aspectRatio: 'auto',
+        boxSizing: 'border-box',
         background: theme.palette.mode === 'dark'
           ? `linear-gradient(180deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 100%)`
           : `linear-gradient(180deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, transparent 100%)`

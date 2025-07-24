@@ -1,0 +1,6 @@
+/* 🚀 CRITICAL CSS: CSS crítico inline para mejorar FCP */
+*,*::before,*::after{box-sizing:border-box}
+html{line-height:1.15;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#root{min-height:100vh}
+.loading-spinner{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}

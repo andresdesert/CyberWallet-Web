@@ -158,6 +158,11 @@ const Testimonials: React.FC = () => {
       id="testimonials-section"
       sx={{
         py: 'clamp(3rem, 8vw, 6rem)',
+        // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+        width: '100%',
+        maxWidth: '100vw',
+        aspectRatio: 'auto',
+        boxSizing: 'border-box',
         background:
           theme.palette.mode === "dark"
             ? `linear-gradient(180deg, ${alpha(

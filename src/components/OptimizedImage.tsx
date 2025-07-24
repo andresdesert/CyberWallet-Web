@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, Skeleton } from '@mui/material';
+import { getAssetPath } from '@/utils/pathUtils';
 
 interface OptimizedImageProps {
   src: string;
@@ -12,6 +13,7 @@ interface OptimizedImageProps {
   placeholder?: string;
   sx?: React.CSSProperties;
   style?: React.CSSProperties;
+  skipBasePath?: boolean; // Para casos donde ya se incluye la ruta completa
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -25,12 +27,34 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   placeholder,
   sx = {},
   style = {},
+  skipBasePath = false,
   ...props
 }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
   const [isInView, setIsInView] = useState(false);
-  const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  
+  // 🎯 FIX: Manejar rutas correctamente para GitHub Pages
+  const getImageSrc = () => {
+    if (skipBasePath || !src) return src;
+    
+    // Si la ruta ya es absoluta o externa, no modificar
+    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')) {
+      return src;
+    }
+    
+    // Para rutas que empiezan con /, asegurar que funcionen en GitHub Pages
+    if (src.startsWith('/')) {
+      const basePath = import.meta.env.PROD ? '/CyberWallet-Web' : '';
+      return `${basePath}${src}`;
+    }
+    
+    // Para rutas relativas, dejarlas como están
+    return src;
+  };
+
+  const imageSrc = getImageSrc();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,12 +77,12 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   }, []);
 
   const handleLoad = () => {
-    setIsLoaded(true);
+    setLoaded(true);
   };
 
   const handleError = () => {
-    setHasError(true);
-    setIsLoaded(true);
+    setError(true);
+    console.error(`Failed to load image: ${imageSrc}`);
   };
 
   return (
@@ -75,7 +99,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       style={style}
       {...props}
     >
-      {!isLoaded && (
+      {!loaded && (
         <Skeleton
           variant="rectangular"
           width="100%"
@@ -92,7 +116,12 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       
       {(isInView || loading === 'eager') && (
         <img
-          src={hasError ? placeholder || '/placeholder.png' : src}
+          src={error ? 
+               (placeholder ? 
+                (typeof placeholder === 'string' && !placeholder.includes('http') && !placeholder.includes('data:') ? 
+                 getAssetPath(placeholder) : placeholder) : 
+                getAssetPath('/placeholder.png')) : 
+               imageSrc}
           alt={alt}
           loading={loading}
           onLoad={handleLoad}
@@ -102,7 +131,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
             height: '100%',
             objectFit,
             transition: 'opacity 0.3s ease',
-            opacity: isLoaded ? 1 : 0,
+            opacity: loaded ? 1 : 0,
             borderRadius,
           }}
         />

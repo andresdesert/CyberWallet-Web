@@ -118,7 +118,7 @@ const LazyLandingPage = lazy(() => import("@/pages/LandingPage"));
 const LazyLoginPage = lazy(() => import("@/pages/LoginPage"));
 const LazyRegisterPage = lazy(() => import("@/pages/RegisterPage"));
 const LazyForgotPasswordPage = lazy(() => import("@/pages/ForgotPasswordPage"));
-const LazyDashboardPage = lazy(() => import("@/pages/DashboardPageNew"));
+const LazyDashboardPage = lazy(() => import("@/pages/ModernDashboard"));
 const LazyProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const LazySettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const LazyAboutMePage = lazy(() => import("@/pages/AboutMePage"));

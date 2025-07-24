@@ -11,7 +11,15 @@ const NotFoundPage: React.FC = () => {
 
     return (
         <AppLayout>
-            <PageContainer>
+            <PageContainer sx={{
+              // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+              width: '100%',
+              maxWidth: '100vw',
+              minHeight: '100vh',
+              maxHeight: '100vh',
+              aspectRatio: 'auto',
+              boxSizing: 'border-box',
+            }}>
                 <Box
                     sx={{
                         textAlign: 'center',

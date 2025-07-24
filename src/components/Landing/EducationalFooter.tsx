@@ -18,7 +18,14 @@ const EducationalFooter: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <Box sx={{ py: 8 }}>
+        <Box sx={{ 
+          py: 8,
+          // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+          width: '100%',
+          maxWidth: '100vw',
+          aspectRatio: 'auto',
+          boxSizing: 'border-box',
+        }}>
             <Container maxWidth="lg">
                 <FadeInUp>
                     <Paper

@@ -72,12 +72,18 @@ const LoginPage: React.FC = () => {
         <Box
             sx={{
                 minHeight: '100vh',
+                maxHeight: '100vh',
+                width: '100%',
+                maxWidth: '100vw',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 p: 2,
                 position: 'relative',
                 overflow: 'hidden',
+                // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+                aspectRatio: 'auto',
+                boxSizing: 'border-box',
             }}
         >
             {/* Efectos de fondo mejorados */}

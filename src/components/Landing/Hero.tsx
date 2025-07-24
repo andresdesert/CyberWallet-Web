@@ -24,13 +24,19 @@ const Hero: React.FC = () => {
             id="home"
             sx={{
                 minHeight: '100vh',
+                maxHeight: '100vh',
+                width: '100%',
+                maxWidth: '100vw',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'relative',
                 background: `radial-gradient(circle at 50% 50%, ${alpha(theme.palette.primary.main, 0.08)} 0%, transparent 70%)`,
                 py: { xs: 8, sm: 12 },
-                px: { xs: 2, sm: 4 }
+                px: { xs: 2, sm: 4 },
+                // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+                aspectRatio: 'auto',
+                boxSizing: 'border-box',
             }}
         >
             <Container maxWidth="lg">

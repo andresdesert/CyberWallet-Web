@@ -10,7 +10,6 @@ import {
     List,
     ListItem,
     ListItemText,
-    useMediaQuery,
     useTheme,
     alpha,
     Container,
@@ -38,6 +37,7 @@ import { HoverScale } from '@/components/ui/MicroInteractions';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useUnifiedTheme } from '@/context/UnifiedThemeContext';
+import { useResponsiveBreakpoint } from '@/hooks/useEnvironment';
 
 // Type definitions
 interface ScrollState {
@@ -149,7 +149,7 @@ const getHeaderStyles = (theme: Theme, scrollState: ScrollState, isMobile: boole
 const LandingHeader: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { isMobile, shouldShowMobileNav } = useResponsiveBreakpoint();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { t, i18n } = useTranslation('landing');

@@ -21,7 +21,15 @@ const AvatarUploader = lazy(() => import('@/components/Settings/AvatarUploader')
 const SettingsPage: React.FC = () => {
   return (
       <AppLayout>
-        <PageContainer maxWidth={900}>
+        <PageContainer maxWidth={900} sx={{
+          // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+          width: '100%',
+          maxWidth: '100vw',
+          minHeight: '100vh',
+          maxHeight: '100vh',
+          aspectRatio: 'auto',
+          boxSizing: 'border-box',
+        }}>
           <Box display="flex" alignItems="center" gap={2} mb={4}>
             <SettingsIcon color="primary" fontSize="large" />
             <Typography variant="h4" fontWeight={600}>

@@ -68,17 +68,23 @@ export default defineConfig(({ mode }) => {
       },
     },
     
-    // Configuración optimizada de CSS
+    // Configuración optimizada de CSS - CONSISTENTE dev/prod
     css: {
       devSourcemap: isDev,
-      postcss: !isDev ? {
+      postcss: {
         plugins: [
-          autoprefixer(),
-          cssnano({
-            preset: 'default',
+          autoprefixer({
+            grid: 'autoplace',
+            flexbox: 'no-2009'
           }),
+          ...(isDev ? [] : [cssnano({
+            preset: ['default', {
+              discardComments: { removeAll: true },
+              normalizeWhitespace: false
+            }]
+          })])
         ],
-      } : undefined,
+      },
     },
     
     // Optimizaciones avanzadas de dependencias
@@ -106,20 +112,20 @@ export default defineConfig(({ mode }) => {
       target: 'es2020',
       outDir: 'dist',
       assetsDir: 'assets',
-      sourcemap: false,
+      sourcemap: isDev,
       minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: true,
-          drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info'],
+          drop_console: !isDev,
+          drop_debugger: !isDev,
+          pure_funcs: isDev ? [] : ['console.log', 'console.info'],
           passes: 2,
         },
         mangle: {
           safari10: true,
         },
         format: {
-          comments: false,
+          comments: isDev,
         },
       },
       cssMinify: true,

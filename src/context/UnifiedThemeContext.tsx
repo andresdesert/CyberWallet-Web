@@ -12,7 +12,8 @@ import { convertSemanticTokensForMui } from '@/theme/utils/colorConverter';
 import { withAlpha } from '@/theme/utils/alphaUtils';
 
 // 🎯 Tipos de sistema de colores
-type ColorScheme = PaletteMode;
+export type ColorScheme = PaletteMode;
+export type ThemeMode = 'light' | 'dark' | 'auto';
 
 // 📐 8pt Grid System - Google Material Design Standard
 const GRID_BASE = 8;
