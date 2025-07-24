@@ -1,0 +1,1 @@
+import{d as i,g as t}from"./index-CAkMPucN.js";function e(i){return t("MuiDivider",i)}const r=i("MuiDivider",["root","absolute","fullWidth","inset","middle","flexItem","light","vertical","withChildren","withChildrenVertical","textAlignRight","textAlignLeft","wrapper","wrapperVertical"]);export{r as d,e as g};

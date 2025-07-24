@@ -1,0 +1,1 @@
+import{r as t}from"./index-CAkMPucN.js";function o({props:t,states:o,muiFormControl:r}){return o.reduce((o,e)=>(o[e]=t[e],r&&void 0===t[e]&&(o[e]=r[e]),o),{})}const r=t.createContext(void 0);function e(){return t.useContext(r)}export{r as F,o as f,e as u};

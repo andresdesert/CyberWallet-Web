@@ -1,0 +1,1 @@
+import{d as t,g as e}from"./index-CAkMPucN.js";function i(t){return e("MuiListItemText",t)}const s=t("MuiListItemText",["root","multiline","dense","inset","primary","secondary"]);export{i as g,s as l};

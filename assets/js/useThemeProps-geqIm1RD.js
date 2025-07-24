@@ -1,0 +1,1 @@
+import{a8 as e,a9 as n,u as o}from"./index-CAkMPucN.js";const s=e();function t(e){const{theme:o,name:s,props:t}=e;return o&&o.components&&o.components[s]&&o.components[s].defaultProps?n(o.components[s].defaultProps,t):t}function a({props:e,name:n,defaultTheme:s,themeId:a}){let p=o(s);return a&&(p=p[a]||p),t({theme:p,name:n,props:e})}export{t as g,s,a as u};
