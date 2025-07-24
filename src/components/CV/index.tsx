@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Container,
-  Grid,
   Paper,
   Typography,
   Avatar,
@@ -45,14 +44,14 @@ const CVPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Grid container spacing={4}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {/* Header Section */}
-          <Grid component="div" item xs={12}>
+          <Box>
             <Paper elevation={3} sx={{ p: 4, position: 'relative', overflow: 'hidden' }}>
-              <Grid component="div" container spacing={3} alignItems="center">
-                <Grid component="div" item xs={12} md={3}>
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3, alignItems: 'center' }}>
+                <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 25%' } }}>
                   <Avatar
-                    src="/profile-photo.jpg"
+                    src={process.env.NODE_ENV === 'development' ? "/profile-photo.png" : "/CyberWallet-Web/profile-photo.png"}
                     sx={{
                       width: 200,
                       height: 200,
@@ -60,8 +59,8 @@ const CVPage: React.FC = () => {
                       border: `4px solid ${theme.palette.primary.main}`,
                     }}
                   />
-                </Grid>
-                <Grid component="div" item xs={12} md={9}>
+                </Box>
+                <Box sx={{ flex: { xs: '1 1 100%', md: '0 0 75%' } }}>
                   <Typography variant="h3" gutterBottom sx={{ fontWeight: 700 }}>
                     {cvData.personalInfo.name}
                   </Typography>
@@ -82,13 +81,13 @@ const CVPage: React.FC = () => {
                   <Box sx={{ mt: 3 }}>
                     <CVDownloadButton />
                   </Box>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Paper>
-          </Grid>
+          </Box>
 
           {/* Professional Summary */}
-          <Grid item xs={12}>
+          <Box>
             <GlassmorphicHover>
               <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h5" gutterBottom color="primary" sx={{ fontWeight: 600 }}>
@@ -99,17 +98,17 @@ const CVPage: React.FC = () => {
                 </Typography>
               </Paper>
             </GlassmorphicHover>
-          </Grid>
+          </Box>
 
           {/* Experience */}
-          <Grid item xs={12}>
+          <Box>
             <Paper elevation={3} sx={{ p: 4 }}>
               <Typography variant="h5" gutterBottom color="primary" sx={{ fontWeight: 600 }}>
                 Experiencia Profesional
               </Typography>
-              <Grid container spacing={3}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {cvData.experience.map((exp, index) => (
-                  <Grid item xs={12} key={index}>
+                  <Box key={index}>
                     <Paper
                       elevation={0}
                       sx={{
@@ -146,22 +145,31 @@ const CVPage: React.FC = () => {
                         ))}
                       </Box>
                     </Paper>
-                  </Grid>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             </Paper>
-          </Grid>
+          </Box>
 
           {/* Skills */}
-          <Grid item xs={12}>
+          <Box>
             <GlassmorphicHover>
               <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h5" gutterBottom color="primary" sx={{ fontWeight: 600 }}>
                   Habilidades Técnicas
                 </Typography>
-                <Grid container spacing={3}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
                   {cvData.skills.map((skillGroup, index) => (
-                    <Grid item xs={12} md={4} key={index}>
+                    <Box 
+                      key={index} 
+                      sx={{ 
+                        width: { 
+                          xs: '100%', 
+                          md: 'calc(33.33% - 2rem)' 
+                        }, 
+                        flexGrow: 1 
+                      }}
+                    >
                       <Typography variant="h6" gutterBottom>
                         {skillGroup.category}
                       </Typography>
@@ -179,15 +187,15 @@ const CVPage: React.FC = () => {
                           />
                         ))}
                       </Box>
-                    </Grid>
+                    </Box>
                   ))}
-                </Grid>
+                </Box>
               </Paper>
             </GlassmorphicHover>
-          </Grid>
+          </Box>
 
           {/* Contact */}
-          <Grid item xs={12}>
+          <Box>
             <FloatingCard>
               <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h5" gutterBottom color="primary" sx={{ fontWeight: 600 }}>
@@ -220,8 +228,8 @@ const CVPage: React.FC = () => {
                 </Box>
               </Paper>
             </FloatingCard>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </motion.div>
     </Container>
   );

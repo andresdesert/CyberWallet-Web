@@ -10,15 +10,14 @@ import {
     List,
     ListItem,
     ListItemText,
-    useMediaQuery,
     useTheme,
     alpha,
     Container,
-    Chip,
     Fade,
     Menu,
     MenuItem,
-    Tooltip
+    Tooltip,
+    Theme
 } from '@mui/material';
 import {
     Menu as MenuIcon,
@@ -30,15 +29,23 @@ import {
     GitHub as GitHubIcon,
     Email as EmailIcon,
     Brightness4,
-    Brightness7,
-    SettingsBrightness
+    Brightness7
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import CyberWalletLogo from '@/components/ui/CyberWalletLogo';
-import { FadeInUp, HoverScale, SlideInRight } from '@/components/ui/MicroInteractions';
+import { HoverScale } from '@/components/ui/MicroInteractions';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useUnifiedTheme } from '@/context/UnifiedThemeContext';
+import { useResponsiveBreakpoint } from '@/hooks/useEnvironment';
+
+// Type definitions
+interface ScrollState {
+    scrollY: number;
+    isScrolled: boolean;
+    isScrollingUp: boolean;
+    isAtTop: boolean;
+}
 
 // 🎯 Hook personalizado para manejar scroll sticky moderno
 const useStickyHeader = () => {
@@ -55,7 +62,7 @@ const useStickyHeader = () => {
         const isScrollingUp = currentScrollY < scrollState.scrollY && currentScrollY > 100;
         const isAtTop = currentScrollY < 10;
 
-        setScrollState(prev => ({
+        setScrollState(() => ({
             scrollY: currentScrollY,
             isScrolled,
             isScrollingUp,
@@ -84,7 +91,7 @@ const useStickyHeader = () => {
 };
 
 // 🎨 Sistema de estilos dinámicos para el header
-const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
+const getHeaderStyles = (theme: Theme, scrollState: ScrollState, isMobile: boolean) => {
     const { isScrolled, isAtTop, scrollY } = scrollState;
     
     // Calcular opacidad del backdrop dinámicamente
@@ -107,7 +114,18 @@ const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
             ? `0 ${4 * shadowIntensity}px ${24 * shadowIntensity}px ${alpha('#000', theme.palette.mode === 'dark' ? 0.3 : 0.1)}`
             : 'none',
             
-        transform: 'none', // Eliminar transform que mueve el header
+        transform: 'none',
+        
+        // 📱 Altura optimizada para móviles - más compacta pero accesible
+        minHeight: isMobile ? '48px' : '80px',
+        maxHeight: isMobile ? '48px' : 'auto',
+        
+        // 📱 Asegurar que el header sea completamente visible
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
         
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         
@@ -131,7 +149,7 @@ const getHeaderStyles = (theme: any, scrollState: any, isMobile: boolean) => {
 const LandingHeader: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const { isMobile, shouldShowMobileNav } = useResponsiveBreakpoint();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const { t, i18n } = useTranslation('landing');
@@ -186,21 +204,21 @@ const LandingHeader: React.FC = () => {
         window.open(urls[type], '_blank');
     };
 
-    // 🎨 Drawer content mejorado
+    // 🎨 Drawer content mejorado y optimizado para móviles
     const drawer = (
-        <Box sx={{ width: 300, p: 3 }}>
+        <Box sx={{ width: '100%', p: 2, maxWidth: 320 }}> {/* Ancho completo en móviles pequeños */}
             <Box sx={{ 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between', 
-                mb: 4,
+                mb: 3,
                 pb: 2,
                 borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`
             }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <CyberWalletLogo size={40} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <CyberWalletLogo size={36} />
                     <Box>
-                        <Typography variant="h6" fontWeight="bold">
+                        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: '1.1rem' }}>
                             CyberWallet
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -210,8 +228,11 @@ const LandingHeader: React.FC = () => {
                 </Box>
                 <IconButton 
                     onClick={handleDrawerToggle}
+                    size="small"
                     sx={{
                         background: alpha(theme.palette.primary.main, 0.1),
+                        width: 36,
+                        height: 36,
                         '&:hover': {
                             background: alpha(theme.palette.primary.main, 0.2),
                             transform: 'rotate(90deg)',
@@ -219,7 +240,7 @@ const LandingHeader: React.FC = () => {
                         transition: 'all 0.3s ease',
                     }}
                 >
-                    <CloseIcon />
+                    <CloseIcon sx={{ fontSize: '18px' }} />
                 </IconButton>
             </Box>
             
@@ -374,6 +395,27 @@ const LandingHeader: React.FC = () => {
                 sx={{
                     ...getHeaderStyles(theme, scrollState, isMobile),
                     zIndex: 1300,
+                    // 📱 Indicador visual de scroll horizontal en móviles
+                    ...(isMobile && {
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            right: 0,
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '4px',
+                            height: '20px',
+                            background: `linear-gradient(180deg, transparent 0%, ${alpha(theme.palette.primary.main, 0.3)} 50%, transparent 100%)`,
+                            borderRadius: '2px',
+                            opacity: 0.6,
+                            pointerEvents: 'none',
+                            animation: 'pulse 2s infinite',
+                            '@keyframes pulse': {
+                                '0%, 100%': { opacity: 0.3 },
+                                '50%': { opacity: 0.7 },
+                            },
+                        }
+                    }),
                     '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -392,33 +434,88 @@ const LandingHeader: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="xl">
-                    <Toolbar sx={{ justifyContent: 'space-between', py: scrollState.isScrolled ? 0.5 : 1.5, transition: 'padding 0.3s ease' }}>
-                        {/* 🎨 Logo con animación */}
+                <Container 
+                    maxWidth="xl" 
+                    sx={{ 
+                        px: { xs: 0, sm: 2 }, // Sin padding en móviles para scroll completo
+                        // 📱 Habilitar scroll horizontal en móviles como respaldo
+                        ...(isMobile && {
+                            overflowX: 'auto',
+                            overflowY: 'visible',
+                            '&::-webkit-scrollbar': {
+                                height: '2px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: 'transparent',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: alpha(theme.palette.primary.main, 0.3),
+                                borderRadius: '2px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                                background: alpha(theme.palette.primary.main, 0.5),
+                            },
+                        })
+                    }}
+                >
+                    <Toolbar sx={{ 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        py: scrollState.isScrolled ? (isMobile ? 0.25 : 0.5) : (isMobile ? 0.5 : 1.5), 
+                        minHeight: isMobile ? '48px' : '80px',
+                        maxHeight: isMobile ? '48px' : 'auto',
+                        px: isMobile ? 1 : 0, // Padding mínimo en móviles
+                        transition: 'padding 0.3s ease, min-height 0.3s ease',
+                        // 📱 Configuración de scroll horizontal como respaldo
+                        width: isMobile ? 'max-content' : '100%',
+                        minWidth: isMobile ? '100%' : 'auto',
+                        overflow: 'visible',
+                        // 📱 Asegurar que el contenido sea scrolleable horizontalmente
+                        ...(isMobile && {
+                            gap: 1,
+                            flexWrap: 'nowrap',
+                        })
+                    }}>
+                        {/* 🎨 Logo con animación optimizado para móviles */}
                         <motion.div
                             animate={{ 
-                                scale: scrollState.isScrolled ? 0.9 : 1,
+                                scale: scrollState.isScrolled ? (isMobile ? 0.9 : 0.9) : 1,
                             }}
                             transition={{ duration: 0.3 }}
                         >
-                            <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                {/* 🎯 CORREGIDO: Solo el logo, sin texto duplicado */}
-                                <CyberWalletLogo size={scrollState.isScrolled ? 40 : 48} />
-                                {/* 🎯 ELIMINADO: Texto duplicado "CyberWallet" */}
-                                {/* <Box sx={{ ml: 2 }}>
-                                    <Typography 
-                                        variant="h6" 
-                                        fontWeight="bold"
-                                        sx={{ 
-                                            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                                            backgroundClip: 'text',
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
-                                        }}
-                                    >
-                                        CyberWallet
-                                    </Typography>
-                                </Box> */}
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                cursor: 'pointer',
+                                minWidth: 0,
+                                flex: isMobile ? '0 0 auto' : '1 1 auto',
+                                maxWidth: isMobile ? 'auto' : 'none',
+                            }}>
+                                {/* 🎯 Logo más compacto en móviles */}
+                                <CyberWalletLogo size={
+                                    isMobile 
+                                        ? (scrollState.isScrolled ? 28 : 32) 
+                                        : (scrollState.isScrolled ? 40 : 48)
+                                } />
+                                {/* Texto del logo solo en desktop */}
+                                {!isMobile && (
+                                    <Box sx={{ ml: 2 }}>
+                                        <Typography 
+                                            variant="h6" 
+                                            fontWeight="bold"
+                                            sx={{ 
+                                                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+                                                backgroundClip: 'text',
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                fontSize: scrollState.isScrolled ? '1.1rem' : '1.25rem',
+                                                transition: 'font-size 0.3s ease'
+                                            }}
+                                        >
+                                            CyberWallet
+                                        </Typography>
+                                    </Box>
+                                )}
                             </Box>
                         </motion.div>
 
@@ -539,30 +636,179 @@ const LandingHeader: React.FC = () => {
                             </Box>
                         )}
 
-                        {/* 📱 Botón móvil */}
+                        {/* 📱 Controles móviles optimizados con scroll horizontal */}
                         {isMobile && (
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                edge="start"
-                                onClick={handleDrawerToggle}
-                                sx={{
-                                    background: alpha(theme.palette.primary.main, 0.1),
-                                    '&:hover': {
-                                        background: alpha(theme.palette.primary.main, 0.2),
-                                        transform: 'scale(1.1)',
-                                    },
-                                    transition: 'all 0.3s ease',
-                                }}
-                            >
-                                <MenuIcon />
-                            </IconButton>
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: 0.5,
+                                minWidth: 0,
+                                flex: '0 0 auto',
+                                ml: 'auto',
+                                // 📱 Navegación horizontal scrolleable como respaldo
+                                overflowX: 'auto',
+                                overflowY: 'visible',
+                                maxWidth: '60vw', // Limitar ancho para permitir scroll
+                                '&::-webkit-scrollbar': {
+                                    height: '2px',
+                                },
+                                '&::-webkit-scrollbar-track': {
+                                    background: 'transparent',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    background: alpha(theme.palette.primary.main, 0.4),
+                                    borderRadius: '2px',
+                                },
+                            }}>
+                                {/* 🚀 Mini navegación horizontal en móviles */}
+                                <Box sx={{ 
+                                    display: 'flex', 
+                                    gap: 0.25, 
+                                    alignItems: 'center',
+                                    minWidth: 'max-content', // Forzar contenido a no cortarse
+                                    pr: 1, // Padding derecho para scroll completo
+                                }}>
+                                    {/* 📍 Botones de navegación rápida en móviles */}
+                                    {navItems.slice(0, 2).map((item, index) => ( // Solo mostrar 2 elementos principales
+                                        <IconButton
+                                            key={item.label}
+                                            onClick={() => handleNavClick(item.href)}
+                                            size="small"
+                                            sx={{
+                                                background: alpha(theme.palette.secondary.main, 0.1),
+                                                border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                                                width: 28,
+                                                height: 28,
+                                                minWidth: 28,
+                                                padding: 0,
+                                                '&:hover': {
+                                                    background: alpha(theme.palette.secondary.main, 0.2),
+                                                },
+                                                transition: 'all 0.2s ease',
+                                            }}
+                                        >
+                                            {React.cloneElement(item.icon, { sx: { fontSize: '14px' } })}
+                                        </IconButton>
+                                    ))}
+
+                                    {/* 🌓 Toggle de tema compacto */}
+                                    <IconButton
+                                        onClick={toggleColorScheme}
+                                        size="small"
+                                        sx={{
+                                            background: alpha(theme.palette.primary.main, 0.1),
+                                            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                            width: 28,
+                                            height: 28,
+                                            minWidth: 28,
+                                            padding: 0,
+                                            '&:hover': {
+                                                background: alpha(theme.palette.primary.main, 0.2),
+                                                transform: 'scale(1.05)',
+                                            },
+                                            transition: 'all 0.2s ease',
+                                        }}
+                                    >
+                                        {colorScheme === 'dark' ? 
+                                            <Brightness7 sx={{ fontSize: '14px' }} /> : 
+                                            <Brightness4 sx={{ fontSize: '14px' }} />
+                                        }
+                                    </IconButton>
+                                    
+                                    {/* 📱 Botón menú hamburguesa */}
+                                    <IconButton
+                                        color="inherit"
+                                        aria-label="open drawer"
+                                        edge="end"
+                                        onClick={handleDrawerToggle}
+                                        size="small"
+                                        sx={{
+                                            background: alpha(theme.palette.primary.main, 0.15),
+                                            border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+                                            width: 32, // Ligeramente más grande para destacar
+                                            height: 32,
+                                            minWidth: 32,
+                                            padding: 0,
+                                            '&:hover': {
+                                                background: alpha(theme.palette.primary.main, 0.25),
+                                                transform: 'scale(1.1)',
+                                                borderColor: alpha(theme.palette.primary.main, 0.5),
+                                            },
+                                            transition: 'all 0.2s ease',
+                                        }}
+                                    >
+                                        <MenuIcon sx={{ fontSize: '16px', fontWeight: 'bold' }} />
+                                    </IconButton>
+                                </Box>
+                            </Box>
                         )}
+
+                        {/* 📱 Versión anterior como respaldo
+                        {isMobile && (
+                            <Box sx={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: 0.25, // Menos gap para pantallas muy pequeñas
+                                minWidth: 0,
+                                flex: '0 0 auto',
+                                ml: 'auto', // Empujar a la derecha
+                            }}>
+                                <IconButton
+                                    onClick={toggleColorScheme}
+                                    size="small"
+                                    sx={{
+                                        background: alpha(theme.palette.primary.main, 0.1),
+                                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                        width: 32, // Más pequeño para pantallas pequeñas
+                                        height: 32,
+                                        minWidth: 32,
+                                        padding: 0,
+                                        '&:hover': {
+                                            background: alpha(theme.palette.primary.main, 0.2),
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                >
+                                    {colorScheme === 'dark' ? 
+                                        <Brightness7 sx={{ fontSize: '16px' }} /> : 
+                                        <Brightness4 sx={{ fontSize: '16px' }} />
+                                    }
+                                </IconButton>
+                                
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    edge="end"
+                                    onClick={handleDrawerToggle}
+                                    size="small"
+                                    sx={{
+                                        background: alpha(theme.palette.primary.main, 0.1),
+                                        border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                                        width: 32, // Más compacto
+                                        height: 32,
+                                        minWidth: 32,
+                                        padding: 0,
+                                        '&:hover': {
+                                            background: alpha(theme.palette.primary.main, 0.2),
+                                            transform: 'scale(1.05)',
+                                        },
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                >
+                                    <MenuIcon sx={{ fontSize: '16px' }} />
+                                </IconButton>
+                            </Box>
+                        )}
+                        */}
+
+                        {/* 📱 Botón móvil */}
+                        {/* ELIMINADO - Reemplazado por la sección de controles móviles optimizada arriba */}
                     </Toolbar>
                 </Container>
             </AppBar>
 
-            {/* 📱 Drawer móvil mejorado */}
+            {/* 📱 Drawer móvil optimizado para pantallas pequeñas */}
             <Drawer
                 variant="temporary"
                 open={mobileOpen}
@@ -574,11 +820,16 @@ const LandingHeader: React.FC = () => {
                     display: { xs: 'block', md: 'none' },
                     '& .MuiDrawer-paper': {
                         boxSizing: 'border-box',
-                        width: 300,
-                        background: alpha(theme.palette.background.paper, 0.95),
+                        width: { xs: '80vw', sm: 300 }, // 80% del viewport en móviles muy pequeños
+                        maxWidth: 300,
+                        background: alpha(theme.palette.background.paper, 0.98),
                         backdropFilter: 'blur(20px) saturate(200%)',
                         borderRight: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                         boxShadow: `0 8px 32px ${alpha('#000', 0.2)}`,
+                        // 📱 Asegurar que el drawer sea accesible
+                        top: 0,
+                        height: '100vh',
+                        overflow: 'auto',
                     },
                 }}
             >
@@ -626,8 +877,15 @@ const LandingHeader: React.FC = () => {
                 </MenuItem>
             </Menu>
 
-            {/* 📏 Spacer para header fixed */}
-            <Toolbar sx={{ minHeight: scrollState.isScrolled ? '64px' : '80px', transition: 'min-height 0.3s ease' }} />
+            {/* 📏 Spacer para header fixed - Optimizado para móviles */}
+            <Toolbar sx={{ 
+                minHeight: isMobile ? '48px' : '80px',
+                maxHeight: isMobile ? '48px' : '80px',
+                transition: 'min-height 0.3s ease',
+                // 📱 Asegurar que el espaciado sea consistente
+                padding: 0,
+                margin: 0,
+            }} />
         </>
     );
 };

@@ -332,6 +332,9 @@ const RegisterPage: React.FC = () => {
         <Box
             sx={{
                 minHeight: '100vh',
+                maxHeight: '100vh',
+                width: '100%',
+                maxWidth: '100vw',
                 background: theme.palette.mode === 'dark'
                     ? `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.grey[900]} 100%)`
                     : `linear-gradient(135deg, ${theme.palette.primary.main}10 0%, ${theme.palette.secondary.main}10 100%)`,
@@ -341,6 +344,9 @@ const RegisterPage: React.FC = () => {
                 py: 4,
                 position: 'relative',
                 overflow: 'hidden',
+                // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+                aspectRatio: 'auto',
+                boxSizing: 'border-box',
             }}
         >
             {/* Background decorations */}

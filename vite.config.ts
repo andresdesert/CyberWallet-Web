@@ -8,14 +8,17 @@ import compression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === 'development';
+  const isGitHubPages = mode === 'production';
+  
+  console.log('🔵 [VITE] Build mode:', mode);
+  console.log('🔵 [VITE] GitHub Pages mode:', isGitHubPages);
   
   return {
-    // 🌐 GitHub Pages configuration - only in production
-    base: isDev ? '/' : '/CyberWallet-Web/',
+    // 🌐 GitHub Pages configuration - OPTIMIZED
+    base: isGitHubPages ? '/CyberWallet-Web/' : '/',
     
     plugins: [
       react({
-        // Configuración optimizada para React
         babel: {
           plugins: ['@emotion/babel-plugin'],
         },
@@ -23,7 +26,7 @@ export default defineConfig(({ mode }) => {
       // 🗜️ COMPRESIÓN GZIP/BROTLI: Reduce transferencia en ~70%
       compression({
         algorithm: 'gzip',
-        threshold: 1024, // Solo comprimir archivos > 1KB
+        threshold: 1024,
         deleteOriginFile: false,
       }),
       compression({
@@ -33,49 +36,57 @@ export default defineConfig(({ mode }) => {
         ext: '.br',
       }),
     ],
+    
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    
     // Configuración de desarrollo
     server: {
       port: 5173,
       host: true,
       proxy: {
-        // Proxy para el backend
         '/api/v1': {
           target: 'http://localhost:8080',
           changeOrigin: true,
           secure: false,
           timeout: 15000,
-          configure: (proxy, _options) => {
-            proxy.on('error', (err, _req, _res) => {
+          configure: (proxy: any, _options: any) => {
+            proxy.on('error', (err: any, _req: any, _res: any) => {
               console.log('🔴 [Proxy Error]:', err.message);
             });
-            proxy.on('proxyReq', (_proxyReq, req, _res) => {
+            proxy.on('proxyReq', (_proxyReq: any, req: any, _res: any) => {
               console.log('🔵 [Proxy Request]:', req.method, req.url);
             });
-            proxy.on('proxyRes', (proxyRes, req, _res) => {
+            proxy.on('proxyRes', (proxyRes: any, req: any, _res: any) => {
               console.log('🟢 [Proxy Response]:', proxyRes.statusCode, req.url);
             });
           },
         },
       },
     },
-    // Configuración optimizada de CSS
+    
+    // Configuración optimizada de CSS - CONSISTENTE dev/prod
     css: {
       devSourcemap: isDev,
-      // Optimizaciones de CSS en producción
-      postcss: !isDev ? {
+      postcss: {
         plugins: [
-          autoprefixer(),
-          cssnano({
-            preset: 'default',
+          autoprefixer({
+            grid: 'autoplace',
+            flexbox: 'no-2009'
           }),
+          ...(isDev ? [] : [cssnano({
+            preset: ['default', {
+              discardComments: { removeAll: true },
+              normalizeWhitespace: false
+            }]
+          })])
         ],
-      } : undefined,
+      },
     },
+    
     // Optimizaciones avanzadas de dependencias
     optimizeDeps: {
       include: [
@@ -92,54 +103,55 @@ export default defineConfig(({ mode }) => {
         define: {
           global: 'globalThis',
         },
-        // Optimizaciones de JSX en desarrollo
         jsx: 'automatic',
       },
     },
-    // 🚀 BUILD OPTIMIZATIONS: Configuración de producción agresiva
+    
+    // 🚀 BUILD OPTIMIZATIONS: GitHub Pages específico
     build: {
       target: 'es2020',
-      minify: 'terser', // Cambiar a terser para mejor compresión
+      outDir: 'dist',
+      assetsDir: 'assets',
+      sourcemap: isDev,
+      minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: true, // Eliminar console.logs
-          drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info'], // Eliminar funciones específicas
-          passes: 2, // Múltiples pasadas de optimización
+          drop_console: !isDev,
+          drop_debugger: !isDev,
+          pure_funcs: isDev ? [] : ['console.log', 'console.info'],
+          passes: 2,
         },
         mangle: {
-          safari10: true, // Compatibilidad Safari
+          safari10: true,
         },
         format: {
-          comments: false, // Sin comentarios
+          comments: isDev,
         },
       },
       cssMinify: true,
       reportCompressedSize: true,
       rollupOptions: {
-        // 🌳 TREE SHAKING AGRESIVO: Eliminación de código no utilizado
         treeshake: {
           moduleSideEffects: false,
           propertyReadSideEffects: false,
           tryCatchDeoptimization: false,
-          unknownGlobalSideEffects: false, // Más agresivo
+          unknownGlobalSideEffects: false,
         },
         output: {
-          // Optimización de chunks más granular
+          // 🎯 GitHub Pages optimized chunks
           manualChunks: {
-            // Separar vendor libraries
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'mui-core': ['@mui/material', '@mui/system'],
             'mui-icons': ['@mui/icons-material'],
             'animation': ['framer-motion', 'motion'],
             'utils': ['axios', 'date-fns', 'loglevel'],
           },
-          // Optimizar nombres de archivos
+          // Optimizar nombres de archivos para GitHub Pages
           chunkFileNames: (chunkInfo) => {
             const facadeModuleId = chunkInfo.facadeModuleId 
               ? chunkInfo.facadeModuleId.split('/').pop()?.replace('.tsx', '').replace('.ts', '') 
               : 'chunk';
-            return `assets/${facadeModuleId}-[hash].js`;
+            return `assets/js/${facadeModuleId}-[hash].js`;
           },
           assetFileNames: (assetInfo) => {
             const info = assetInfo.name?.split('.') || [];
@@ -152,13 +164,14 @@ export default defineConfig(({ mode }) => {
             }
             return `assets/[name]-[hash].${ext}`;
           },
+          entryFileNames: 'assets/js/[name]-[hash].js'
         },
         external: ['crypto'],
       },
-      // Optimizaciones adicionales
-      assetsInlineLimit: 4096, // Inline assets menores a 4KB
-      cssCodeSplit: true, // Separar CSS por componente
+      assetsInlineLimit: 4096,
+      cssCodeSplit: true,
     },
+    
     // Variables de entorno
     define: {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version || '2.0.0'),

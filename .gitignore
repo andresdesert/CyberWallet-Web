@@ -12,6 +12,9 @@ dist/
 dist-ssr/
 .vite/
 .cache/
+coverage/
+stats.html
+build-stats.json
 
 # === Environment variables ===
 .env
@@ -50,6 +53,17 @@ lerna-debug.log*
 ehthumbs.db
 Thumbs.db
 
+# === Temporary and backup files ===
+*.bak
+*.backup
+*.old
+*.new
+*.tmp
+*.temp
+*.swp
+*~
+Thumbs.db
+
 # === Testing and Coverage ===
 coverage/
 *.lcov
@@ -84,7 +98,7 @@ test-output/
 
 # === npm ===
 .npm
-package-lock.json
+# package-lock.json  # Comentado para permitir en GitHub Actions
 
 # === Runtime data ===
 pids
@@ -120,7 +134,8 @@ dist
 
 # === Gatsby files ===
 .cache/
-public
+# No ignoramos public para que se incluyan los archivos estáticos necesarios
+# public/
 
 # === Storybook build outputs ===
 .out
@@ -143,5 +158,100 @@ metrics.log
 # === Local development ===
 local.config.js
 local.config.json
+
+# === 🎯 ARCHIVOS CRÍTICOS PARA GITHUB PAGES ===
+# Estos archivos SON ESENCIALES para el funcionamiento correcto
+
+# 📁 DIRECTORIO PUBLIC COMPLETO - Permitir todo el contenido
+!public/
+!public/**/*
+
+# 📄 ARCHIVOS PDF ESENCIALES 
+!public/*.pdf
+!public/**/*.pdf
+!*.pdf
+
+# 🖼️ IMÁGENES ESENCIALES
+!public/*.png
+!public/*.jpg
+!public/*.jpeg
+!public/*.gif
+!public/*.svg
+!public/*.webp
+!public/*.ico
+!public/*.avif
+
+# 📋 ARCHIVOS DE CONFIGURACIÓN WEB
+!public/manifest.json
+!public/robots.txt
+!public/sitemap.xml
+!public/404.html
+!public/.nojekyll
+
+# 🌍 TRADUCCIONES COMPLETAS
+!public/locales/
+!public/locales/**/*.json
+
+# 🎨 ARCHIVOS DE ESTILO CRÍTICOS
+!public/critical.css
+!public/**/*.css
+
+# 🔧 ARCHIVOS DE CONFIGURACIÓN ESENCIALES
+!vite.config.ts
+!tsconfig.json
+!tsconfig.*.json
+!package.json
+!package-lock.json
+
+# 📜 DOCUMENTACIÓN CRÍTICA
+!README.md
+!LICENSE
+
+# 🚀 ARCHIVOS DE DEPLOYMENT
+!.github/
+!.github/**/*
+!netlify.toml
+!vercel.json
+
+# === Archivos específicos a ignorar ===
+# Archivos temporales de editores
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+*.orig
+*.tmp
+*.temp
+
+# Archivos de VSCode que no son necesarios para colaboración
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
+
+# Archivos de configuración local
+local.config.*
+*.local.*
+
+# Archivos de registro y diagnóstico
+*.log
+*.log.*
+report.*
+stats.*
+*.heapsnapshot
+*.cpu.profile
+
+# Archivos de sistema específicos del proyecto
+.project
+.classpath
+.factorypath
+.settings/
+
+# Otros archivos a ignorar
+.history/
+.sass-cache/
+.versions/
+*.sublime-*
 
 # === End of file ===

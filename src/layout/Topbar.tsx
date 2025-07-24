@@ -321,7 +321,7 @@ const Topbar: React.FC = () => {
   const handleLogout = async () => {
     setUserMenuAnchor(null);
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const toggleMobileMenu = () => {

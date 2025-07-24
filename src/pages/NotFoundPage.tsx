@@ -11,7 +11,15 @@ const NotFoundPage: React.FC = () => {
 
     return (
         <AppLayout>
-            <PageContainer>
+            <PageContainer sx={{
+              // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+              width: '100%',
+              maxWidth: '100vw',
+              minHeight: '100vh',
+              maxHeight: '100vh',
+              aspectRatio: 'auto',
+              boxSizing: 'border-box',
+            }}>
                 <Box
                     sx={{
                         textAlign: 'center',
@@ -23,6 +31,22 @@ const NotFoundPage: React.FC = () => {
                         px: 2,
                     }}
                 >
+
+                    <Box
+                        component="img"
+                        src="/404-not-found.jpg"
+                        alt="404 Not Found"
+                        sx={{
+                            width: { xs: 180, sm: 240 },
+                            height: 'auto',
+                            mb: 2,
+                            borderRadius: 4,
+                            boxShadow: theme.palette.mode === 'dark'
+                                ? '0 0 24px rgba(168,154,246,0.15)'
+                                : '0 4px 16px rgba(0,0,0,0.08)',
+                            objectFit: 'contain',
+                        }}
+                    />
                     <Typography
                         variant="h1"
                         sx={{

@@ -183,19 +183,35 @@ export const updateAlias = async (request: UpdateAliasRequest): Promise<void> =>
   }
 };
 
-export const getTransactionHistory = async (): Promise<unknown[]> => {
+export const getTransactionHistory = async (): Promise<{
+  id: string;
+  type: string;
+  amount: number;
+  status: string;
+  date: string;
+  counterpart: string | null;
+}[]> => {
   try {
     // Simular delay
     await new Promise(resolve => setTimeout(resolve, 300));
     // Generar transacciones simuladas
-    const transactions = [];
+    const transactions: {
+      id: string;
+      type: string;
+      amount: number;
+      status: string;
+      date: string;
+      counterpart: string | null;
+    }[] = [];
     for (let i = 0; i < 10; i++) {
+      const transactionType = Math.random() > 0.5 ? 'deposit' : 'withdrawal';
       transactions.push({
         id: `tx-${Math.random().toString(36).substr(2, 9)}`,
-        type: Math.random() > 0.5 ? 'deposit' : 'withdrawal',
+        type: transactionType,
         amount: Math.floor(Math.random() * 10000),
         status: 'completed',
-        date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString()
+        date: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+        counterpart: transactionType === 'deposit' ? 'Bank Transfer' : 'User Wallet'
       });
     }
     return transactions;

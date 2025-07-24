@@ -198,7 +198,15 @@ const ForgotPasswordPage: React.FC = () => {
   return (
       <AppLayout>
         <ParticleBackground />
-        <PageContainer maxWidth={480}>
+        <PageContainer maxWidth={480} sx={{
+          // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+          width: '100%',
+          maxWidth: '100vw',
+          minHeight: '100vh',
+          maxHeight: '100vh',
+          aspectRatio: 'auto',
+          boxSizing: 'border-box',
+        }}>
           {pageLoading ? (
               <Stack spacing={3}>
                 <NeumorphicSkeleton variant="rectangular" height={56} />

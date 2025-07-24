@@ -2,24 +2,31 @@
   "name": "cyberwallet-web",
   "description": "Billetera Virtual adaptada para operar en GitHub page a modo demo",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.3",
   "type": "module",
-  "homepage": "https://deluxo.github.io/CyberWallet-Web",
+  "homepage": "https://andresdesert.github.io/CyberWallet-Web",
   "repository": {
     "type": "git",
-    "url": "https://github.com/deluxo/CyberWallet-Web.git"
+    "url": "https://github.com/andresdesert/CyberWallet-Web.git"
   },
   "author": "deluxo@gmail.com",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build-fast": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest run --dir src/test --environment jsdom",
+    "prod": "npm run build && vite --port 5173 --host",
+    "test": "vitest run --environment jsdom --reporter=verbose",
     "type-check": "tsc --noEmit",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "postbuild": "echo > dist/.nojekyll && cp public/404.html dist/404.html",
+    "predeploy": "npm run clean && npm run build",
+    "deploy": "gh-pages -d dist --dotfiles",
+    "deploy-clean": "gh-pages -d dist --dotfiles --no-cache --repo=https://github.com/andresdesert/CyberWallet-Web.git",
+    "sync-deploy": "npm run clean && npm run build && npm run deploy-clean",
+    "force-deploy": "npm run clean && npm run build && gh-pages -d dist --dotfiles --add --no-cache --message \"Force deploy: cache bust %DATE% %TIME%\"",
+    "clean": "rm -rf dist node_modules/.cache"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -49,6 +56,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^24.0.14",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

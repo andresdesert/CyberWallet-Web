@@ -1,5 +1,5 @@
 // src/components/Testimonials.tsx
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Container,
@@ -12,10 +12,14 @@ import {
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
 
 // estilos de Swiper
 import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 interface Testimonial {
   name: string;
@@ -105,11 +109,60 @@ const testimonials: Testimonial[] = [
 
 const Testimonials: React.FC = () => {
   const theme = useTheme();
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  // ✅ SOLUCIÓN: Reiniciar autoplay cuando el componente esté visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          // Reiniciar autoplay cuando esté visible
+          if (swiperRef.current && swiperRef.current.autoplay) {
+            swiperRef.current.autoplay.start();
+          }
+        } else {
+          setIsInView(false);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    const testimonialSection = document.getElementById('testimonials-section');
+    if (testimonialSection) {
+      observer.observe(testimonialSection);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // ✅ SOLUCIÓN: Forzar reinicio del autoplay cada 15 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (swiperRef.current && isInView) {
+        // Verificar si el autoplay está funcionando, si no, reiniciarlo
+        if (swiperRef.current.autoplay && !swiperRef.current.autoplay.running) {
+          console.log('🔄 Reiniciando autoplay de testimonios...');
+          swiperRef.current.autoplay.start();
+        }
+      }
+    }, 15000); // Cada 15 segundos
+
+    return () => clearInterval(interval);
+  }, [isInView]);
 
   return (
     <Box
+      id="testimonials-section"
       sx={{
         py: 'clamp(3rem, 8vw, 6rem)',
+        // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+        width: '100%',
+        maxWidth: '100vw',
+        aspectRatio: 'auto',
+        boxSizing: 'border-box',
         background:
           theme.palette.mode === "dark"
             ? `linear-gradient(180deg, ${alpha(
@@ -158,23 +211,49 @@ const Testimonials: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* — Carrusel swipeable con autoplay sin navegación — */}
+        {/* — Carrusel swipeable con autoplay mejorado — */}
         <Swiper
-          modules={[Autoplay]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          modules={[Autoplay, Navigation, Pagination]}
           autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true,
+            delay: 3000, // 3 segundos
+            disableOnInteraction: false, // No se deshabilita al interactuar
+            pauseOnMouseEnter: true, // Se pausa al hacer hover
+            stopOnLastSlide: false, // Continúa después del último slide
+            waitForTransition: true, // Espera a que termine la transición
+            reverseDirection: false, // Dirección normal
           }}
           loop={true}
+          loopAdditionalSlides={2} // ✅ Mejora la fluidez del loop
+          centeredSlides={false}
+          grabCursor={true}
           spaceBetween={theme.spacing(4)}
+          speed={800} // ✅ Velocidad de transición más fluida
           breakpoints={{
             0: { slidesPerView: 1, spaceBetween: 16 },
             600: { slidesPerView: 2, spaceBetween: 20 },
             900: { slidesPerView: 3, spaceBetween: 24 },
             1200: { slidesPerView: 3, spaceBetween: 32 }
           }}
-          style={{ padding: `0 ${theme.spacing(2)}` }}
+          onAutoplayTimeLeft={(swiper, time, progress) => {
+            // ✅ Log para debugging (solo en desarrollo)
+            if (process.env.NODE_ENV === 'development' && time % 1000 < 100) {
+              console.log(`⏱️ Autoplay: ${Math.ceil(time/1000)}s restantes`);
+            }
+          }}
+          onSlideChange={(swiper) => {
+            // ✅ Verificar que el autoplay sigue activo
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`📊 Slide ${swiper.activeIndex + 1}/${testimonials.length}`);
+            }
+          }}
+          style={{ 
+            padding: `0 ${theme.spacing(2)}`,
+            // ✅ Asegurar que el contenedor mantenga altura
+            minHeight: '350px',
+          }}
         >
           {testimonials.map((t, i) => (
             <SwiperSlide key={t.name}>

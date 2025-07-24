@@ -126,13 +126,18 @@ const ProfilePage: React.FC = () => {
 
     return (
         <Box sx={{ 
-            maxWidth: 600, 
+            width: '100%',
+            maxWidth: '600px', 
             mx: 'auto', 
             p: 3,
             minHeight: '100vh',
+            maxHeight: '100vh',
             background: theme.palette.mode === 'dark'
                 ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.05)} 100%)`
                 : `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.02)} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`,
+            // 🎯 CRÍTICO: Constraints para evitar stretching en producción
+            aspectRatio: 'auto',
+            boxSizing: 'border-box',
         }}>
             <Paper
                 elevation={8}

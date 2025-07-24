@@ -27,6 +27,66 @@ if (process.env.NODE_ENV === 'development') {
   logger.info('[⚡ PROD] CyberWallet - Aplicación web iniciada');
 }
 
+// 🎯 FIX RESPONSIVE: Asegurar viewport y CSS consistente en prod
+const metaViewport = document.querySelector('meta[name="viewport"]');
+if (!metaViewport) {
+  const viewport = document.createElement('meta');
+  viewport.name = 'viewport';
+  viewport.content = 'width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no';
+  document.head.appendChild(viewport);
+}
+
+// 🎯 CSS CRÍTICO: Estilos base para responsive
+const criticalStyles = document.createElement('style');
+criticalStyles.innerHTML = `
+  /* Reset y base responsive */
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    font-size: 16px;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Asegurar que las imágenes sean responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Media query helpers */
+  @media screen and (max-width: 599px) {
+    html { font-size: 14px; }
+  }
+  
+  @media screen and (min-width: 600px) and (max-width: 899px) {
+    html { font-size: 15px; }
+  }
+  
+  @media screen and (min-width: 900px) {
+    html { font-size: 16px; }
+  }
+`;
+document.head.appendChild(criticalStyles);
+
 // 🔍 DEBUG: Verificar DOM
 const rootElement = document.getElementById('root');
 console.log('🔵 [MAIN] Root element encontrado:', !!rootElement);
@@ -42,16 +102,24 @@ const root = ReactDOM.createRoot(rootElement);
 console.log('🔵 [MAIN] Iniciando renderizado de la aplicación...');
 
 try {
+  // 🌐 Configuración de routing para GitHub Pages
+  const isDev = process.env.NODE_ENV === 'development';
+  // Aseguramos que el basename sea correcto para GitHub Pages
+  const basename = isDev ? '' : '/CyberWallet-Web';
+  
+  console.log('🔵 [MAIN] Router basename configurado:', basename);
+  console.log('🔵 [MAIN] URL actual:', window.location.href);
+  
   root.render(
     <React.StrictMode>
       <ErrorBoundary>
-        <BrowserRouter basename={import.meta.env.DEV ? '' : '/CyberWallet-Web'}>
+        <BrowserRouter basename={basename}>
           <UnifiedThemeProvider>
-            <AuthProvider>
-              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+              <AuthProvider>
                 <App />
-              </LocalizationProvider>
-            </AuthProvider>
+              </AuthProvider>
+            </LocalizationProvider>
           </UnifiedThemeProvider>
         </BrowserRouter>
       </ErrorBoundary>
