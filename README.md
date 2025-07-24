@@ -5,7 +5,7 @@ Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages com
 
 ## 🎯 **Optimizaciones Implementadas (2025)**
 
-### 📱 **Mobile Navigation Fix**
+### 📱 **Phone Navigation Fix**
 - ✅ **Solucionado problema de hidratación** entre desarrollo y producción
 - ✅ **Navegación móvil consistente** en ambos modos
 - ✅ **Componente fallback robusto** para máxima compatibilidad
