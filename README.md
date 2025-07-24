@@ -10,6 +10,11 @@ Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages com
 - ✅ **Componente fallback robusto** para máxima compatibilidad
 - ✅ **Layout responsive optimizado** para todas las resoluciones
 
+### 📱 **OTRA COSA**
+ - ✅ **Me gusta el arte** y el porker ♥♦♣♠
+
+
+
 ### 🏗️ **AboutMe Layout Optimizado** 
 - ✅ **Centrado perfecto** consistente entre dev y prod
 - ✅ **Avatar responsive** con tamaños adaptativos
