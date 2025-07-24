@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm ci # 'npm ci' es preferible para CI/CD ya que usa package-lock.json
 
-      - name: Run clean and build
+      - name: Build and clean
         run: |
           rm -rf dist || true # Elimina el directorio 'dist' si existe, ignora errores si no
           rm -rf node_modules/.cache || true # Elimina el caché de node_modules si existe, ignora errores
