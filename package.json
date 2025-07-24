@@ -20,7 +20,7 @@
     "prod": "npm run build && vite --port 5173 --host",
     "test": "vitest run --environment jsdom --reporter=verbose",
     "type-check": "tsc --noEmit",
-    "postbuild": "echo. > dist\\.nojekyll && copy public\\404.html dist\\404.html",
+    "postbuild": "echo > dist\\.nojekyll && copy public\\404.html dist\\404.html",
     "predeploy": "npm run clean && npm run build",
     "deploy": "gh-pages -d dist --dotfiles",
     "deploy-clean": "gh-pages -d dist --dotfiles --no-cache --repo=https://github.com/andresdesert/CyberWallet-Web.git",
