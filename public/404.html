@@ -83,6 +83,18 @@
           path = url.substring(1); // Eliminar el primer '/'
         }
         
+        // Limpiar la ruta de parámetros de caché
+        path = path.split('?')[0];
+        
+        // Si estamos en la raíz, no necesitamos redirección
+        if (!path || path === '') {
+          console.log('[404] Estamos en la raíz, redirigiendo al landing');
+          setTimeout(() => {
+            window.location.replace(basePath + '/');
+          }, 1000);
+          return;
+        }
+        
         console.log('[404] Guardando ruta para redirección:', path);
         
         // Guardar la ruta en sessionStorage para recuperarla después

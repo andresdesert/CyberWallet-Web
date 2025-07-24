@@ -186,8 +186,28 @@
     <!-- 🌐 GitHub Pages SPA routing fix -->
     <script>
       // Single Page Application routing fix for GitHub Pages
-      (function(l) {
-        if (l.search[1] === '/' ) {
+      (function() {
+        const l = window.location;
+        
+        // Detectar si estamos en GitHub Pages
+        const isGitHubPages = l.hostname === 'andresdesert.github.io';
+        const basePath = isGitHubPages ? '/CyberWallet-Web' : '';
+        
+        // Manejar redirecciones desde 404.html
+        const redirectPath = sessionStorage.getItem('spa_redirect');
+        if (redirectPath) {
+          console.log('[ROUTING] Procesando redirección guardada:', redirectPath);
+          sessionStorage.removeItem('spa_redirect');
+          
+          const cleanRedirectPath = redirectPath.split('?')[0];
+          const fullPath = basePath + (cleanRedirectPath ? ('/' + cleanRedirectPath) : '');
+          
+          console.log('[ROUTING] Redireccionando a:', fullPath);
+          window.history.replaceState(null, null, fullPath);
+        }
+        
+        // Manejar parámetros de búsqueda para SPA routing
+        if (l.search && l.search[1] === '/') {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
@@ -195,7 +215,22 @@
             l.pathname.slice(0, -1) + decoded + l.hash
           );
         }
-      }(window.location))
+        
+        // Limpiar parámetros de caché
+        if (l.search) {
+          const searchParams = new URLSearchParams(l.search);
+          searchParams.delete('nocache');
+          
+          if (searchParams.size > 0) {
+            const newSearch = '?' + searchParams.toString();
+            window.history.replaceState(null, null, l.pathname + newSearch + l.hash);
+          } else {
+            window.history.replaceState(null, null, l.pathname + l.hash);
+          }
+        }
+        
+        console.log('[ROUTING] Configuración aplicada para:', isGitHubPages ? 'GitHub Pages' : 'Desarrollo');
+      })();
     </script>
   </head>
   <body>
