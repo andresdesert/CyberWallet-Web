@@ -26,7 +26,7 @@
     "deploy-clean": "gh-pages -d dist --dotfiles --no-cache --repo=https://github.com/andresdesert/CyberWallet-Web.git",
     "sync-deploy": "npm run clean && npm run build && npm run deploy-clean",
     "force-deploy": "npm run clean && npm run build && gh-pages -d dist --dotfiles --add --no-cache --message \"Force deploy: cache bust %DATE% %TIME%\"",
-    "clean": "if exist dist rmdir /s /q dist && if exist node_modules/.cache rmdir /s /q node_modules/.cache"
+    "clean": "rm -rf dist node_modules/.cache"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
