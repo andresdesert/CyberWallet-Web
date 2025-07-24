@@ -1,4 +1,3 @@
-
 # CyberWallet-Web 🚀
 
 Una billetera virtual moderna y segura, adaptada para operar en GitHub Pages como demo. Incluye el portafolio profesional completo de **Andrés Simahan** - Senior QA Analyst certificado ISTQB Foundation Level 4.0.
