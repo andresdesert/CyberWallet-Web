@@ -1,0 +1,21 @@
+{
+  "name": "CyberWallet - Finanzas Digitales",
+  "short_name": "CyberWallet",
+  "description": "La plataforma financiera más avanzada del mercado",
+  "start_url": "/CyberWallet-Web/",
+  "scope": "/CyberWallet-Web/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/CyberWallet-Web/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business"],
+  "lang": "es-AR"
+} 

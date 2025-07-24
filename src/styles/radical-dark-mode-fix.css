@@ -1,0 +1,149 @@
+/* 🚨 RADICAL DARK MODE FIX - Correcciones críticas para modo oscuro */
+
+/* 
+ * Este archivo contiene correcciones específicas para problemas de contraste
+ * y legibilidad en modo oscuro extremo
+ */
+
+/* ================================
+   🎨 CORRECCIONES DE CONTRASTE
+   ================================ */
+
+/* Material-UI Dark Mode Overrides */
+.MuiPaper-root[data-theme="dark"] {
+    background-color: rgba(18, 24, 38, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+}
+
+/* Text Contrast Fixes */
+[data-theme="dark"] .MuiTypography-root {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+[data-theme="dark"] .MuiTypography-body2 {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Input Fields Dark Mode */
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root fieldset {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-theme="dark"] .MuiTextField-root .MuiOutlinedInput-root:hover fieldset {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Button Contrast Fixes */
+[data-theme="dark"] .MuiButton-outlined {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="dark"] .MuiButton-outlined:hover {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ================================
+   🔧 ACCESSIBILITY IMPROVEMENTS
+   ================================ */
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    [data-theme="dark"] * {
+        text-shadow: 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    [data-theme="dark"] .MuiButton-contained {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="dark"] * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ================================
+   🎯 SPECIFIC COMPONENT FIXES
+   ================================ */
+
+/* AppBar Dark Mode */
+[data-theme="dark"] .MuiAppBar-root {
+    background-color: rgba(13, 15, 17, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Drawer Dark Mode */
+[data-theme="dark"] .MuiDrawer-paper {
+    background-color: rgba(18, 24, 38, 0.98) !important;
+    backdrop-filter: blur(30px) !important;
+}
+
+/* Card Components */
+[data-theme="dark"] .MuiCard-root {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Dialog Dark Mode */
+[data-theme="dark"] .MuiDialog-paper {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ================================
+   ⚡ PERFORMANCE OPTIMIZATIONS
+   ================================ */
+
+/* GPU Acceleration for Dark Theme */
+[data-theme="dark"] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+/* Prevent FOUC (Flash of Unstyled Content) */
+html[data-theme="dark"] {
+    background-color: #0d0f11 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* ================================
+   🌙 CUSTOM SCROLLBAR DARK
+   ================================ */
+
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.7);
+    border-radius: 4px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.8);
+}
+
+/* Firefox Scrollbar */
+[data-theme="dark"] * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.7) rgba(30, 41, 59, 0.5);
+}
